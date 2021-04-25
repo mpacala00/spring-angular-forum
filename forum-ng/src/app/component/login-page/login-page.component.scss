@@ -1,0 +1,26 @@
+$invalid-color: red;
+
+input.ng-invalid.ng-touched {
+      //border: $invalid-color 1px solid;
+}
+
+mat-form-field {
+      width: 100%;
+}
+
+.form-group {
+      position: relative;
+      padding-top: 15px;
+}
+
+.span-error {
+      color: $invalid-color;
+      position: absolute;
+      top: -20%;
+}
+
+#loginButton {
+      margin-left: 50%;
+      margin-right: 50%;
+      transform: translateX(-50%);
+}

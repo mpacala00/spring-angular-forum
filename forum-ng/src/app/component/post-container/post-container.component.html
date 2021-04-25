@@ -1,0 +1,22 @@
+<div class="container">
+   <div class="row justify-content-center">
+      <div class="col-lg-12 p-0">
+         <div class="card m-4 mx-0" *ngIf="!posts">
+            <div class="card-body" style="min-height: 100px">
+               <h3>There are no posts to show!</h3>
+            </div>
+         </div>
+         <div class="card my-4 mx-0" *ngFor="let post of posts">
+            <div class="card-header">
+               <h3>{{ post.title }}</h3>
+               <small *ngIf="post.creator">By {{ post.creator }}</small>
+               <p>{{ post.date | date:'dd.MM.yyy'}}</p>
+            </div>
+            <div class="card-body">
+               <p>{{ post.body }}</p>
+
+            </div>
+         </div>
+      </div>
+   </div>
+</div>

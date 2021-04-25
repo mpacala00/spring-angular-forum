@@ -1,0 +1,37 @@
+spring:
+  mvc:
+    dispatch-options-request: true
+  banner-mode: false
+  h2:
+  console:
+    enabled: true
+
+  datasource:
+    url: jdbc:h2:mem:testdb
+    driverClassName: org.h2.Driver
+    username: sa
+
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+
+  mail:
+    activation-link: localhost:8080/public/users/activate-account?token= #must be parametrized with token
+
+    host: smtp.mailtrap.io
+    port: 25
+    username: 91f05e81b0403f
+    password: 9e49565445af78
+    protocol: smtp
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
+jwt:
+  issuer: mpacala00
+  expiration-sec: 86400 #one day in seconds
+  clock-skew-sec: 300
+  #some random jwt secret from a password generating site
+  secret: '26SCT49ibP2QcBO94jLjbjTsoWa5laExtjm0ddleKcMg9JWBMyV9CjH7JCQ24H7'
