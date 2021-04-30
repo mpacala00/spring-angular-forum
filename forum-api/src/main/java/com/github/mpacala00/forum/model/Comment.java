@@ -1,32 +1,27 @@
 package com.github.mpacala00.forum.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AccessLevel;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
 import lombok.experimental.FieldDefaults;
-import org.codehaus.jackson.annotate.JsonIgnore;
 
 import javax.persistence.*;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 @Entity
-@ToString
-@EqualsAndHashCode
+@Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Comment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    Long id;
 
-//    @JsonIgnore
-//    @ManyToOne
-//    @JoinColumn(name="creator_id", nullable=false)
-//    User creator;
-    String creator;
+    @JsonIgnore
+    @ManyToOne
+    @JoinColumn(name="creator_id", nullable=true)
+    User creator;
 
     @Lob String body;
     LocalDateTime postDate;
@@ -42,45 +37,9 @@ public class Comment {
         this.postDate = now;
     }
 
-    public Comment(String creator, String body) {
+    public Comment(User creator, String body) {
         super();
         this.creator = creator;
         this.body = body;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getCreator() {
-        return creator;
-    }
-
-    public void setCreator(String creator) {
-        this.creator = creator;
-    }
-
-    public String getBody() {
-        return body;
-    }
-
-    public void setBody(String body) {
-        this.body = body;
-    }
-
-    public LocalDateTime getPostDate() {
-        return postDate;
-    }
-
-    public void setPostDate(LocalDateTime postDate) {
-        this.postDate = postDate;
-    }
-
-    public void setPost(Post post) {
-        this.post = post;
     }
 }

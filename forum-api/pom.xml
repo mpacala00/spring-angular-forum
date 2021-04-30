@@ -8,11 +8,11 @@
 		<version>2.3.0.RELEASE</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>pl.mpacala</groupId>
-	<artifactId>blog</artifactId>
+	<groupId>com.github.mpacala00</groupId>
+	<artifactId>forum-api</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>blog</name>
-	<description>Blog in Spring Boot</description>
+	<name>forum-api</name>
+	<description>Forum in Spring Boot</description>
 
 	<properties>
 		<java.version>11</java.version>

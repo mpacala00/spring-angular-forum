@@ -1,15 +1,17 @@
 package com.github.mpacala00.forum.controllers;
 
+import com.github.mpacala00.forum.model.Category;
 import com.github.mpacala00.forum.model.Comment;
+import com.github.mpacala00.forum.model.Post;
 import com.github.mpacala00.forum.model.dto.CommentDto;
+import com.github.mpacala00.forum.service.CategoryService;
 import com.github.mpacala00.forum.service.CommentService;
+import com.github.mpacala00.forum.service.PostService;
+import com.github.mpacala00.forum.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import com.github.mpacala00.forum.model.Post;
-import com.github.mpacala00.forum.service.PostService;
-import com.github.mpacala00.forum.service.UserService;
 
 import java.util.Date;
 import java.util.List;
@@ -22,17 +24,34 @@ public class ForumController {
     private final PostService postService;
     private final CommentService commentService;
     private final UserService userService;
+    private final CategoryService categoryService;
 
     @Autowired
-    public ForumController(PostService postService, CommentService commentService, UserService userService) {
+    public ForumController(PostService postService, CommentService commentService, UserService userService, CategoryService categoryService) {
         this.postService = postService;
         this.commentService = commentService;
         this.userService = userService;
+        this.categoryService = categoryService;
     }
 
     @GetMapping("public/posts")
-    public List<Post> posts() {
+    public List<Post> getPosts() {
         return postService.getAllPosts();
+    }
+
+    @GetMapping("public/categories")
+    public List<Category> getCategories() {
+        return categoryService.getAllCategories();
+    }
+
+    //todo remove public from url
+    @PostMapping("public/category/{categoryId}/post")
+    public Category publishPostToCategory(@PathVariable Long categoryId, @RequestBody Post post) {
+
+        Post savedPost = postService.savePost(post);
+        Category category = categoryService.findById(categoryId);
+        category.addPost(savedPost);
+        return categoryService.save(category);
     }
 
     @PostMapping("/post")
@@ -46,14 +65,14 @@ public class ForumController {
         //post.setCreator(userService.getUser(userDetails.getUsername()));
         post.setCreator(post.getCreator());
 
-        postService.insertPost(post);
+        postService.savePost(post);
         return "Post was published";
     }
 
     @PostMapping("/post/{id}/comment")
     public ResponseEntity<String> postComment(@PathVariable String id, @RequestBody CommentDto commentDto) {
         //todo check if Long.valueOf(id) is of type Long
-        Comment posted = commentService.postComment(commentDto, Long.valueOf(id));
+        Comment posted = commentService.postComment(commentDto);
         return new ResponseEntity<>("Comment successfully added", HttpStatus.CREATED);
     }
 

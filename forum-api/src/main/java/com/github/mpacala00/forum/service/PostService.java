@@ -1,17 +1,15 @@
 package com.github.mpacala00.forum.service;
 
-import com.github.mpacala00.forum.model.Comment;
+import com.github.mpacala00.forum.model.Post;
 import com.github.mpacala00.forum.repository.CommentRepository;
+import com.github.mpacala00.forum.repository.PostRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.github.mpacala00.forum.model.Post;
-import com.github.mpacala00.forum.repository.PostRepository;
 
+import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -25,12 +23,21 @@ public class PostService {
         return postRepository.findAll();
     }
 
-    public void insertPost(Post post) {
-        postRepository.save(post);
+    public Post savePost(Post post) {
+        if(post.getDate() == null) {
+            Date date = new Date();
+            post.setDate(date);
+        }
+        return postRepository.save(post);
     }
 
     public List<Post> findByUser(String user) {
         return postRepository.findByCreator(user);
+    }
+
+    public Post findById(Long id) {
+        //todo check if not null
+        return postRepository.findById(id).get();
     }
 
 }
