@@ -20,32 +20,18 @@ public class CommentService {
     private final CommentRepository commentRepository;
     private final PostRepository postRepository;
     private final UserRepository userRepository;
-    private final MappingService mappingService;
 
-    public Comment postComment(CommentDto commentDto) {
-        Optional<Post> post = postRepository.findById(commentDto.getPostId());
-        if(post.isPresent()) {
-//            Comment comment = new Comment(commentDto.getCreator(), commentDto.getBody());
-            Comment comment = mappingService.dtoToComment(commentDto);
-            //not checking if username exist because it will come from decoded token
-            User creator = userRepository.findByUsername(commentDto.getCreator()).get();
-            Comment savedComment = commentRepository.save(comment); //save to get ID
-            post.get().getComments().add(savedComment);
-            postRepository.save(post.get());
-            userRepository.save(creator);
-            //adding comment to comments in User entity missing
-
-            return savedComment;
-        }
-        throw new NullPointerException(String.format("Post of id=%d does not exist", commentDto.getPostId()));
-    }
-
-    public List<Comment> getAllCommentsFromPost(Long postId) {
+    public List<Comment> getAllCommentsFromPost(Long postId) throws Exception {
         Optional<Post> post = postRepository.findById(postId);
         if(post.isPresent()) {
 //            return post.get().getCommentList();
+            throw new Exception("Not implemented yet");
         }
         throw new NullPointerException();
+    }
+    
+    public Comment save(Comment comment) {
+        return commentRepository.save(comment);
     }
 
     public List<Comment> findByUser(String user) {

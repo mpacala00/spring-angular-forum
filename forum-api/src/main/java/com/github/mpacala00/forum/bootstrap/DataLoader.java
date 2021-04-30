@@ -1,6 +1,7 @@
 package com.github.mpacala00.forum.bootstrap;
 
 import com.github.mpacala00.forum.model.Category;
+import com.github.mpacala00.forum.model.Comment;
 import com.github.mpacala00.forum.model.Post;
 import com.github.mpacala00.forum.model.User;
 import com.github.mpacala00.forum.repository.CategoryRepository;
@@ -31,7 +32,7 @@ public class DataLoader implements CommandLineRunner {
         Post post1 = new Post();
         post1.setTitle("Hello, world!");
         post1.setBody("First post");
-        post1.setCreator("Test author");
+        post1.setCreator(user);
         Post savedPost = postRepository.save(post1);
 
         Category cat1 = new Category();
@@ -40,7 +41,6 @@ public class DataLoader implements CommandLineRunner {
 
         savedCat1.addPost(savedPost);
         categoryRepository.save(savedCat1);
-        postRepository.save(savedPost);
 
     }
 }

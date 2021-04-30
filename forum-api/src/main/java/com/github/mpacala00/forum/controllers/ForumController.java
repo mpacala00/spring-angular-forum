@@ -11,10 +11,12 @@ import com.github.mpacala00.forum.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 @RestController
 //@RequestMapping("/api")
@@ -54,6 +56,15 @@ public class ForumController {
         return categoryService.save(category);
     }
 
+    @PostMapping("public/post/{postId}/comment")
+    public Post publishComment(@PathVariable Long postId,
+                               @RequestBody Comment comment) {
+        Comment savedComment = commentService.save(comment);
+        Post post = postService.findById(postId);
+        post.addComment(savedComment);
+        return postService.savePost(post);
+    }
+
     @PostMapping("/post")
     public String publishPost(@RequestBody Post post) {
 //        CustomUserDetails userDetails =
@@ -69,12 +80,12 @@ public class ForumController {
         return "Post was published";
     }
 
-    @PostMapping("/post/{id}/comment")
-    public ResponseEntity<String> postComment(@PathVariable String id, @RequestBody CommentDto commentDto) {
-        //todo check if Long.valueOf(id) is of type Long
-        Comment posted = commentService.postComment(commentDto);
-        return new ResponseEntity<>("Comment successfully added", HttpStatus.CREATED);
-    }
+//    @PostMapping("/post/{id}/comment")
+//    public ResponseEntity<String> postComment(@PathVariable String id, @RequestBody CommentDto commentDto) {
+//        //todo check if Long.valueOf(id) is of type Long
+//        Comment posted = commentService.postComment(commentDto);
+//        return new ResponseEntity<>("Comment successfully added", HttpStatus.CREATED);
+//    }
 
 //    @GetMapping("posts/{username}")
 //    public List<Post> postsByUsername(@PathVariable String username) {

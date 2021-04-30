@@ -16,10 +16,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Entity
-@Getter
-@Setter
-@ToString
-@EqualsAndHashCode
+@Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class User implements UserDetails {
 
@@ -33,10 +30,11 @@ public class User implements UserDetails {
     boolean enabled;
     Role role;
 
-
-    @JsonIgnore
     @OneToMany(mappedBy = "creator", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     Set<Comment> comments = new HashSet<>();
+
+    @OneToMany(mappedBy = "creator", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    Set<Post> posts = new HashSet<>();
 
     public User() {
         this.enabled = false;

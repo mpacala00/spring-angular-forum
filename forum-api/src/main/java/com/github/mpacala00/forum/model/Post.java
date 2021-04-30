@@ -15,8 +15,10 @@ import java.util.Set;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Post {
 
-    //@ManyToOne //post has one creator, creator has many posts
-    String creator;
+    @JsonIgnore
+    @ManyToOne
+    @JoinColumn(name="creator_id", nullable=false)
+    User creator;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -42,10 +44,14 @@ public class Post {
         date = new Date();
     }
 
-    public Post(String creator, String title, String body) {
+    public Post(String title, String body) {
         super();
-        this.creator = creator;
         this.title = title;
         this.body = body;
+    }
+
+    public void addComment(Comment comment) {
+        this.comments.add(comment);
+        comment.setPost(this);
     }
 }

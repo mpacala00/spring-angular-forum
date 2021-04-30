@@ -20,7 +20,7 @@ public class Comment {
 
     @JsonIgnore
     @ManyToOne
-    @JoinColumn(name="creator_id", nullable=true)
+    @JoinColumn(name="creator_id", nullable=false)
     User creator;
 
     @Lob String body;
@@ -28,7 +28,7 @@ public class Comment {
 
     @JsonIgnore
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name="post_id", nullable=false)
+    @JoinColumn(name="post_id") //cannot be nullable because of the way comments are saved
     Post post;
 
     public Comment() {
