@@ -30,10 +30,10 @@ public class User implements UserDetails {
     boolean enabled;
     Role role;
 
-    @OneToMany(mappedBy = "creator", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "creator", cascade = CascadeType.ALL)
     Set<Comment> comments = new HashSet<>();
 
-    @OneToMany(mappedBy = "creator", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "creator", cascade = CascadeType.ALL)
     Set<Post> posts = new HashSet<>();
 
     public User() {

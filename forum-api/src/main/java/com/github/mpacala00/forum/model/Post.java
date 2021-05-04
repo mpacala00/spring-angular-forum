@@ -1,8 +1,7 @@
 package com.github.mpacala00.forum.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.AccessLevel;
-import lombok.Data;
+import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import javax.persistence.*;
@@ -11,11 +10,14 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Data
+@Getter
+@Setter
+@AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Post {
 
     @JsonIgnore
+    @EqualsAndHashCode.Exclude
     @ManyToOne
     @JoinColumn(name="creator_id", nullable=false)
     User creator;
@@ -32,10 +34,12 @@ public class Post {
     //todo use LocalDate
     Date date;
 
+    //array list works fine, hashset creates infinite loop
     @OneToMany(mappedBy = "post", fetch = FetchType.EAGER)
     Set<Comment> comments = new HashSet<>();
 
     @JsonIgnore
+    @EqualsAndHashCode.Exclude
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name="category_id")
     Category category;

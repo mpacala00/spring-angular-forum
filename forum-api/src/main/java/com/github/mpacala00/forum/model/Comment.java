@@ -3,6 +3,8 @@ package com.github.mpacala00.forum.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AccessLevel;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 
 import javax.persistence.*;
@@ -19,6 +21,7 @@ public class Comment {
     Long id;
 
     @JsonIgnore
+    @EqualsAndHashCode.Exclude //if not excluded causes stack overflow during User fetching
     @ManyToOne
     @JoinColumn(name="creator_id", nullable=false)
     User creator;
@@ -27,6 +30,7 @@ public class Comment {
     LocalDateTime postDate;
 
     @JsonIgnore
+    @EqualsAndHashCode.Exclude
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name="post_id") //cannot be nullable because of the way comments are saved
     Post post;

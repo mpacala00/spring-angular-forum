@@ -40,6 +40,7 @@ public class DataLoader implements CommandLineRunner {
         Category savedCat1 = categoryRepository.save(cat1);
 
         savedCat1.addPost(savedPost);
+        postRepository.save(savedPost);
         categoryRepository.save(savedCat1);
 
     }

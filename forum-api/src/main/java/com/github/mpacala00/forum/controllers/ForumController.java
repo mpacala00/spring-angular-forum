@@ -20,9 +20,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
-@RestController
-//@RequestMapping("/api")
-@CrossOrigin(origins = "*")
+
 public class ForumController {
 
     private final PostService postService;
@@ -30,44 +28,18 @@ public class ForumController {
     private final UserService userService;
     private final CategoryService categoryService;
 
-    @Autowired
     public ForumController(PostService postService, CommentService commentService, UserService userService, CategoryService categoryService) {
         this.postService = postService;
         this.commentService = commentService;
         this.userService = userService;
         this.categoryService = categoryService;
     }
-
-    @GetMapping("public/posts")
-    public List<Post> getPosts() {
-        return postService.getAllPosts();
-    }
-
-    @GetMapping("public/categories")
-    public List<Category> getCategories() {
-        return categoryService.getAllCategories();
-    }
+    
 
     //todo remove public from url
-    @PostMapping("public/category/{categoryId}/post")
-    public Category publishPostToCategory(@PathVariable Long categoryId, @RequestBody Post post) {
+    
 
-        Post savedPost = postService.savePost(post);
-        Category category = categoryService.findById(categoryId);
-        category.addPost(savedPost);
-        return categoryService.save(category);
-    }
-
-    @PostMapping("public/post/{postId}/comment")
-    public Post publishComment(@PathVariable Long postId,
-                               @RequestBody Comment comment) {
-        Comment savedComment = commentService.save(comment);
-        Post post = postService.findById(postId);
-        post.addComment(savedComment);
-        return postService.savePost(post);
-    }
-
-    @PostMapping("/post")
+//    @PostMapping("/post")
     public String publishPost(@RequestBody Post post) {
 //        CustomUserDetails userDetails =
 //                (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -83,7 +55,7 @@ public class ForumController {
     }
 
     //test mapping to get current user from token passed in the header
-    @GetMapping("/current-user")
+//    @GetMapping("/current-user")
     public String getCurrentUser() throws Exception {
         return userService.getUsernameFromToken();
     }
@@ -102,7 +74,7 @@ public class ForumController {
 
     //authO below
 
-    @GetMapping("/private")
+//    @GetMapping("/private")
     public String privateArea() {
         return "private";
     }

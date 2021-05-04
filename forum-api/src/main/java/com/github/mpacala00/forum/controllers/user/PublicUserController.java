@@ -2,6 +2,7 @@ package com.github.mpacala00.forum.controllers.user;
 
 import com.github.mpacala00.forum.pojos.TokenResponse;
 import com.github.mpacala00.forum.pojos.UserLogin;
+import com.github.mpacala00.forum.security.model.Role;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
@@ -17,7 +18,7 @@ import com.github.mpacala00.forum.service.UserService;
 @CrossOrigin(origins = "*")
 @RestController
 @Slf4j
-@RequestMapping("/public/users")
+@RequestMapping("/public/user")
 public class PublicUserController {
 
     private final UserService userService;
@@ -45,19 +46,24 @@ public class PublicUserController {
             return "passwords do not match";
         else if(userService.findByUsername(userRegistration.getUsername()).isPresent())
             return "user already exists";
+        
+        User u = new User(userRegistration.getUsername(),
+                userRegistration.getPassword(), userRegistration.getEmail());
+        
+        //enable account for now to skip email activation
+        u.setEnabled(true);
+        u.setRole(Role.ROLE_USER);
 
-        //input sanitization
-        User savedUser = userService.save(new User(userRegistration.getUsername(),
-                userRegistration.getPassword(), userRegistration.getEmail()));
+        User savedUser = userService.save(u);
 
         String token = authenticationService.login(savedUser.getUsername(), savedUser.getPassword())
                 .orElseThrow(() -> new RuntimeException("invalid login or password"));
 
         //sending activation email
-        mailService.sendMail(new NotificationEmail("BlogApplication - active your account",
-                savedUser.getEmail(), "Thank you for signing up, " +
-                "please click the link below to activate your account:\n"+
-                activationLink+token));
+//        mailService.sendMail(new NotificationEmail("ForumApp - active your account",
+//                savedUser.getEmail(), "Thank you for signing up, " +
+//                "please click the link below to activate your account:\n"+
+//                activationLink+token));
 
         return "Successfully registered. Your token:\n"+token;
     }
@@ -66,7 +72,9 @@ public class PublicUserController {
     public String activateAccount(@RequestParam final String token) {
         this.authenticationService.activateAccount(token);
         boolean activated = this.authenticationService.activateAccount(token);
-        if(activated) return "Successfully activated account";
+        if(activated) {
+            return "Successfully activated account";
+        }
         return "Error occurred while activating account";
     }
 
