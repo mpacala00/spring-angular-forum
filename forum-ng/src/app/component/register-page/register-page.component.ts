@@ -28,7 +28,7 @@ export class RegisterPageComponent implements OnInit {
    public register() {
       this.authService.register(this.registerForm.value).subscribe(
          res => {
-            let token = res;
+            let token = res.token;
             //basically log in
             this.authService.setToken(token);
             this.router.navigateByUrl('/');

@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { CookieService } from 'ngx-cookie-service';
 import { Observable } from 'rxjs';
 import { LoginModel } from '../model/login-model';
-import { LoginResponse } from '../model/login-response';
+import { TokenResponse } from '../model/token-response';
 import { RegisterModel } from '../model/register-model';
 
 import jwt_decode from 'jwt-decode';
@@ -27,13 +27,13 @@ export class AuthService {
 
    public login(loginModel: LoginModel): Observable<any> {
       // this.decodeToken();
-      return this.http.post<LoginResponse>(this.LOGIN_URL, loginModel);
+      return this.http.post<TokenResponse>(this.LOGIN_URL, loginModel);
       //return this.http.post<LoginResponse>(this.loginUrl, loginModel);
    }
 
    //returns token
    public register(registerModel: RegisterModel) {
-      return this.http.post<string>(this.REGISTER_URL, registerModel);
+      return this.http.post<TokenResponse>(this.REGISTER_URL, registerModel);
    }
 
    public setToken(token: string): void {

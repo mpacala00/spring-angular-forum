@@ -5,6 +5,8 @@ import com.github.mpacala00.forum.pojos.UserLogin;
 import com.github.mpacala00.forum.security.model.Role;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.github.mpacala00.forum.exception.ActivationEmailException;
 import com.github.mpacala00.forum.exception.UserNotFoundException;
@@ -38,14 +40,15 @@ public class PublicUserController {
     }
 
     @PostMapping("/register")
-    public String register(@RequestBody UserRegistration userRegistration) throws UserNotFoundException, ActivationEmailException {
+    public ResponseEntity<?> register(@RequestBody UserRegistration userRegistration) throws UserNotFoundException, ActivationEmailException {
 
 
+        //todo replace String with HttpResponse
         //check if confirm password is the same as password in registration form
         if(!userRegistration.getPassword().equals(userRegistration.getPasswordConfirmation()))
-            return "passwords do not match";
+            return new ResponseEntity<>("Passwords do not match",HttpStatus.BAD_REQUEST);
         else if(userService.findByUsername(userRegistration.getUsername()).isPresent())
-            return "user already exists";
+            return new ResponseEntity<>("User already exists", HttpStatus.BAD_REQUEST);
         
         User u = new User(userRegistration.getUsername(),
                 userRegistration.getPassword(), userRegistration.getEmail());
@@ -65,7 +68,7 @@ public class PublicUserController {
 //                "please click the link below to activate your account:\n"+
 //                activationLink+token));
 
-        return token;
+        return new ResponseEntity<>(new TokenResponse(token), HttpStatus.OK);
     }
 
     @GetMapping("/activate-account")
