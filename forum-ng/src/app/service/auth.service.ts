@@ -4,8 +4,10 @@ import { CookieService } from 'ngx-cookie-service';
 import { Observable } from 'rxjs';
 import { LoginModel } from '../model/login-model';
 import { LoginResponse } from '../model/login-response';
-import { map } from 'rxjs/operators';
+import { RegisterModel } from '../model/register-model';
+
 import jwt_decode from 'jwt-decode';
+import { environment } from 'src/environments/environment';
 
 //TODO move all api links to enviroment.ts
 
@@ -15,18 +17,23 @@ import jwt_decode from 'jwt-decode';
 
 export class AuthService {
 
-   private loginUrl = "http://localhost:8080/public/users/login";
+   //@RequestBody UserRegistration = { username, password, passwordConfirm}
+   private REGISTER_URL = `${environment.BASE_URL_PUBLIC}/user/register`;
+   private LOGIN_URL = `${environment.BASE_URL_PUBLIC}/user/login`;
    public username: string;
    public decodedToken;
 
    constructor(private http: HttpClient, private cookieService: CookieService) { }
 
-   //todo use RequestBody instead of url params
-   login(loginModel: LoginModel): Observable<any> {
-      this.loginUrl = this.loginUrl + "?username=" + loginModel.username + "&password=" + loginModel.password;
+   public login(loginModel: LoginModel): Observable<any> {
       // this.decodeToken();
-      return this.http.post<LoginResponse>(this.loginUrl, loginModel);
+      return this.http.post<LoginResponse>(this.LOGIN_URL, loginModel);
       //return this.http.post<LoginResponse>(this.loginUrl, loginModel);
+   }
+
+   //returns token
+   public register(registerModel: RegisterModel) {
+      return this.http.post<string>(this.REGISTER_URL, registerModel);
    }
 
    public setToken(token: string): void {

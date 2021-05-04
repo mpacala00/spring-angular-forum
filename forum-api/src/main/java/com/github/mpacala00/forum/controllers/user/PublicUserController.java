@@ -65,7 +65,7 @@ public class PublicUserController {
 //                "please click the link below to activate your account:\n"+
 //                activationLink+token));
 
-        return "Successfully registered. Your token:\n"+token;
+        return token;
     }
 
     @GetMapping("/activate-account")

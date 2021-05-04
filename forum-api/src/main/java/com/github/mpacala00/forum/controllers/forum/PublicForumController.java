@@ -24,6 +24,7 @@ public class PublicForumController {
     PostService postService;
     CategoryService categoryService;
 
+    //this should be removed as they belong to a category
     @GetMapping("posts")
     public List<Post> getPosts() {
         return postService.getAllPosts();

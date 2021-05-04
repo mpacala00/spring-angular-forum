@@ -24,6 +24,7 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
 import { NavComponent } from './component/nav/nav.component';
+import { RegisterPageComponent } from './component/register-page/register-page.component';
 
 @NgModule({
    declarations: [
@@ -31,7 +32,8 @@ import { NavComponent } from './component/nav/nav.component';
       PostContainerComponent,
       LoginPageComponent,
       NewPostComponent,
-      NavComponent
+      NavComponent,
+      RegisterPageComponent
    ],
    imports: [
       BrowserModule,
