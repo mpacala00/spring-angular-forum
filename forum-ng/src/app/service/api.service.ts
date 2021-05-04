@@ -5,22 +5,18 @@ import { Post } from '../model/post';
 import { Observable } from 'rxjs';
 import { LocalStorageService } from 'ngx-webstorage';
 import { CookieService } from 'ngx-cookie-service';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
    providedIn: 'root'
 })
 export class ApiService {
 
-   private BASE_URL = "http://localhost:8080/public";
-   private BASE_URL_NO_API = "http://localhost:8080";
+   private GET_POSTS = `${environment.BASE_URL_PUBLIC}\\posts`;
 
-   //@RequestBody UserRegistration = { username, password, passwordConfirm}
-   private POST_REGISTER = `${this.BASE_URL}\\register`;
-   private GET_POSTS = `${this.BASE_URL}\\posts`;
-   private POST_POST_URL = `${this.BASE_URL_NO_API}\\post`;
+   //category is required to publish a post
+   //private POST_POST_URL = `${environment.BASE_URL}\\post`;
 
-   //send a post request with username and password
-   private OAUTH_TOKEN = `${this.BASE_URL_NO_API}\\oauth\\token`;
 
    //private AUTH_HEADER_CONTENT = "Bearer: " + this.localStorage.retrieve('token');
 
@@ -50,8 +46,9 @@ export class ApiService {
       // headers.append('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
       // headers.append('Access-Control-Allow-Credentials', 'true');
 
-      console.log("debug: createNewPost in api.service; token: " + this.cookieService.get('token'));
-      return this.http.post<Post>(this.POST_POST_URL, post, this.httpOptions);
+      console.log('CREATE NEW POST NOT IMPLEMENTED');
+      //return this.http.post<Post>(this.POST_POST_URL, post, this.httpOptions);
+      return null;
    }
 
 }
