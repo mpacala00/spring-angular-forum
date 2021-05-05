@@ -5,6 +5,7 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -31,8 +32,7 @@ public class Post {
     @Lob
     String body;
 
-    //todo use LocalDate
-    Date date;
+    LocalDateTime date;
 
     //array list works fine, hashset creates infinite loop
     @OneToMany(mappedBy = "post", fetch = FetchType.EAGER)
@@ -45,7 +45,7 @@ public class Post {
     Category category;
 
     public Post() {
-        date = new Date();
+        this.date = LocalDateTime.now();
     }
 
     public Post(String title, String body) {
