@@ -21,6 +21,7 @@ public class Category {
     Long id;
 
     String name;
+    String description; //default max is 255, use constrains on front-end too
 
     @JsonIgnore
     @OneToMany(mappedBy = "category")

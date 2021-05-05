@@ -37,6 +37,7 @@ public class DataLoader implements CommandLineRunner {
 
         Category cat1 = new Category();
         cat1.setName("Fist category");
+        cat1.setDescription("This is an example category description, max amount of chars is 255");
         Category savedCat1 = categoryRepository.save(cat1);
 
         savedCat1.addPost(savedPost);

@@ -4,7 +4,7 @@
 
          <mat-card class="my-4">
             <mat-card-title>{{ category.name }}</mat-card-title>
-            <mat-card-subtitle>short description for cat</mat-card-subtitle>
+            <mat-card-subtitle>{{ category.description }}</mat-card-subtitle>
          </mat-card>
 
          <mat-card class="my-4" *ngIf="!posts">

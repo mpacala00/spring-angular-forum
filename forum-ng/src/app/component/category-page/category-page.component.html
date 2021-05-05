@@ -9,7 +9,7 @@
          <div *ngFor="let c of categories" class="my-4">
             <mat-card (click)="navigateToPost(c.id, c)">
                <mat-card-title>{{ c.name }}</mat-card-title>
-               <mat-card-subtitle>short description for cat</mat-card-subtitle>
+               <mat-card-subtitle>{{ c.description }}</mat-card-subtitle>
             </mat-card>
          </div>
 
