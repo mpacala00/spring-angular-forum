@@ -29,6 +29,7 @@ import { NavComponent } from './component/nav/nav.component';
 import { RegisterPageComponent } from './component/register-page/register-page.component';
 import { CategoryPageComponent } from './component/category-page/category-page.component';
 import { PostsByCategoryPageComponent } from './component/posts-by-category-page/posts-by-category-page.component';
+import { CommentsByPostPageComponent } from './component/comments-by-post-page/comments-by-post-page.component';
 
 @NgModule({
    declarations: [
@@ -39,7 +40,8 @@ import { PostsByCategoryPageComponent } from './component/posts-by-category-page
       NavComponent,
       RegisterPageComponent,
       CategoryPageComponent,
-      PostsByCategoryPageComponent
+      PostsByCategoryPageComponent,
+      CommentsByPostPageComponent
    ],
    imports: [
       BrowserModule,

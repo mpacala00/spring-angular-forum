@@ -1,0 +1,21 @@
+<div class="container">
+   <div class="row justify-content-center">
+      <div class="col-lg-12 p-0">
+
+         <mat-card class="my-4">
+            <mat-card-title>{{ post?.title }}</mat-card-title>
+            <mat-card-content>{{ post?.body }}</mat-card-content>
+            <hr>
+            <div *ngFor="let c of post?.comments">
+               <p class="text-muted">Posted on {{ c?.postDate | date }}</p>
+               <p>
+
+                  {{ c?.body }}
+               </p>
+               <hr>
+            </div>
+         </mat-card>
+
+      </div>
+   </div>
+</div>

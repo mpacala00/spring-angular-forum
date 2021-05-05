@@ -11,8 +11,8 @@
             <h3>There are no posts about this topic. Add one [insert button here]</h3>
          </mat-card>
 
-         <div *ngIf="posts">
-            <mat-card class="my-3" *ngFor="let p of posts">
+         <div *ngFor="let p of posts">
+            <mat-card class="my-3" (click)="navigateToPost(p.id)">
                {{p.title}}<br>
                {{p.body}}
             </mat-card>

@@ -2,7 +2,9 @@ package com.github.mpacala00.forum.controllers.forum;
 
 import com.github.mpacala00.forum.model.Category;
 import com.github.mpacala00.forum.model.Post;
+import com.github.mpacala00.forum.model.command.PostCommand;
 import com.github.mpacala00.forum.service.CategoryService;
+import com.github.mpacala00.forum.service.CommandMappingService;
 import com.github.mpacala00.forum.service.PostService;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -35,5 +37,10 @@ public class PublicForumController {
     @GetMapping("category/{categoryId}/posts")
     public List<Post> getPostsByCategory(@PathVariable Long categoryId) {
         return this.categoryService.findById(categoryId).getPosts();
+    }
+
+    @GetMapping("post/{postId}")
+    public Post getPostById(@PathVariable Long postId) {
+        return postService.findById(postId);
     }
 }

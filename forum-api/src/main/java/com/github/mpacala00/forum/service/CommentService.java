@@ -2,8 +2,6 @@ package com.github.mpacala00.forum.service;
 
 import com.github.mpacala00.forum.model.Comment;
 import com.github.mpacala00.forum.model.Post;
-import com.github.mpacala00.forum.model.User;
-import com.github.mpacala00.forum.model.dto.CommentDto;
 import com.github.mpacala00.forum.repository.CommentRepository;
 import com.github.mpacala00.forum.repository.PostRepository;
 import com.github.mpacala00.forum.repository.UserRepository;

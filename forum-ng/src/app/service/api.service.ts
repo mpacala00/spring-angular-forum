@@ -19,6 +19,10 @@ export class ApiService {
       return `${environment.BASE_URL_PUBLIC}/category/${id}/posts`;
    }
 
+   private getCommentsByPostUrl(id: number): string {
+      return `${environment.BASE_URL_PUBLIC}/post/${id}`;
+   }
+
    //category is required to publish a post
    //private POST_POST_URL = `${environment.BASE_URL}\\post`;
 
@@ -36,8 +40,13 @@ export class ApiService {
       return this.http.get<CategoryModel[]>(this.GET_CATEGORIES);
    }
 
+   //just return category, posts will be nested in it...
    getPostsByCategory(categoryId: number) {
       return this.http.get<Post[]>(this.getPostsByCategoryUrl(categoryId));
+   }
+
+   getCommentsByPost(postId: number) {
+      return this.http.get<Post>(this.getCommentsByPostUrl(postId));
    }
 
    private headersObj = new HttpHeaders({

@@ -29,8 +29,8 @@ export class CategoryPageComponent implements OnInit {
       )
    }
 
-   public navigateToPost(categoryId: number, category: CategoryModel) {
-
+   //todo use route ID instead of sending state, it causes problems upon refreshing on child route
+   public navigateToCategory(categoryId: number, category: CategoryModel) {
       this.router.navigateByUrl('/categories/' + categoryId, { state: category });
    }
 

@@ -1,6 +1,7 @@
 export interface Post {
-      title: string;
-      body: string;
-      creator: string;
-      date: string;
+   title: string;
+   body: string;
+   creator: string;
+   date: string;
+   comments: any[];
 }

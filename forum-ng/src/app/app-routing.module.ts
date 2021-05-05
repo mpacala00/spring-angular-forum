@@ -6,19 +6,33 @@ import { NewPostComponent } from './component/new-post/new-post.component';
 import { RegisterPageComponent } from './component/register-page/register-page.component';
 import { CategoryPageComponent } from './component/category-page/category-page.component';
 import { PostsByCategoryPageComponent } from './component/posts-by-category-page/posts-by-category-page.component';
+import { CommentsByPostPageComponent } from './component/comments-by-post-page/comments-by-post-page.component';
 
 const routes: Routes = [
    {
+      //routes are done this done in order to have nested routes without sub router-outlets
+      //in child components - completly replace parent's component with a new one
       path: 'categories',
-      component: CategoryPageComponent,
-   },
-   {
-      path: 'categories/:id',
-      component: PostsByCategoryPageComponent
-   },
-   {
-      path: 'posts',
-      component: PostContainerComponent
+      children: [
+         {
+            path: '',
+            component: CategoryPageComponent
+         },
+         {
+            path: ':id',
+            children: [
+               {
+                  path: '',
+                  component: PostsByCategoryPageComponent
+               },
+               {
+                  path: 'posts/:id',
+                  component: CommentsByPostPageComponent
+               }
+
+            ]
+         }
+      ]
    },
    {
       path: 'post',

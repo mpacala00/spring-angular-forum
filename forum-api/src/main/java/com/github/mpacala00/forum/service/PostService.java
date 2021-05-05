@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -25,8 +26,7 @@ public class PostService {
 
     public Post savePost(Post post) {
         if(post.getDate() == null) {
-            Date date = new Date();
-            post.setDate(date);
+            post.setDate(LocalDateTime.now());
         }
         return postRepository.save(post);
     }
