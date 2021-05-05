@@ -1,13 +1,16 @@
-package com.github.mpacala00.forum.model.dto;
+package com.github.mpacala00.forum.model.command;
 
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.experimental.FieldDefaults;
 
+import java.time.LocalDateTime;
+
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class CommentDto {
+public class CommentCommand {
 
-    String username;
+    Long id;
     String body;
+    LocalDateTime postDate;
 }
