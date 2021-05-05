@@ -7,10 +7,7 @@ import com.github.mpacala00.forum.service.PostService;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -33,5 +30,10 @@ public class PublicForumController {
     @GetMapping("categories")
     public List<Category> getCategories() {
         return categoryService.getAllCategories();
+    }
+
+    @GetMapping("category/{categoryId}/posts")
+    public List<Post> getPostsByCategory(@PathVariable Long categoryId) {
+        return this.categoryService.findById(categoryId).getPosts();
     }
 }

@@ -3,7 +3,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 import { Post } from '../model/post';
 import { Observable } from 'rxjs';
-import { LocalStorageService } from 'ngx-webstorage';
+import { CategoryModel } from '../model/category-model';
 import { CookieService } from 'ngx-cookie-service';
 import { environment } from 'src/environments/environment';
 
@@ -12,7 +12,12 @@ import { environment } from 'src/environments/environment';
 })
 export class ApiService {
 
-   private GET_POSTS = `${environment.BASE_URL_PUBLIC}\\posts`;
+   private GET_POSTS = `${environment.BASE_URL_PUBLIC}/posts`;
+   private GET_CATEGORIES = `${environment.BASE_URL_PUBLIC}/categories`;
+
+   private getPostsByCategoryUrl(id: number): string {
+      return `${environment.BASE_URL_PUBLIC}/category/${id}/posts`;
+   }
 
    //category is required to publish a post
    //private POST_POST_URL = `${environment.BASE_URL}\\post`;
@@ -24,6 +29,15 @@ export class ApiService {
 
    getAllPosts() {
       return this.http.get<Post[]>(this.GET_POSTS);
+   }
+
+   //todo change cat entity to include description
+   getAllCategories() {
+      return this.http.get<CategoryModel[]>(this.GET_CATEGORIES);
+   }
+
+   getPostsByCategory(categoryId: number) {
+      return this.http.get<Post[]>(this.getPostsByCategoryUrl(categoryId));
    }
 
    private headersObj = new HttpHeaders({

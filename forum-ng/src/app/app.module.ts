@@ -23,8 +23,12 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
+import { MatCardModule } from '@angular/material/card';
+
 import { NavComponent } from './component/nav/nav.component';
 import { RegisterPageComponent } from './component/register-page/register-page.component';
+import { CategoryPageComponent } from './component/category-page/category-page.component';
+import { PostsByCategoryPageComponent } from './component/posts-by-category-page/posts-by-category-page.component';
 
 @NgModule({
    declarations: [
@@ -33,7 +37,9 @@ import { RegisterPageComponent } from './component/register-page/register-page.c
       LoginPageComponent,
       NewPostComponent,
       NavComponent,
-      RegisterPageComponent
+      RegisterPageComponent,
+      CategoryPageComponent,
+      PostsByCategoryPageComponent
    ],
    imports: [
       BrowserModule,
@@ -53,7 +59,8 @@ import { RegisterPageComponent } from './component/register-page/register-page.c
       MatToolbarModule,
       MatSidenavModule,
       MatIconModule,
-      MatListModule
+      MatListModule,
+      MatCardModule
    ],
 
    providers: [],

@@ -1,0 +1,23 @@
+<div class="container">
+   <div class="row justify-content-center">
+      <div class="col-lg-12 p-0">
+
+         <mat-card class="my-4">
+            <mat-card-title>{{ category.name }}</mat-card-title>
+            <mat-card-subtitle>short description for cat</mat-card-subtitle>
+         </mat-card>
+
+         <mat-card class="my-4" *ngIf="!posts">
+            <h3>There are no posts about this topic. Add one [insert button here]</h3>
+         </mat-card>
+
+         <div *ngIf="posts">
+            <mat-card class="my-3" *ngFor="let p of posts">
+               {{p.title}}<br>
+               {{p.body}}
+            </mat-card>
+         </div>
+
+      </div>
+   </div>
+</div>

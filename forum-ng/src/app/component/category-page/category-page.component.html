@@ -1,0 +1,19 @@
+<div class="container">
+   <div class="row justify-content-center">
+      <div class="col-lg-12 p-0">
+
+         <mat-card class="my-4" *ngIf="!categories">
+            <h3>There are no categories. Add one [insert button here]</h3>
+         </mat-card>
+
+         <div *ngFor="let c of categories" class="my-4">
+            <mat-card (click)="navigateToPost(c.id, c)">
+               <mat-card-title>{{ c.name }}</mat-card-title>
+               <mat-card-subtitle>short description for cat</mat-card-subtitle>
+            </mat-card>
+         </div>
+
+
+      </div>
+   </div>
+</div>
