@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
+@Table(name = "category")
 @Data
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)

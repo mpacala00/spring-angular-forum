@@ -16,6 +16,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Entity
+@Table(name = "`user`") //user is reserved keyword in postgres, hence the weird quotation marks
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class User implements UserDetails {
@@ -28,6 +29,8 @@ public class User implements UserDetails {
     @JsonIgnore String password;
     String email;
     boolean enabled;
+
+    @Enumerated(EnumType.STRING)
     Role role;
 
     @OneToMany(mappedBy = "creator", cascade = CascadeType.ALL)

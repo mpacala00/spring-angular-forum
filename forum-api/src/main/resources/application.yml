@@ -2,17 +2,19 @@ spring:
   mvc:
     dispatch-options-request: true
   banner-mode: false
-  h2:
-  console:
-    enabled: true
 
   datasource:
-    url: jdbc:h2:mem:testdb
-    driverClassName: org.h2.Driver
-    username: sa
-
+    url: 'jdbc:postgresql:spring_forum_db'
+    username: postgres
+    password: password12
+    driver-class-name: 'org.postgresql.Driver'
   jpa:
-    database-platform: org.hibernate.dialect.H2Dialect
+    database: 'POSTGRESQL'
+    show-sql: true
+    hibernate:
+      ddl-auto: 'create-drop'
+      dialect: 'org.hibernate.dialect.PostgreSQL9Dialect'
+  show-sql: true
 
   mail:
     activation-link: localhost:8080/public/users/activate-account?token= #must be parametrized with token

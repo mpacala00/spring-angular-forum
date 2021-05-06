@@ -11,6 +11,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
+@Table(name = "post")
 @Getter
 @Setter
 @AllArgsConstructor
@@ -35,6 +36,7 @@ public class Post {
     LocalDateTime date;
 
     //array list works fine, hashset creates infinite loop
+    @ToString.Exclude
     @OneToMany(mappedBy = "post", fetch = FetchType.EAGER)
     Set<Comment> comments = new HashSet<>();
 
