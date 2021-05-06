@@ -9,6 +9,8 @@ import com.github.mpacala00.forum.service.PostService;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -25,22 +27,23 @@ public class PublicForumController {
 
     //this should be removed as they belong to a category
     @GetMapping("posts")
-    public List<Post> getPosts() {
-        return postService.getAllPosts();
+    public ResponseEntity<List<Post>> getPosts() {
+        return new ResponseEntity<>(postService.getAllPosts(), HttpStatus.OK);
     }
 
     @GetMapping("categories")
-    public List<Category> getCategories() {
-        return categoryService.getAllCategories();
+    public ResponseEntity<List<Category>> getCategories() {
+        return new ResponseEntity<>(categoryService.getAllCategories(), HttpStatus.OK);
     }
 
     @GetMapping("category/{categoryId}/posts")
-    public List<Post> getPostsByCategory(@PathVariable Long categoryId) {
-        return this.categoryService.findById(categoryId).getPosts();
+    public ResponseEntity<List<Post>> getPostsByCategory(@PathVariable Long categoryId) {
+        List<Post> posts = categoryService.findById(categoryId).getPosts();
+        return new ResponseEntity<>(posts, HttpStatus.OK);
     }
 
     @GetMapping("post/{postId}")
-    public Post getPostById(@PathVariable Long postId) {
-        return postService.findById(postId);
+    public ResponseEntity<Post> getPostById(@PathVariable Long postId) {
+        return new ResponseEntity<>(postService.findById(postId), HttpStatus.OK);
     }
 }

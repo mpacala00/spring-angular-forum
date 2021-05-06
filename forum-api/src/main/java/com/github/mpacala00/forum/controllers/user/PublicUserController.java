@@ -1,7 +1,6 @@
 package com.github.mpacala00.forum.controllers.user;
 
-import com.github.mpacala00.forum.pojos.TokenResponse;
-import com.github.mpacala00.forum.pojos.UserLogin;
+import com.github.mpacala00.forum.pojos.*;
 import com.github.mpacala00.forum.security.model.Role;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -10,9 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.github.mpacala00.forum.exception.ActivationEmailException;
 import com.github.mpacala00.forum.exception.UserNotFoundException;
-import com.github.mpacala00.forum.pojos.NotificationEmail;
 import com.github.mpacala00.forum.model.User;
-import com.github.mpacala00.forum.pojos.UserRegistration;
 import com.github.mpacala00.forum.security.UserAuthenticationService;
 import com.github.mpacala00.forum.service.MailService;
 import com.github.mpacala00.forum.service.UserService;
@@ -45,10 +42,11 @@ public class PublicUserController {
 
         //todo replace String with HttpResponse
         //check if confirm password is the same as password in registration form
-        if(!userRegistration.getPassword().equals(userRegistration.getPasswordConfirmation()))
-            return new ResponseEntity<>("Passwords do not match",HttpStatus.BAD_REQUEST);
+        if(!userRegistration.getPassword().equals(userRegistration.getPasswordConfirmation())) {
+            return HttpResponse.createResponseEntity(HttpStatus.CONFLICT, "Passwords do not match");
+        }
         else if(userService.findByUsername(userRegistration.getUsername()).isPresent())
-            return new ResponseEntity<>("User already exists", HttpStatus.BAD_REQUEST);
+            return HttpResponse.createResponseEntity(HttpStatus.CONFLICT, "User already exists");
         
         User u = new User(userRegistration.getUsername(),
                 userRegistration.getPassword(), userRegistration.getEmail());
@@ -72,20 +70,19 @@ public class PublicUserController {
     }
 
     @GetMapping("/activate-account")
-    public String activateAccount(@RequestParam final String token) {
+    public ResponseEntity<HttpResponse> activateAccount(@RequestParam final String token) {
         this.authenticationService.activateAccount(token);
         boolean activated = this.authenticationService.activateAccount(token);
         if(activated) {
-            return "Successfully activated account";
+            return HttpResponse.createResponseEntity(HttpStatus.OK, "Successfully activated account");
         }
-        return "Error occurred while activating account";
+        return HttpResponse.createResponseEntity(HttpStatus.BAD_REQUEST, "Error occurred while activating account");
     }
-
-    //no feedback on the front-end, only exception in the back-end - change that
+    
     @PostMapping("/login")
-    TokenResponse login(@RequestBody UserLogin login) throws UserNotFoundException {
+    public ResponseEntity<TokenResponse> login(@RequestBody UserLogin login) throws UserNotFoundException {
         String token = authenticationService.login(login.getUsername(), login.getPassword())
                 .orElseThrow(() -> new RuntimeException("invalid login or password"));
-        return new TokenResponse(token);
+        return new ResponseEntity<>(new TokenResponse(token), HttpStatus.OK);
     }
 }

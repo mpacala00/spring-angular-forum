@@ -3,6 +3,8 @@ package com.github.mpacala00.forum.controllers.user;
 import com.github.mpacala00.forum.model.Comment;
 import com.github.mpacala00.forum.model.Post;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import com.github.mpacala00.forum.model.User;
@@ -22,21 +24,23 @@ public class SecuredUserController {
     private final UserService userService;
     
     @GetMapping("/current")
-    public User currentUser(@AuthenticationPrincipal User user) { return user; }
+    public ResponseEntity<User> currentUser(@AuthenticationPrincipal User user) { 
+        return new ResponseEntity<>(user, HttpStatus.OK); 
+    }
 
     @GetMapping("/{userId}/comments")
-    public List<Comment> getUserComments(@PathVariable Long userId) {
-        return userService.getComments(userId);
+    public ResponseEntity<List<Comment>> getUserComments(@PathVariable Long userId) {
+        return new ResponseEntity<>(userService.getComments(userId), HttpStatus.OK);
     }
 
     @GetMapping("/{userId}/posts")
-    public List<Post> getUserPosts(@PathVariable Long userId) {
-        return userService.getPosts(userId);
+    public ResponseEntity<List<Post>> getUserPosts(@PathVariable Long userId) {
+        return new ResponseEntity<>(userService.getPosts(userId), HttpStatus.OK);
     }
 
     //todo secure with required authority
     @GetMapping("/all")
-    public List<User> users() {
-        return userService.getUsers();
+    public ResponseEntity<List<User>> users() {
+        return new ResponseEntity<>(userService.getUsers(), HttpStatus.OK);
     }
 }
