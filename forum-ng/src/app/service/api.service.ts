@@ -23,6 +23,10 @@ export class ApiService {
       return `${environment.BASE_URL_PUBLIC}/post/${id}`;
    }
 
+   private getCategoryByIdUrl(id: number): string {
+      return `${environment.BASE_URL_PUBLIC}/category/${id}`;
+   }
+
    //category is required to publish a post
    //private POST_POST_URL = `${environment.BASE_URL}\\post`;
 
@@ -38,6 +42,10 @@ export class ApiService {
    //todo change cat entity to include description
    getAllCategories() {
       return this.http.get<CategoryModel[]>(this.GET_CATEGORIES);
+   }
+
+   getCategoryById(categoryId: number) {
+      return this.http.get<CategoryModel>(this.getCategoryByIdUrl(categoryId));
    }
 
    //just return category, posts will be nested in it...

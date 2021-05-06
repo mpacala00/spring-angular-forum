@@ -10,7 +10,7 @@ spring:
     driver-class-name: 'org.postgresql.Driver'
   jpa:
     database: 'POSTGRESQL'
-    show-sql: true
+    show-sql: false
     hibernate:
       ddl-auto: 'create-drop'
       dialect: 'org.hibernate.dialect.PostgreSQL9Dialect'

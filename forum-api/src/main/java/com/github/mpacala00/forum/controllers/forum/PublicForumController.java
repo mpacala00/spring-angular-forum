@@ -13,7 +13,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
@@ -36,10 +39,15 @@ public class PublicForumController {
         return new ResponseEntity<>(categoryService.getAllCategories(), HttpStatus.OK);
     }
 
+    @GetMapping("category/{categoryId}")
+    public ResponseEntity<Category> getCategoryById(@PathVariable Long categoryId) {
+        return new ResponseEntity<>(categoryService.findById(categoryId), HttpStatus.OK);
+    }
+
     @GetMapping("category/{categoryId}/posts")
     public ResponseEntity<List<Post>> getPostsByCategory(@PathVariable Long categoryId) {
-        List<Post> posts = categoryService.findById(categoryId).getPosts();
-        return new ResponseEntity<>(posts, HttpStatus.OK);
+        Set<Post> posts = categoryService.findById(categoryId).getPosts();
+        return new ResponseEntity<>(new ArrayList<>(posts), HttpStatus.OK);
     }
 
     @GetMapping("post/{postId}")

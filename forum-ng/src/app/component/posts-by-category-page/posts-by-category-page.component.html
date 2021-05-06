@@ -3,8 +3,8 @@
       <div class="col-lg-12 p-0">
 
          <mat-card class="my-4">
-            <mat-card-title>{{ category.name }}</mat-card-title>
-            <mat-card-subtitle>{{ category.description }}</mat-card-subtitle>
+            <mat-card-title>{{ category?.name }}</mat-card-title>
+            <mat-card-subtitle>{{ category?.description }}</mat-card-subtitle>
          </mat-card>
 
          <mat-card class="my-4" *ngIf="!posts">

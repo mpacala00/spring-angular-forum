@@ -4,6 +4,7 @@ import { CategoryModel } from 'src/app/model/category-model';
 import { Post } from 'src/app/model/post';
 import { ApiService } from 'src/app/service/api.service';
 
+
 @Component({
    selector: 'app-posts-by-category-page',
    templateUrl: './posts-by-category-page.component.html',
@@ -16,13 +17,38 @@ export class PostsByCategoryPageComponent implements OnInit {
    //todo replace category & model with a DTO
    category: CategoryModel;
    posts: Post[];
+   categoryId: number;
 
    ngOnInit(): void {
-      //this will not work upon site refreshing
-      this.category = history.state;
-      this.getPostsByCategory(history.state.id);
+      //this solution is probably not worth it to save 2 lines of json response
+
+      //simple check if history containes cateogry object
+      if (history.state.hasOwnProperty('name')) {
+         this.category = history.state;
+         this.getPostsByCategory(history.state.id);
+      } else {
+         this.activatedRoute.params.subscribe(
+            params => { this.categoryId = params['id']; }
+         );
+         this.getCategory(this.categoryId);
+      }
+
    }
 
+   //will contain its posts
+   getCategory(categoryId: number) {
+      this.apiService.getCategoryById(categoryId).subscribe(
+         res => {
+            this.category = res;
+            this.posts = res.posts;
+         },
+         err => {
+            alert("An error occured while fetching category");
+         }
+      )
+   }
+
+   //make a call when category is known
    getPostsByCategory(categoryId: number) {
       this.apiService.getPostsByCategory(categoryId).subscribe(
          res => {

@@ -7,6 +7,7 @@ import { RegisterPageComponent } from './component/register-page/register-page.c
 import { CategoryPageComponent } from './component/category-page/category-page.component';
 import { PostsByCategoryPageComponent } from './component/posts-by-category-page/posts-by-category-page.component';
 import { CommentsByPostPageComponent } from './component/comments-by-post-page/comments-by-post-page.component';
+import { PersonalProfilePageComponent } from './component/user/personal-profile-page/personal-profile-page.component';
 
 const routes: Routes = [
    {
@@ -31,6 +32,15 @@ const routes: Routes = [
                }
 
             ]
+         }
+      ]
+   },
+   {
+      path: 'user',
+      children: [
+         {
+            path: 'current',
+            component: PersonalProfilePageComponent
          }
       ]
    },

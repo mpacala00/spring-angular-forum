@@ -24,12 +24,14 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
 import { MatCardModule } from '@angular/material/card';
+import { MatTabsModule } from '@angular/material/tabs';
 
 import { NavComponent } from './component/nav/nav.component';
 import { RegisterPageComponent } from './component/register-page/register-page.component';
 import { CategoryPageComponent } from './component/category-page/category-page.component';
 import { PostsByCategoryPageComponent } from './component/posts-by-category-page/posts-by-category-page.component';
 import { CommentsByPostPageComponent } from './component/comments-by-post-page/comments-by-post-page.component';
+import { PersonalProfilePageComponent } from './component/user/personal-profile-page/personal-profile-page.component';
 
 @NgModule({
    declarations: [
@@ -41,7 +43,8 @@ import { CommentsByPostPageComponent } from './component/comments-by-post-page/c
       RegisterPageComponent,
       CategoryPageComponent,
       PostsByCategoryPageComponent,
-      CommentsByPostPageComponent
+      CommentsByPostPageComponent,
+      PersonalProfilePageComponent
    ],
    imports: [
       BrowserModule,
@@ -62,7 +65,8 @@ import { CommentsByPostPageComponent } from './component/comments-by-post-page/c
       MatSidenavModule,
       MatIconModule,
       MatListModule,
-      MatCardModule
+      MatCardModule,
+      MatTabsModule
    ],
 
    providers: [],
