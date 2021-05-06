@@ -44,21 +44,21 @@ export class LoginPageComponent implements OnInit {
          // err => { console.log("error on login component while login"); }
          res => {
             console.log(res);
+            //setting the token also sets the username in auth service
             this.authService.setToken(res.token);
-            this.authService.setUsername(this.model.username);
 
             //this redirect works but causes the whole page to reload
-            // window.location.href = "/";
+            //needed to refresh nav component to show logout button etc.
+            //not the most elegant solution
+            window.location.href = "/";
+         },
+         err => {
+            console.log(err);
          }
       )
 
       //debug
       //console.log(localStorage.getItem('token'));
-   }
-
-   logout() {
-      this.authService.logout();
-      window.location.href = "/";
    }
 
    getErrorMessage() {

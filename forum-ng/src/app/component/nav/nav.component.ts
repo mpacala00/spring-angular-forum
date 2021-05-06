@@ -25,11 +25,15 @@ export class NavComponent implements OnInit {
       private authService: AuthService) {
    }
    ngOnInit(): void {
-      this.username = this.authService.getUsername();
+      if (this.authService.isTokenSet()) {
+         this.username = this.authService.getUsername();
+      }
+
    }
 
    logout() {
       this.authService.logout();
       this.username = null;
+      window.location.href = "/";
    }
 }

@@ -20,15 +20,13 @@ export class AuthService {
    //@RequestBody UserRegistration = { username, password, passwordConfirm}
    private REGISTER_URL = `${environment.BASE_URL_PUBLIC}/user/register`;
    private LOGIN_URL = `${environment.BASE_URL_PUBLIC}/user/login`;
-   public username: string;
-   public decodedToken;
+
+   private decodedToken;
 
    constructor(private http: HttpClient, private cookieService: CookieService) { }
 
    public login(loginModel: LoginModel): Observable<any> {
-      // this.decodeToken();
       return this.http.post<TokenResponse>(this.LOGIN_URL, loginModel);
-      //return this.http.post<LoginResponse>(this.loginUrl, loginModel);
    }
 
    //returns token
@@ -42,15 +40,11 @@ export class AuthService {
       }
       this.cookieService.set('token', token);
       this.decodeToken(token);
-      this.setUsername(this.decodedToken.username);
-   }
-
-   public setUsername(username: string): void {
-      this.username = username;
    }
 
    public getUsername(): string {
-      return this.username;
+      this.decodeToken(this.cookieService.get('token'));
+      return this.decodedToken.username;
    }
 
    logout(): void {
@@ -59,6 +53,9 @@ export class AuthService {
 
    decodeToken(token: string): void {
       this.decodedToken = jwt_decode(token);
-      console.log("decoded: ", this.decodedToken);
+   }
+
+   public isTokenSet(): boolean {
+      return this.cookieService.check('token');
    }
 }
