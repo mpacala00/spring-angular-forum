@@ -2,6 +2,7 @@ package com.github.mpacala00.forum.controllers.user;
 
 import com.github.mpacala00.forum.model.Comment;
 import com.github.mpacala00.forum.model.Post;
+import com.github.mpacala00.forum.model.dto.UserDTO;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,6 +27,17 @@ public class SecuredUserController {
     @GetMapping("/current")
     public ResponseEntity<User> currentUser(@AuthenticationPrincipal User user) { 
         return new ResponseEntity<>(user, HttpStatus.OK); 
+    }
+
+    @GetMapping("/current/dto")
+    public ResponseEntity<UserDTO> currentUserDTO(@AuthenticationPrincipal User user) {
+        //todo implement dto mapping service
+        UserDTO dto = new UserDTO();
+        dto.setUsername(user.getUsername());
+        dto.setRole(user.getRole());
+        dto.setId(user.getId());
+        dto.setEmail(user.getEmail());
+        return new ResponseEntity<>(dto, HttpStatus.OK);
     }
 
     @GetMapping("/{userId}/comments")

@@ -4,6 +4,7 @@ import com.github.mpacala00.forum.model.Category;
 import com.github.mpacala00.forum.model.Comment;
 import com.github.mpacala00.forum.model.Post;
 import com.github.mpacala00.forum.model.User;
+import com.github.mpacala00.forum.model.dto.UserDTO;
 import com.github.mpacala00.forum.repository.CategoryRepository;
 import com.github.mpacala00.forum.repository.CommentRepository;
 import com.github.mpacala00.forum.repository.PostRepository;
@@ -43,6 +44,13 @@ public class DataLoader implements CommandLineRunner {
         savedCat1.addPost(savedPost);
         postRepository.save(savedPost);
         categoryRepository.save(savedCat1);
+
+        UserDTO dto = new UserDTO();
+        dto.setEmail(user.getEmail());
+        dto.setId(user.getId());
+        dto.setRole(user.getRole());
+        dto.setUsername(user.getUsername());
+        System.out.println(dto);
 
     }
 }

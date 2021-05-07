@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
+import { ApiService } from 'src/app/service/api.service';
 
 @Component({
    selector: 'app-personal-profile-page',
@@ -8,14 +9,23 @@ import { FormControl, FormGroup } from '@angular/forms';
 })
 export class PersonalProfilePageComponent implements OnInit {
 
-   constructor() { }
+   constructor(private apiService: ApiService) { }
 
-   form: FormGroup;
+   user: any;
 
    ngOnInit(): void {
-      this.form = new FormGroup({
-         username: new FormControl(''),
-      })
+      this.getCurrentUser();
+   }
+
+   public getCurrentUser() {
+      this.apiService.getCurrentUser().subscribe(
+         res => {
+            this.user = res;
+         },
+         err => {
+            alert("Could not retrieve current user");
+         }
+      )
    }
 
 }

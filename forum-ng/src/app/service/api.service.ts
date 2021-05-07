@@ -14,6 +14,7 @@ export class ApiService {
 
    private GET_POSTS = `${environment.BASE_URL_PUBLIC}/posts`;
    private GET_CATEGORIES = `${environment.BASE_URL_PUBLIC}/categories`;
+   private GET_USER_DTO = `${environment.BASE_URL}/user`;
 
    private getPostsByCategoryUrl(id: number): string {
       return `${environment.BASE_URL_PUBLIC}/category/${id}/posts`;
@@ -34,6 +35,10 @@ export class ApiService {
    //private AUTH_HEADER_CONTENT = "Bearer: " + this.localStorage.retrieve('token');
 
    constructor(private http: HttpClient, private cookieService: CookieService) { }
+
+   getCurrentUser() {
+      return this.http.get<any>(this.GET_USER_DTO + "/current/dto", { headers: this.headersObj });
+   }
 
    getAllPosts() {
       return this.http.get<Post[]>(this.GET_POSTS);

@@ -8,18 +8,35 @@
             </mat-card-title>
             <!-- <mat-card-subtitle>subtitle</mat-card-subtitle> -->
 
-            <form class="example-form">
-               <mat-form-field class="example-full-width">
-                  <mat-label>Username</mat-label>
-                  <input type="email" matInput formControlName="username" value="username">
-               </mat-form-field>
-            </form>
+            <mat-card-content>
 
-            <mat-tab-group>
-               <mat-tab label="First"> Content 1 </mat-tab>
-               <mat-tab label="Second"> Content 2 </mat-tab>
-               <mat-tab label="Third"> Content 3 </mat-tab>
-            </mat-tab-group>
+               <mat-tab-group dynamicHeight>
+                  <mat-tab label="Overview" active="true">
+                     <div class="tab-content">
+                        <p>username: {{ user?.username }}</p>
+                        <p>email: {{ user?.email }}</p>
+                        <p>github link:</p>
+                     </div>
+                  </mat-tab>
+
+                  <mat-tab label="Followed categories">
+                     <div class="tab-content">
+                        Followed categories
+                     </div>
+                  </mat-tab>
+                  <mat-tab label="Your posts">
+                     <div class="tab-content">
+                        Your posts
+                     </div>
+                  </mat-tab>
+                  <mat-tab label="Your comments">
+                     <div class="tab-content">
+                        Your comments
+                     </div>
+                  </mat-tab>
+               </mat-tab-group>
+
+            </mat-card-content>
          </mat-card>
 
 
