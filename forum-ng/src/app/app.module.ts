@@ -25,6 +25,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
 import { MatCardModule } from '@angular/material/card';
 import { MatTabsModule } from '@angular/material/tabs';
+import { TextFieldModule } from '@angular/cdk/text-field';
 
 import { NavComponent } from './component/nav/nav.component';
 import { RegisterPageComponent } from './component/register-page/register-page.component';
@@ -66,7 +67,8 @@ import { PersonalProfilePageComponent } from './component/user/personal-profile-
       MatIconModule,
       MatListModule,
       MatCardModule,
-      MatTabsModule
+      MatTabsModule,
+      TextFieldModule
    ],
 
    providers: [],

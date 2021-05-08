@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { Post } from 'src/app/model/post';
 import { ApiService } from 'src/app/service/api.service';
@@ -16,8 +17,12 @@ export class CommentsByPostPageComponent implements OnInit {
    private postId: number;
    public post: Post;
    public comments: Comment[];
+   public commentForm: FormGroup;
 
    ngOnInit(): void {
+      this.commentForm = new FormGroup({
+         comment: new FormControl('', [Validators.required, Validators.minLength(1)])
+      })
       //get id from current route
       this.route.params.subscribe(
          params => { this.postId = params['id']; }
@@ -36,6 +41,13 @@ export class CommentsByPostPageComponent implements OnInit {
             alert('An error occured while fetching posts');
          }
       )
+   }
+
+   public onCommentPost() {
+      if (this.commentForm.valid) {
+         alert(this.commentForm.value.comment);
+      }
+
    }
 
 
