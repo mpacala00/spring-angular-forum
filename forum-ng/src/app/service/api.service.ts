@@ -4,6 +4,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Post } from '../model/post';
 import { Observable } from 'rxjs';
 import { CategoryModel } from '../model/category-model';
+import { CommentModel } from '../model/comment-model';
 import { CookieService } from 'ngx-cookie-service';
 import { environment } from 'src/environments/environment';
 
@@ -20,12 +21,20 @@ export class ApiService {
       return `${environment.BASE_URL_PUBLIC}/category/${id}/posts`;
    }
 
-   private getCommentsByPostUrl(id: number): string {
+   private getPostCommentsUrl(id: number): string {
       return `${environment.BASE_URL_PUBLIC}/post/${id}`;
+   }
+
+   private getCommentsByPostUrl(id: number): string {
+      return `${environment.BASE_URL_PUBLIC}/post/${id}/comments`;
    }
 
    private getCategoryByIdUrl(id: number): string {
       return `${environment.BASE_URL_PUBLIC}/category/${id}`;
+   }
+
+   private getPostCommentUrl(id: number): string {
+      return `${environment.BASE_URL}/post/${id}/comment`;
    }
 
    //category is required to publish a post
@@ -58,8 +67,18 @@ export class ApiService {
       return this.http.get<Post[]>(this.getPostsByCategoryUrl(categoryId));
    }
 
+   //return post object with comments
+   getPostComments(postId: number) {
+      return this.http.get<Post>(this.getPostCommentsUrl(postId));
+   }
+
+   //return only comments belonging to post
    getCommentsByPost(postId: number) {
-      return this.http.get<Post>(this.getCommentsByPostUrl(postId));
+      return this.http.get<CommentModel[]>(this.getCommentsByPostUrl(postId));
+   }
+
+   postComment(postId: number, comment: CommentModel) {
+      return this.http.post<CommentModel>(this.getPostCommentUrl(postId), comment, { headers: this.headersObj });
    }
 
    private headersObj = new HttpHeaders({

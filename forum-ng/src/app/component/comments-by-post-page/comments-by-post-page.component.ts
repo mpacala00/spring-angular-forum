@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
+import { CommentModel } from 'src/app/model/comment-model';
 import { Post } from 'src/app/model/post';
 import { ApiService } from 'src/app/service/api.service';
 
@@ -13,15 +14,14 @@ export class CommentsByPostPageComponent implements OnInit {
 
    constructor(private route: ActivatedRoute, private apiService: ApiService) { }
 
-   //implement PostCommentDTO on backend?
    private postId: number;
    public post: Post;
-   public comments: Comment[];
+   public comments: CommentModel[];
    public commentForm: FormGroup;
 
    ngOnInit(): void {
       this.commentForm = new FormGroup({
-         comment: new FormControl('', [Validators.required, Validators.minLength(1)])
+         body: new FormControl('', [Validators.required, Validators.minLength(1)])
       })
       //get id from current route
       this.route.params.subscribe(
@@ -32,7 +32,7 @@ export class CommentsByPostPageComponent implements OnInit {
    }
 
    private getPostById(postId: number): void {
-      this.apiService.getCommentsByPost(postId).subscribe(
+      this.apiService.getPostComments(postId).subscribe(
          res => {
             this.post = res;
             this.comments = this.post.comments;
@@ -45,16 +45,33 @@ export class CommentsByPostPageComponent implements OnInit {
 
    public onCommentPost() {
       if (this.commentForm.valid) {
-         alert(this.commentForm.value.comment);
+         this.apiService.postComment(this.postId, this.commentForm.value).subscribe(
+            res => {
+               this.refreshComments();
+            },
+            err => {
+               alert("An error occured while posting a comment");
+            }
+         );
+         this.commentForm.reset();
       }
 
    }
 
+   public refreshComments() {
+      if (this.postId) {
+         this.apiService.getCommentsByPost(this.postId).subscribe(
+            res => {
+               this.comments = res;
+            },
+            err => {
+               alert("Error occured while refreshing comments");
+            }
+         )
+      } else {
+         alert("Post id not set");
+      }
 
-}
+   }
 
-export interface Comment {
-   id: number;
-   postDate: string;
-   body: string;
 }

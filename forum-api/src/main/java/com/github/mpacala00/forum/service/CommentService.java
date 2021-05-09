@@ -8,6 +8,7 @@ import com.github.mpacala00.forum.repository.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,8 +23,7 @@ public class CommentService {
     public List<Comment> getAllCommentsFromPost(Long postId) throws Exception {
         Optional<Post> post = postRepository.findById(postId);
         if(post.isPresent()) {
-//            return post.get().getCommentList();
-            throw new Exception("Not implemented yet");
+            return new ArrayList<>(post.get().getComments());
         }
         throw new NullPointerException();
     }

@@ -1,11 +1,14 @@
 package com.github.mpacala00.forum.controllers.forum;
 
 import com.github.mpacala00.forum.model.Category;
+import com.github.mpacala00.forum.model.Comment;
 import com.github.mpacala00.forum.model.Post;
 import com.github.mpacala00.forum.model.command.PostCommand;
 import com.github.mpacala00.forum.service.CategoryService;
 import com.github.mpacala00.forum.service.CommandMappingService;
+import com.github.mpacala00.forum.service.CommentService;
 import com.github.mpacala00.forum.service.PostService;
+import com.sun.mail.iap.Response;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -27,6 +30,7 @@ public class PublicForumController {
 
     PostService postService;
     CategoryService categoryService;
+    CommentService commentService;
 
     //this should be removed as they belong to a category
     @GetMapping("posts")
@@ -53,5 +57,10 @@ public class PublicForumController {
     @GetMapping("post/{postId}")
     public ResponseEntity<Post> getPostById(@PathVariable Long postId) {
         return new ResponseEntity<>(postService.findById(postId), HttpStatus.OK);
+    }
+
+    @GetMapping("post/{postId}/comments")
+    public ResponseEntity<List<Comment>> getCommentsByPost(@PathVariable Long postId) throws Exception {
+        return new ResponseEntity<>(commentService.getAllCommentsFromPost(postId), HttpStatus.OK);
     }
 }
