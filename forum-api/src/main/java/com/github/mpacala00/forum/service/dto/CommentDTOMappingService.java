@@ -2,9 +2,11 @@ package com.github.mpacala00.forum.service.dto;
 
 import com.github.mpacala00.forum.model.Comment;
 import com.github.mpacala00.forum.model.dto.CommentDTO;
+import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 
+@Service
 public class CommentDTOMappingService implements DTOMappingService<Comment, CommentDTO>{
 
     @Override

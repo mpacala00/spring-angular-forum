@@ -3,7 +3,10 @@ package com.github.mpacala00.forum.controllers.user;
 import com.github.mpacala00.forum.model.Comment;
 import com.github.mpacala00.forum.model.Post;
 import com.github.mpacala00.forum.model.dto.UserDTO;
+import com.github.mpacala00.forum.service.dto.UserDTOMappingService;
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -18,24 +21,16 @@ import java.util.stream.Collectors;
 
 @RestController
 @AllArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequestMapping("/user")
 public class SecuredUserController {
 
-    private final UserService userService;
+    UserService userService;
+    UserDTOMappingService mappingService;
     
     @GetMapping("/current")
-    public ResponseEntity<User> currentUser(@AuthenticationPrincipal User user) { 
-        return new ResponseEntity<>(user, HttpStatus.OK); 
-    }
-
-    @GetMapping("/current/dto")
-    public ResponseEntity<UserDTO> currentUserDTO(@AuthenticationPrincipal User user) {
-        //todo implement dto mapping service
-        UserDTO dto = new UserDTO();
-        dto.setUsername(user.getUsername());
-        dto.setRole(user.getRole());
-        dto.setId(user.getId());
-        dto.setEmail(user.getEmail());
+    public ResponseEntity<UserDTO> currentUser(@AuthenticationPrincipal User user) {
+        UserDTO dto = mappingService.convertToDTO(user);
         return new ResponseEntity<>(dto, HttpStatus.OK);
     }
 

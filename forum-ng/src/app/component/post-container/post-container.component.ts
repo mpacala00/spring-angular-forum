@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
-import { Post } from '../../model/post';
+import { PostModel } from '../../model/post-model';
 import { ApiService } from '../../service/api.service';
 
 @Component({
@@ -17,7 +17,7 @@ export class PostContainerComponent implements OnInit {
       this.getAllPosts();
    }
 
-   posts: Post[] = [];
+   posts: PostModel[] = [];
 
    getAllPosts() {
       this.apiService.getAllPosts().subscribe(

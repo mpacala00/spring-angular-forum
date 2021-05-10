@@ -2,7 +2,7 @@ import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { CommentModel } from 'src/app/model/comment-model';
-import { Post } from 'src/app/model/post';
+import { PostModel } from 'src/app/model/post-model';
 import { ApiService } from 'src/app/service/api.service';
 
 @Component({
@@ -15,7 +15,7 @@ export class CommentsByPostPageComponent implements OnInit {
    constructor(private route: ActivatedRoute, private apiService: ApiService) { }
 
    private postId: number;
-   public post: Post;
+   public post: PostModel;
    public comments: CommentModel[];
    public commentForm: FormGroup;
 

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ApiService } from '../../service/api.service';
-import { Post } from '../../model/post';
+import { PostModel } from '../../model/post-model';
 import { Router } from '@angular/router';
 import { LocalStorageService } from 'ngx-webstorage';
 import { FormControl, FormGroup } from '@angular/forms';

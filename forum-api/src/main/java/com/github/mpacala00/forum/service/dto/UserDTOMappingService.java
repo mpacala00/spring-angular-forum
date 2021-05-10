@@ -2,7 +2,9 @@ package com.github.mpacala00.forum.service.dto;
 
 import com.github.mpacala00.forum.model.User;
 import com.github.mpacala00.forum.model.dto.UserDTO;
+import org.springframework.stereotype.Service;
 
+@Service
 public class UserDTOMappingService implements DTOMappingService<User, UserDTO> {
 
     @Override

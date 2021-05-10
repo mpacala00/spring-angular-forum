@@ -4,10 +4,12 @@ import com.github.mpacala00.forum.model.Category;
 import com.github.mpacala00.forum.model.dto.CategoryDTO;
 import com.github.mpacala00.forum.model.dto.CategoryPostsDTO;
 import lombok.AllArgsConstructor;
+import org.springframework.stereotype.Service;
 
 import java.util.stream.Collectors;
 
 @AllArgsConstructor
+@Service
 public class CategoryDTOMappingService implements DTOMappingService<Category, CategoryDTO> {
 
     private final PostDTOMappingService postDTOMappingService;
@@ -32,7 +34,10 @@ public class CategoryDTOMappingService implements DTOMappingService<Category, Ca
 
     //include post list in dto
     public CategoryPostsDTO convertToCategoryPostsDTO(Category entity) {
-        CategoryPostsDTO dto = (CategoryPostsDTO) convertToDTO(entity);
+        CategoryPostsDTO dto = new CategoryPostsDTO();
+        dto.setDescription(entity.getDescription());
+        dto.setName(entity.getName());
+        dto.setId(entity.getId());
         dto.setPosts(entity.getPosts()
                 .stream()
                 .map(postDTOMappingService::convertToDTO)

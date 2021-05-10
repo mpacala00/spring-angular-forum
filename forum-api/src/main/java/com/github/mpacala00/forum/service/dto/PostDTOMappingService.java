@@ -2,9 +2,11 @@ package com.github.mpacala00.forum.service.dto;
 
 import com.github.mpacala00.forum.model.Post;
 import com.github.mpacala00.forum.model.dto.PostDTO;
+import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 
+@Service
 public class PostDTOMappingService implements DTOMappingService<Post, PostDTO> {
 
     @Override

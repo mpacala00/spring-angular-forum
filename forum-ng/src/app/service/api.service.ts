@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 
-import { Post } from '../model/post';
+import { PostModel } from '../model/post-model';
 import { Observable } from 'rxjs';
 import { CategoryModel } from '../model/category-model';
 import { CommentModel } from '../model/comment-model';
@@ -46,11 +46,11 @@ export class ApiService {
    constructor(private http: HttpClient, private cookieService: CookieService) { }
 
    getCurrentUser() {
-      return this.http.get<any>(this.GET_USER_DTO + "/current/dto", { headers: this.headersObj });
+      return this.http.get<any>(this.GET_USER_DTO + "/current", { headers: this.headersObj });
    }
 
    getAllPosts() {
-      return this.http.get<Post[]>(this.GET_POSTS);
+      return this.http.get<PostModel[]>(this.GET_POSTS);
    }
 
    //todo change cat entity to include description
@@ -64,12 +64,12 @@ export class ApiService {
 
    //just return category, posts will be nested in it...
    getPostsByCategory(categoryId: number) {
-      return this.http.get<Post[]>(this.getPostsByCategoryUrl(categoryId));
+      return this.http.get<PostModel[]>(this.getPostsByCategoryUrl(categoryId));
    }
 
    //return post object with comments
    getPostComments(postId: number) {
-      return this.http.get<Post>(this.getPostCommentsUrl(postId));
+      return this.http.get<PostModel>(this.getPostCommentsUrl(postId));
    }
 
    //return only comments belonging to post
@@ -93,7 +93,7 @@ export class ApiService {
       headers: this.headersObj
    };
 
-   createNewPost(post: Post): Observable<any> {
+   createNewPost(post: PostModel): Observable<any> {
 
       // headers.append("Authorization", "Bearer " + this.localStorage.retrieve('token'));
       // headers.append('Access-Control-Allow-Origin', 'http://localhost:8080');

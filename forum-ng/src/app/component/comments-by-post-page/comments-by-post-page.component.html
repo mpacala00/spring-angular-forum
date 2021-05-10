@@ -19,10 +19,8 @@
             <div *ngFor="let c of comments">
                <hr>
                <p class="text-muted">Posted on {{ c?.postDate | date }}</p>
-               <p>
-
-                  {{ c?.body }}
-               </p>
+               <p>{{ c?.body }}</p>
+               Posted by: {{ c?.creator }}
             </div>
          </mat-card>
 

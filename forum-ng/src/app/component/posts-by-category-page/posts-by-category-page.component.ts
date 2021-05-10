@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CategoryModel } from 'src/app/model/category-model';
-import { Post } from 'src/app/model/post';
+import { PostModel } from 'src/app/model/post-model';
 import { ApiService } from 'src/app/service/api.service';
 
 
@@ -16,7 +16,7 @@ export class PostsByCategoryPageComponent implements OnInit {
 
    //todo replace category & model with a DTO
    category: CategoryModel;
-   posts: Post[];
+   posts: PostModel[];
    categoryId: number;
 
    ngOnInit(): void {
