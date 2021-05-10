@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CategoryModel } from 'src/app/model/category-model';
 import { PostModel } from 'src/app/model/post-model';
 import { ApiService } from 'src/app/service/api.service';
+import { SubSink } from 'subsink';
 
 
 @Component({
@@ -10,14 +11,15 @@ import { ApiService } from 'src/app/service/api.service';
    templateUrl: './posts-by-category-page.component.html',
    styleUrls: ['./posts-by-category-page.component.scss']
 })
-export class PostsByCategoryPageComponent implements OnInit {
+export class PostsByCategoryPageComponent implements OnInit, OnDestroy {
 
-   constructor(private apiService: ApiService, private router: Router, private activatedRoute: ActivatedRoute) { }
+   private subs = new SubSink();
 
-   //todo replace category & model with a DTO
    category: CategoryModel;
    posts: PostModel[];
    categoryId: number;
+
+   constructor(private apiService: ApiService, private router: Router, private activatedRoute: ActivatedRoute) { }
 
    ngOnInit(): void {
       //this solution is probably not worth it to save 2 lines of json response
@@ -37,7 +39,7 @@ export class PostsByCategoryPageComponent implements OnInit {
 
    //will contain its posts
    getCategory(categoryId: number) {
-      this.apiService.getCategoryById(categoryId).subscribe(
+      this.subs.sink = this.apiService.getCategoryById(categoryId).subscribe(
          res => {
             this.category = res;
             this.posts = res.posts;
@@ -50,7 +52,7 @@ export class PostsByCategoryPageComponent implements OnInit {
 
    //make a call when category is known
    getPostsByCategory(categoryId: number) {
-      this.apiService.getPostsByCategory(categoryId).subscribe(
+      this.subs.sink = this.apiService.getPostsByCategory(categoryId).subscribe(
          res => {
             this.posts = res;
          },
@@ -64,6 +66,10 @@ export class PostsByCategoryPageComponent implements OnInit {
       //dot in front of url is mandatory in order for it to be relative 
       let url = './posts/' + postId;
       this.router.navigate([url], { relativeTo: this.activatedRoute });
+   }
+
+   ngOnDestroy(): void {
+      this.subs.unsubscribe();
    }
 
 }

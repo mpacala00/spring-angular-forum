@@ -1,23 +1,26 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { CommentModel } from 'src/app/model/comment-model';
 import { PostModel } from 'src/app/model/post-model';
 import { ApiService } from 'src/app/service/api.service';
+import { SubSink } from 'subsink';
 
 @Component({
    selector: 'app-comments-by-post-page',
    templateUrl: './comments-by-post-page.component.html',
    styleUrls: ['./comments-by-post-page.component.scss']
 })
-export class CommentsByPostPageComponent implements OnInit {
+export class CommentsByPostPageComponent implements OnInit, OnDestroy {
 
-   constructor(private route: ActivatedRoute, private apiService: ApiService) { }
+   private subs = new SubSink();
 
    private postId: number;
    public post: PostModel;
    public comments: CommentModel[];
    public commentForm: FormGroup;
+
+   constructor(private route: ActivatedRoute, private apiService: ApiService) { }
 
    ngOnInit(): void {
       this.commentForm = new FormGroup({
@@ -32,7 +35,7 @@ export class CommentsByPostPageComponent implements OnInit {
    }
 
    private getPostById(postId: number): void {
-      this.apiService.getPostComments(postId).subscribe(
+      this.subs.sink = this.apiService.getPostComments(postId).subscribe(
          res => {
             this.post = res;
             this.comments = this.post.comments;
@@ -72,6 +75,10 @@ export class CommentsByPostPageComponent implements OnInit {
          alert("Post id not set");
       }
 
+   }
+
+   ngOnDestroy(): void {
+      this.subs.unsubscribe();
    }
 
 }

@@ -1,10 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { Observable } from 'rxjs';
 import { map, shareReplay } from 'rxjs/operators';
 import { LocalStorageService } from 'ngx-webstorage';
 import { AuthService } from '../../service/auth.service';
 import { CookieService } from 'ngx-cookie-service';
+import { SubSink } from 'subsink';
 
 @Component({
    selector: 'app-nav',
@@ -24,6 +25,7 @@ export class NavComponent implements OnInit {
    constructor(private breakpointObserver: BreakpointObserver,
       private authService: AuthService) {
    }
+   
    ngOnInit(): void {
       if (this.authService.isTokenSet()) {
          this.username = this.authService.getUsername();

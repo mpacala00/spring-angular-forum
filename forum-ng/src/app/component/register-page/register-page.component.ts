@@ -1,18 +1,21 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from 'src/app/service/auth.service';
+import { SubSink } from 'subsink';
 
 @Component({
    selector: 'app-register-page',
    templateUrl: './register-page.component.html',
    styleUrls: ['./register-page.component.scss']
 })
-export class RegisterPageComponent implements OnInit {
+export class RegisterPageComponent implements OnInit, OnDestroy {
 
-   constructor(private authService: AuthService, private router: Router) { }
+   private subs = new SubSink();
 
    public registerForm: FormGroup;
+
+   constructor(private authService: AuthService, private router: Router) { }
 
    ngOnInit(): void {
       this.registerForm = new FormGroup({
@@ -26,7 +29,7 @@ export class RegisterPageComponent implements OnInit {
    }
 
    public register() {
-      this.authService.register(this.registerForm.value).subscribe(
+      this.subs.sink = this.authService.register(this.registerForm.value).subscribe(
          res => {
             let token = res.token;
             //basically log in
@@ -38,6 +41,10 @@ export class RegisterPageComponent implements OnInit {
          }
       );
 
+   }
+
+   ngOnDestroy(): void {
+      this.subs.unsubscribe();
    }
 
 }

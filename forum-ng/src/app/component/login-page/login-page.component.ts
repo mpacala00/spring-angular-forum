@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { LoginModel } from '../../model/login-model';
 import { AuthService } from '../../service/auth.service';
 import { CookieService } from 'ngx-cookie-service';
+import { SubSink } from 'subsink';
 
 
 @Component({
@@ -10,17 +11,17 @@ import { CookieService } from 'ngx-cookie-service';
    templateUrl: './login-page.component.html',
    styleUrls: ['./login-page.component.scss']
 })
-export class LoginPageComponent implements OnInit {
+export class LoginPageComponent implements OnInit, OnDestroy {
 
-   constructor(private authService: AuthService, private cookieService: CookieService) {
-      this.model = {
-         username: '',
-         password: ''
-      };
-   }
+   private subs = new SubSink();
 
    model: LoginModel;
    loginForm: FormGroup;
+
+   constructor(private authService: AuthService, private cookieService: CookieService) {
+
+   }
+   
 
    ngOnInit(): void {
       this.loginForm = new FormGroup({
@@ -35,11 +36,8 @@ export class LoginPageComponent implements OnInit {
    // }
 
    login() {
-      this.model.username = this.loginForm.get('username').value;
-      this.model.password = this.loginForm.get('password').value;
-      //post using provided credentials to login into backend
-      console.log(this.model);
-      this.authService.login(this.model).subscribe(
+
+      this.authService.login(this.loginForm.value).subscribe(
          // res => { this.localStorage.store('token', res) },
          // err => { console.log("error on login component while login"); }
          res => {
@@ -65,6 +63,10 @@ export class LoginPageComponent implements OnInit {
       if (this.loginForm.get('username').hasError('required') || this.loginForm.get('password').hasError('required')) {
          return 'You must enter a value';
       }
+   }
+
+   ngOnDestroy(): void {
+      this.subs.unsubscribe();
    }
 
 

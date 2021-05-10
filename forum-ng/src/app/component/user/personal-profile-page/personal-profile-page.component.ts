@@ -1,24 +1,28 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { ApiService } from 'src/app/service/api.service';
+import { UserModel } from 'src/app/model/user-model';
+import { SubSink } from 'subsink';
 
 @Component({
    selector: 'app-personal-profile-page',
    templateUrl: './personal-profile-page.component.html',
    styleUrls: ['./personal-profile-page.component.scss']
 })
-export class PersonalProfilePageComponent implements OnInit {
+export class PersonalProfilePageComponent implements OnInit, OnDestroy {
+
+   private subs = new SubSink();
+
+   user: UserModel;
 
    constructor(private apiService: ApiService) { }
-
-   user: any;
-
+   
    ngOnInit(): void {
       this.getCurrentUser();
    }
 
    public getCurrentUser() {
-      this.apiService.getCurrentUser().subscribe(
+      this.subs.sink = this.apiService.getCurrentUser().subscribe(
          res => {
             this.user = res;
          },
@@ -26,6 +30,10 @@ export class PersonalProfilePageComponent implements OnInit {
             alert("Could not retrieve current user");
          }
       )
+   }
+
+   ngOnDestroy(): void {
+      this.subs.unsubscribe();
    }
 
 }
