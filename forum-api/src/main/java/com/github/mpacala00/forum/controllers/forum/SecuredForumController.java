@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.*;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RestController
-@CrossOrigin(origins = "*")
 public class SecuredForumController {
     
     PostService postService;

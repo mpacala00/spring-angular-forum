@@ -25,7 +25,6 @@ import java.util.Set;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RestController
 @RequestMapping("public")
-@CrossOrigin(origins = "*")
 public class PublicForumController {
 
     PostService postService;

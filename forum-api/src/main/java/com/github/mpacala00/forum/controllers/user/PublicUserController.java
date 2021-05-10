@@ -14,7 +14,6 @@ import com.github.mpacala00.forum.security.UserAuthenticationService;
 import com.github.mpacala00.forum.service.MailService;
 import com.github.mpacala00.forum.service.UserService;
 
-@CrossOrigin(origins = "*")
 @RestController
 @Slf4j
 @RequestMapping("/public/user")
