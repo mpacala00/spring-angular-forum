@@ -6,7 +6,6 @@ import lombok.experimental.FieldDefaults;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -33,7 +32,7 @@ public class Post {
     @Lob
     String body;
 
-    LocalDateTime date;
+    LocalDateTime postDate;
 
     //array list works fine, hashset creates infinite loop
     @ToString.Exclude
@@ -47,7 +46,7 @@ public class Post {
     Category category;
 
     public Post() {
-        this.date = LocalDateTime.now();
+        this.postDate = LocalDateTime.now();
     }
 
     public Post(String title, String body) {

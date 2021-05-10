@@ -28,7 +28,7 @@ public class CommandMappingServiceImpl implements CommandMappingService {
     public PostCommand convertPostToCommand(Post post) {
         PostCommand cmd = new PostCommand();
         cmd.setBody(post.getBody());
-        cmd.setDate(post.getDate());
+        cmd.setDate(post.getPostDate());
         cmd.setId(post.getId());
         cmd.setPostComments(post.getComments()
                 .stream()

@@ -5,8 +5,8 @@ spring:
 
   datasource:
     url: 'jdbc:postgresql:spring_forum_db'
-    username: postgres
-    password: password12
+    username: postgres #postgres user with access to db
+    password: 170408 #password for the user
     driver-class-name: 'org.postgresql.Driver'
   jpa:
     database: 'POSTGRESQL'
