@@ -4,6 +4,7 @@ import { ApiService } from 'src/app/service/api.service';
 import { UserModel } from 'src/app/model/user-model';
 import { SubSink } from 'subsink';
 import { PostModel } from 'src/app/model/post-model';
+import { CommentModel } from 'src/app/model/comment-model';
 
 @Component({
    selector: 'app-personal-profile-page',
@@ -16,6 +17,7 @@ export class PersonalProfilePageComponent implements OnInit, OnDestroy {
 
    user: UserModel;
    userPosts: PostModel[];
+   userComments: CommentModel[];
 
    constructor(private apiService: ApiService) { }
    
@@ -35,13 +37,23 @@ export class PersonalProfilePageComponent implements OnInit, OnDestroy {
    }
 
    public getUserPosts() {
-      console.log("helo?");
       this.apiService.getPostsByUsername(this.user.username).subscribe(
          res => {
             this.userPosts = res;
          },
          err => {
             alert("An error occured while fetching user posts");
+         }
+      )
+   }
+
+   public getUserComments() {
+      this.apiService.getCommentsByUsername(this.user.username).subscribe(
+         res => {
+            this.userComments = res;
+         },
+         err => {
+            alert("An error occured while fetching user comments");
          }
       )
    }

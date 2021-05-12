@@ -9,6 +9,7 @@ import lombok.experimental.FieldDefaults;
 public class PostDTO {
 
     Long id;
+    Long categoryId;
     String creator;
     String title;
     String body;

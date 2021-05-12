@@ -29,7 +29,7 @@
                         <button mat-raised-button color="basic" (click)="getUserPosts()">Load</button>
                         
                         <div *ngFor="let p of userPosts">
-                           <mat-card class="my-3" (click)="navigateToPost(p.id)">
+                           <mat-card class="my-3 pointer" routerLink="/categories/{{ p.categoryId }}/posts/{{ p.id }}">
                               <mat-card-title>{{p.title}}</mat-card-title>
                               <mat-card-conent>{{p.body}}</mat-card-conent>
                            </mat-card>
@@ -39,7 +39,15 @@
                   </mat-tab>
                   <mat-tab label="Your comments">
                      <div class="tab-content">
-                        Your comments
+                        <button mat-raised-button color="basic" (click)="getUserComments()">Load</button>
+
+                        <div *ngFor="let c of userComments">
+                           <hr>
+                           <p class="text-muted">Posted on {{ c?.postDate | date }} in post: 
+                              <a routerLink="/categories/{{ c.postCategoryId }}/posts/{{ c.postId }}">"{{ c?.postTitle }}"</a>
+                           </p>
+                           <p>{{ c?.body }}</p>
+                        </div>
                      </div>
                   </mat-tab>
                </mat-tab-group>

@@ -1,8 +1,10 @@
 package com.github.mpacala00.forum.controllers.user;
 
+import com.github.mpacala00.forum.model.dto.CommentDTO;
 import com.github.mpacala00.forum.model.dto.PostDTO;
 import com.github.mpacala00.forum.pojos.*;
 import com.github.mpacala00.forum.security.model.Role;
+import com.github.mpacala00.forum.service.dto.CommentDTOMappingService;
 import com.github.mpacala00.forum.service.dto.PostDTOMappingService;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -37,6 +39,7 @@ public class PublicUserController {
     UserAuthenticationService authenticationService;
 
     PostDTOMappingService postDTOMappingService;
+    CommentDTOMappingService commentDTOMappingService;
 
     @Value("${spring.mail.activation-link}")
     @NonFinal
@@ -101,6 +104,22 @@ public class PublicUserController {
                     .map(postDTOMappingService::convertToDTO)
                     .collect(Collectors.toList());
             return new ResponseEntity<>(posts, HttpStatus.OK);
+        }
+
+        //this exception will never be thrown as findById() will throw NullPointer first
+        throw new UserNotFoundException(String.format("Cannot get posts from user\nUser %s not present", username));
+    }
+
+    @Transactional
+    @GetMapping("{username}/comments")
+    public ResponseEntity<List<CommentDTO>> getCommentsByUser(@PathVariable String username) throws UserNotFoundException {
+        if(userService.findByUsername(username).isPresent()) {
+
+            List<CommentDTO> comments = userService.findByUsername(username).get().getComments()
+                    .stream()
+                    .map(commentDTOMappingService::convertToCommentPostDTO)
+                    .collect(Collectors.toList());
+            return new ResponseEntity<>(comments, HttpStatus.OK);
         }
 
         //this exception will never be thrown as findById() will throw NullPointer first

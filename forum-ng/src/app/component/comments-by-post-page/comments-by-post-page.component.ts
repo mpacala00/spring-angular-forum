@@ -38,7 +38,7 @@ export class CommentsByPostPageComponent implements OnInit, OnDestroy {
       this.subs.sink = this.apiService.getPostComments(postId).subscribe(
          res => {
             this.post = res;
-            this.comments = this.post.comments;
+            this.refreshComments();
          },
          err => {
             alert('An error occured while fetching posts');

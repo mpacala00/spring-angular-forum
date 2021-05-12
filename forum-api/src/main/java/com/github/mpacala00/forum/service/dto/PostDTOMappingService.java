@@ -14,6 +14,7 @@ public class PostDTOMappingService implements DTOMappingService<Post, PostDTO> {
         PostDTO dto = new PostDTO();
         dto.setBody(entity.getBody());
         dto.setId(entity.getId());
+        dto.setCategoryId(entity.getCategory().getId());
         dto.setPostDate(entity.getPostDate().toString());
         dto.setTitle(entity.getTitle());
         //only username will be needed to represent the user object

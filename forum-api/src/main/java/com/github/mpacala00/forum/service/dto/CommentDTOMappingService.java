@@ -2,6 +2,7 @@ package com.github.mpacala00.forum.service.dto;
 
 import com.github.mpacala00.forum.model.Comment;
 import com.github.mpacala00.forum.model.dto.CommentDTO;
+import com.github.mpacala00.forum.model.dto.CommentPostDTO;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -26,5 +27,19 @@ public class CommentDTOMappingService implements DTOMappingService<Comment, Comm
         comment.setId(commentDTO.getId());
         comment.setPostDate(LocalDateTime.parse(commentDTO.getPostDate()));
         return comment;
+    }
+
+    //include Post ID and Post title
+    public CommentPostDTO convertToCommentPostDTO(Comment entity) {
+        CommentPostDTO dto = new CommentPostDTO();
+        dto.setBody(entity.getBody());
+        dto.setId(entity.getId());
+        dto.setCreator(entity.getCreator().getUsername());
+        dto.setPostDate(entity.getPostDate().toString());
+
+        dto.setPostId(entity.getPost().getId());
+        dto.setPostTitle(entity.getPost().getTitle());
+        dto.setPostCategoryId(entity.getPost().getCategory().getId());
+        return dto;
     }
 }
