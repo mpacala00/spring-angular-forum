@@ -29,7 +29,6 @@ public class Post {
 
     String title;
 
-    @Lob
     String body;
 
     LocalDateTime postDate;

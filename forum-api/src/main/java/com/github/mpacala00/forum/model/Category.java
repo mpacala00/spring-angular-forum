@@ -1,11 +1,11 @@
 package com.github.mpacala00.forum.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import lombok.AccessLevel;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import com.google.common.hash.HashCode;
+import lombok.*;
 import lombok.experimental.FieldDefaults;
+import org.apache.commons.lang3.builder.HashCodeExclude;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -16,6 +16,7 @@ import java.util.Set;
 @Entity
 @Table(name = "category")
 @Data
+@EqualsAndHashCode(exclude = {"followingUsers"})
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Category {
@@ -31,6 +32,10 @@ public class Category {
     @JsonIgnoreProperties("comments")
     @OneToMany(mappedBy = "category", fetch = FetchType.EAGER)
     Set<Post> posts = new HashSet<>();
+
+    @JsonIgnore
+    @ManyToMany(mappedBy = "followedCategories", fetch = FetchType.EAGER)
+    Set<User> followingUsers = new HashSet<>();
 
     public Category(String name) {
         this.name = name;

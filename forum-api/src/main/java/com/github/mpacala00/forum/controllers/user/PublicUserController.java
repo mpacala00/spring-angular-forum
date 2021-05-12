@@ -1,9 +1,11 @@
 package com.github.mpacala00.forum.controllers.user;
 
+import com.github.mpacala00.forum.model.dto.CategoryDTO;
 import com.github.mpacala00.forum.model.dto.CommentDTO;
 import com.github.mpacala00.forum.model.dto.PostDTO;
 import com.github.mpacala00.forum.pojos.*;
 import com.github.mpacala00.forum.security.model.Role;
+import com.github.mpacala00.forum.service.dto.CategoryDTOMappingService;
 import com.github.mpacala00.forum.service.dto.CommentDTOMappingService;
 import com.github.mpacala00.forum.service.dto.PostDTOMappingService;
 import lombok.AccessLevel;
@@ -40,6 +42,7 @@ public class PublicUserController {
 
     PostDTOMappingService postDTOMappingService;
     CommentDTOMappingService commentDTOMappingService;
+    CategoryDTOMappingService categoryDTOMappingService;
 
     @Value("${spring.mail.activation-link}")
     @NonFinal
@@ -93,8 +96,6 @@ public class PublicUserController {
         return new ResponseEntity<>(new TokenResponse(token), HttpStatus.OK);
     }
 
-    //using transaction because @Lob can be stored in several records
-    @Transactional
     @GetMapping("{username}/posts")
     public ResponseEntity<List<PostDTO>> getPostsByUser(@PathVariable String username) throws UserNotFoundException {
         if(userService.findByUsername(username).isPresent()) {
@@ -110,7 +111,6 @@ public class PublicUserController {
         throw new UserNotFoundException(String.format("Cannot get posts from user\nUser %s not present", username));
     }
 
-    @Transactional
     @GetMapping("{username}/comments")
     public ResponseEntity<List<CommentDTO>> getCommentsByUser(@PathVariable String username) throws UserNotFoundException {
         if(userService.findByUsername(username).isPresent()) {
@@ -120,6 +120,21 @@ public class PublicUserController {
                     .map(commentDTOMappingService::convertToCommentPostDTO)
                     .collect(Collectors.toList());
             return new ResponseEntity<>(comments, HttpStatus.OK);
+        }
+
+        //this exception will never be thrown as findById() will throw NullPointer first
+        throw new UserNotFoundException(String.format("Cannot get posts from user\nUser %s not present", username));
+    }
+
+    @GetMapping("{username}/followed-categories")
+    public ResponseEntity<List<CategoryDTO>> getFollowedCategoriesByUser(@PathVariable String username) throws UserNotFoundException {
+        if(userService.findByUsername(username).isPresent()) {
+
+            List<CategoryDTO> categories = userService.findByUsername(username).get().getFollowedCategories()
+                    .stream()
+                    .map(categoryDTOMappingService::convertToDTO)
+                    .collect(Collectors.toList());
+            return new ResponseEntity<>(categories, HttpStatus.OK);
         }
 
         //this exception will never be thrown as findById() will throw NullPointer first

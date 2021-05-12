@@ -39,6 +39,12 @@ public class User implements UserDetails {
     @OneToMany(mappedBy = "creator", cascade = CascadeType.ALL)
     Set<Post> posts = new HashSet<>();
 
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "followed_categories",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "category_id"))
+    Set<Category> followedCategories = new HashSet<>();
+
     public User() {
         this.enabled = false;
         this.role = Role.ROLE_USER;
@@ -51,6 +57,11 @@ public class User implements UserDetails {
         //this.password = passwordEncoder().encode(password);
         this.password = password;
         this.email = email;
+    }
+
+    public void followCategory(Category category) {
+        getFollowedCategories().add(category);
+        category.getFollowingUsers().add(this);
     }
 
     @Override
