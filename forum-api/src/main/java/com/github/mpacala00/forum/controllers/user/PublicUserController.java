@@ -1,7 +1,14 @@
 package com.github.mpacala00.forum.controllers.user;
 
+import com.github.mpacala00.forum.model.dto.PostDTO;
 import com.github.mpacala00.forum.pojos.*;
 import com.github.mpacala00.forum.security.model.Role;
+import com.github.mpacala00.forum.service.dto.PostDTOMappingService;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
+import lombok.experimental.NonFinal;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -14,32 +21,30 @@ import com.github.mpacala00.forum.security.UserAuthenticationService;
 import com.github.mpacala00.forum.service.MailService;
 import com.github.mpacala00.forum.service.UserService;
 
-@RestController
+import javax.transaction.Transactional;
+import java.util.List;
+import java.util.stream.Collectors;
+
+@RequiredArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @Slf4j
+@RestController
 @RequestMapping("/public/user")
 public class PublicUserController {
 
-    private final UserService userService;
-    private final MailService mailService;
-    private final UserAuthenticationService authenticationService;
+    UserService userService;
+    MailService mailService;
+    UserAuthenticationService authenticationService;
 
-    private final String activationLink;
+    PostDTOMappingService postDTOMappingService;
 
-    public PublicUserController(UserService userService,
-                                MailService mailService,
-                                UserAuthenticationService authenticationService,
-                                @Value("${spring.mail.activation-link}") String activationLink) {
-        this.userService = userService;
-        this.mailService = mailService;
-        this.authenticationService = authenticationService;
-        this.activationLink = activationLink;
-    }
+    @Value("${spring.mail.activation-link}")
+    @NonFinal
+    String activationLink;
 
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody UserRegistration userRegistration) throws UserNotFoundException, ActivationEmailException {
 
-
-        //todo replace String with HttpResponse
         //check if confirm password is the same as password in registration form
         if(!userRegistration.getPassword().equals(userRegistration.getPasswordConfirmation())) {
             return HttpResponse.createResponseEntity(HttpStatus.CONFLICT, "Passwords do not match");
@@ -83,5 +88,22 @@ public class PublicUserController {
         String token = authenticationService.login(login.getUsername(), login.getPassword())
                 .orElseThrow(() -> new RuntimeException("invalid login or password"));
         return new ResponseEntity<>(new TokenResponse(token), HttpStatus.OK);
+    }
+
+    //using transaction because @Lob can be stored in several records
+    @Transactional
+    @GetMapping("{username}/posts")
+    public ResponseEntity<List<PostDTO>> getPostsByUser(@PathVariable String username) throws UserNotFoundException {
+        if(userService.findByUsername(username).isPresent()) {
+
+            List<PostDTO> posts = userService.findByUsername(username).get().getPosts()
+                    .stream()
+                    .map(postDTOMappingService::convertToDTO)
+                    .collect(Collectors.toList());
+            return new ResponseEntity<>(posts, HttpStatus.OK);
+        }
+
+        //this exception will never be thrown as findById() will throw NullPointer first
+        throw new UserNotFoundException(String.format("Cannot get posts from user\nUser %s not present", username));
     }
 }

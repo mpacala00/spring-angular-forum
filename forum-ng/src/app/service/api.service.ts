@@ -37,6 +37,11 @@ export class ApiService {
       return `${environment.BASE_URL}/post/${id}/comment`;
    }
 
+   //user
+   private getPostsByUsernameUrl(username: string): string {
+      return `${environment.BASE_URL_PUBLIC}/user/${username}/posts`;
+   }
+
    //category is required to publish a post
    //private POST_POST_URL = `${environment.BASE_URL}\\post`;
 
@@ -79,6 +84,11 @@ export class ApiService {
 
    postComment(postId: number, comment: CommentModel) {
       return this.http.post<CommentModel>(this.getPostCommentUrl(postId), comment, { headers: this.headersObj });
+   }
+
+   //USER
+   getPostsByUsername(username: string) {
+      return this.http.get<PostModel[]>(this.getPostsByUsernameUrl(username));
    }
 
    private headersObj = new HttpHeaders({

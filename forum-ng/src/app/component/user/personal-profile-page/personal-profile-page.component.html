@@ -24,9 +24,17 @@
                         Followed categories
                      </div>
                   </mat-tab>
-                  <mat-tab label="Your posts">
+                  <mat-tab label="Your posts" (click)="getUserPosts()">
                      <div class="tab-content">
-                        Your posts
+                        <button mat-raised-button color="basic" (click)="getUserPosts()">Load</button>
+                        
+                        <div *ngFor="let p of userPosts">
+                           <mat-card class="my-3" (click)="navigateToPost(p.id)">
+                              <mat-card-title>{{p.title}}</mat-card-title>
+                              <mat-card-conent>{{p.body}}</mat-card-conent>
+                           </mat-card>
+                        </div>
+
                      </div>
                   </mat-tab>
                   <mat-tab label="Your comments">
