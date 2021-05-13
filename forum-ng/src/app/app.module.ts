@@ -26,6 +26,7 @@ import { MatListModule } from '@angular/material/list';
 import { MatCardModule } from '@angular/material/card';
 import { MatTabsModule } from '@angular/material/tabs';
 import { TextFieldModule } from '@angular/cdk/text-field';
+import { MatDialogModule } from '@angular/material/dialog';
 
 import { NavComponent } from './component/nav/nav.component';
 import { RegisterPageComponent } from './component/register-page/register-page.component';
@@ -33,6 +34,7 @@ import { CategoryPageComponent } from './component/category-page/category-page.c
 import { PostsByCategoryPageComponent } from './component/posts-by-category-page/posts-by-category-page.component';
 import { CommentsByPostPageComponent } from './component/comments-by-post-page/comments-by-post-page.component';
 import { PersonalProfilePageComponent } from './component/user/personal-profile-page/personal-profile-page.component';
+import { NewPostDialogComponent } from './component/posts-by-category-page/new-post-dialog/new-post-dialog.component';
 
 @NgModule({
    declarations: [
@@ -45,7 +47,8 @@ import { PersonalProfilePageComponent } from './component/user/personal-profile-
       CategoryPageComponent,
       PostsByCategoryPageComponent,
       CommentsByPostPageComponent,
-      PersonalProfilePageComponent
+      PersonalProfilePageComponent,
+      NewPostDialogComponent
    ],
    imports: [
       BrowserModule,
@@ -68,7 +71,8 @@ import { PersonalProfilePageComponent } from './component/user/personal-profile-
       MatListModule,
       MatCardModule,
       MatTabsModule,
-      TextFieldModule
+      TextFieldModule,
+      MatDialogModule
    ],
 
    providers: [],

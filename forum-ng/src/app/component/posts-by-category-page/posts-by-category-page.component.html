@@ -5,6 +5,10 @@
          <mat-card class="my-4">
             <mat-card-title>{{ category?.name }}</mat-card-title>
             <mat-card-subtitle>{{ category?.description }}</mat-card-subtitle>
+
+            <mat-card-content>
+               <button mat-raised-button color="primary" (click)="openDialog()">New post</button>
+            </mat-card-content>
          </mat-card>
 
          <mat-card class="my-4" *ngIf="!posts">

@@ -13,12 +13,19 @@ import { environment } from 'src/environments/environment';
 })
 export class ApiService {
 
+   //todo split this service into several smaller ones
+   //todo use http interceptor to put token in headers
+
    private GET_POSTS = `${environment.BASE_URL_PUBLIC}/posts`;
    private GET_CATEGORIES = `${environment.BASE_URL_PUBLIC}/categories`;
    private GET_USER_DTO = `${environment.BASE_URL}/user`;
 
    private getPostsByCategoryUrl(id: number): string {
       return `${environment.BASE_URL_PUBLIC}/category/${id}/posts`;
+   }
+
+   private getPublishPostOnCategoryUrl(id: number): string {
+      return `${environment.BASE_URL}/category/${id}/post`;
    }
 
    private getPostCommentsUrl(id: number): string {
@@ -92,6 +99,10 @@ export class ApiService {
 
    postComment(postId: number, comment: CommentModel) {
       return this.http.post<CommentModel>(this.getPostCommentUrl(postId), comment, { headers: this.headersObj });
+   }
+
+   postPost(categoryId: number, post: PostModel) {
+      return this.http.post<PostModel>(this.getPublishPostOnCategoryUrl(categoryId), post, { headers: this.headersObj });
    }
 
    //USER
