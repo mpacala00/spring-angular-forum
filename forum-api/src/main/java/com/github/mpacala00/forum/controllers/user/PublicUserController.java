@@ -108,7 +108,7 @@ public class PublicUserController {
         }
 
         //this exception will never be thrown as findById() will throw NullPointer first
-        throw new UserNotFoundException(String.format("Cannot get posts from user\nUser %s not present", username));
+        throw new UserNotFoundException(String.format("Cannot get posts from user. User %s not present", username));
     }
 
     @GetMapping("{username}/comments")
@@ -122,8 +122,7 @@ public class PublicUserController {
             return new ResponseEntity<>(comments, HttpStatus.OK);
         }
 
-        //this exception will never be thrown as findById() will throw NullPointer first
-        throw new UserNotFoundException(String.format("Cannot get posts from user\nUser %s not present", username));
+        throw new UserNotFoundException(String.format("Cannot get comments from user. User %s not present", username));
     }
 
     @GetMapping("{username}/followed-categories")
@@ -137,7 +136,6 @@ public class PublicUserController {
             return new ResponseEntity<>(categories, HttpStatus.OK);
         }
 
-        //this exception will never be thrown as findById() will throw NullPointer first
-        throw new UserNotFoundException(String.format("Cannot get posts from user\nUser %s not present", username));
+        throw new UserNotFoundException(String.format("Cannot get categories from user. User %s not present", username));
     }
 }

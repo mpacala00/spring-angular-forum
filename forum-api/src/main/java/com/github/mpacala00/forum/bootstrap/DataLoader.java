@@ -43,7 +43,10 @@ public class DataLoader implements CommandLineRunner {
 
         savedCat1.addPost(savedPost);
         postRepository.save(savedPost);
-        categoryRepository.save(savedCat1);
+        savedCat1 = categoryRepository.save(savedCat1);
+
+        user.followCategory(savedCat1);
+        userRepository.save(user);
 
         UserDTO dto = new UserDTO();
         dto.setEmail(user.getEmail());

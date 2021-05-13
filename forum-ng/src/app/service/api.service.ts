@@ -46,6 +46,10 @@ export class ApiService {
       return `${environment.BASE_URL_PUBLIC}/user/${username}/comments`;
    }
 
+   private getFollowedCategoriesByUsernameUrl(username: string): string {
+      return `${environment.BASE_URL_PUBLIC}/user/${username}/followed-categories`;
+   }
+
    //category is required to publish a post
    //private POST_POST_URL = `${environment.BASE_URL}\\post`;
 
@@ -97,6 +101,10 @@ export class ApiService {
 
    getCommentsByUsername(username: string) {
       return this.http.get<CommentModel[]>(this.getCommentsByUsernameUrl(username));
+   }
+
+   getFollowedCategoriesByUsername(username: string) {
+      return this.http.get<CategoryModel[]>(this.getFollowedCategoriesByUsernameUrl(username));
    }
 
    private headersObj = new HttpHeaders({

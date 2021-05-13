@@ -43,22 +43,26 @@ public class UserService {
 
     }
 
+    //transactional as User entity became so big its fields are stored in several records
+    @Transactional
     public Optional<User> findById(Long id) {
         Optional<User> foundUser = userRepository.findById(id);
         if(foundUser.isPresent()) {
             return foundUser;
         } else {
-            throw new NullPointerException("User by id "+id+" cannot be found");
+            log.info("User of id="+id+" not found");
+            return Optional.empty();
         }
     }
 
+    @Transactional
     public Optional<User> findByUsername(String username) {
         Optional<User> foundUser = userRepository.findByUsername(username);
         if(foundUser.isPresent()) {
             return foundUser;
         } else {
-            log.info("Username "+username+" not taken/ not found");
-            return Optional.ofNullable(null);
+            log.info("Username "+username+" not found");
+            return Optional.empty();
         }
     }
 

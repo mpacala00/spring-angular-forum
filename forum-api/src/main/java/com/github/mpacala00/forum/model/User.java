@@ -17,7 +17,9 @@ import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "`user`") //user is reserved keyword in postgres, hence the weird quotation marks
-@Data
+@Getter
+@Setter
+@EqualsAndHashCode(exclude = { "followedCategories", "comments", "posts" })
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class User implements UserDetails {
 
@@ -62,6 +64,17 @@ public class User implements UserDetails {
     public void followCategory(Category category) {
         getFollowedCategories().add(category);
         category.getFollowingUsers().add(this);
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", username='" + username + '\'' +
+                ", email='" + email + '\'' +
+                ", enabled=" + enabled +
+                ", role=" + role +
+                '}';
     }
 
     @Override

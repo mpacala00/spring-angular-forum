@@ -27,7 +27,8 @@ public class SecuredUserController {
 
     UserService userService;
     UserDTOMappingService mappingService;
-    
+
+    @Transactional
     @GetMapping("/current")
     public ResponseEntity<UserDTO> currentUser(@AuthenticationPrincipal User user) {
         UserDTO dto = mappingService.convertToDTO(user);
