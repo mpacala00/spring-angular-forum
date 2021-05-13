@@ -3,11 +3,13 @@ package com.github.mpacala00.forum.controllers.user;
 import com.github.mpacala00.forum.model.dto.CategoryDTO;
 import com.github.mpacala00.forum.model.dto.CommentDTO;
 import com.github.mpacala00.forum.model.dto.PostDTO;
+import com.github.mpacala00.forum.model.dto.UserDTO;
 import com.github.mpacala00.forum.pojos.*;
 import com.github.mpacala00.forum.security.model.Role;
 import com.github.mpacala00.forum.service.dto.CategoryDTOMappingService;
 import com.github.mpacala00.forum.service.dto.CommentDTOMappingService;
 import com.github.mpacala00.forum.service.dto.PostDTOMappingService;
+import com.github.mpacala00.forum.service.dto.UserDTOMappingService;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
@@ -43,6 +45,7 @@ public class PublicUserController {
     PostDTOMappingService postDTOMappingService;
     CommentDTOMappingService commentDTOMappingService;
     CategoryDTOMappingService categoryDTOMappingService;
+    UserDTOMappingService userDTOMappingService;
 
     @Value("${spring.mail.activation-link}")
     @NonFinal
@@ -94,6 +97,18 @@ public class PublicUserController {
         String token = authenticationService.login(login.getUsername(), login.getPassword())
                 .orElseThrow(() -> new RuntimeException("invalid login or password"));
         return new ResponseEntity<>(new TokenResponse(token), HttpStatus.OK);
+    }
+
+    @GetMapping("{username}")
+    public ResponseEntity<UserDTO> getUserByUsername(@PathVariable String username) throws UserNotFoundException {
+        if(userService.findByUsername(username).isPresent()) {
+
+            UserDTO user = userDTOMappingService.convertToDTO(userService.findByUsername(username).get());
+            return new ResponseEntity<>(user, HttpStatus.OK);
+        }
+
+        //this exception will never be thrown as findById() will throw NullPointer first
+        throw new UserNotFoundException(String.format("User %s not present", username));
     }
 
     @GetMapping("{username}/posts")

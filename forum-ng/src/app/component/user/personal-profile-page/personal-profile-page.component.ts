@@ -21,6 +21,9 @@ export class PersonalProfilePageComponent implements OnInit, OnDestroy {
    userComments: CommentModel[];
    userFollowedCategories: CategoryModel[];
 
+   //is currently logged in user owner of the profile
+   isOwner: boolean = false;
+
    constructor(private apiService: ApiService) { }
    
    ngOnInit(): void {

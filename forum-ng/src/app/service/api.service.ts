@@ -7,6 +7,7 @@ import { CategoryModel } from '../model/category-model';
 import { CommentModel } from '../model/comment-model';
 import { CookieService } from 'ngx-cookie-service';
 import { environment } from 'src/environments/environment';
+import { UserModel } from '../model/user-model';
 
 @Injectable({
    providedIn: 'root'
@@ -65,10 +66,6 @@ export class ApiService {
 
    constructor(private http: HttpClient, private cookieService: CookieService) { }
 
-   getCurrentUser() {
-      return this.http.get<any>(this.GET_USER_DTO + "/current", { headers: this.headersObj });
-   }
-
    getAllPosts() {
       return this.http.get<PostModel[]>(this.GET_POSTS);
    }
@@ -106,6 +103,14 @@ export class ApiService {
    }
 
    //USER
+   getCurrentUser() {
+      return this.http.get<UserModel>(this.GET_USER_DTO + "/current", { headers: this.headersObj });
+   }
+
+   getUserByUsername(username: string) {
+      return this.http.get<UserModel>(`${environment.BASE_URL}/user/${username}`);
+   }
+
    getPostsByUsername(username: string) {
       return this.http.get<PostModel[]>(this.getPostsByUsernameUrl(username));
    }
