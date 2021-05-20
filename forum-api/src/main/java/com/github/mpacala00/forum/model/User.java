@@ -9,6 +9,8 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
@@ -27,11 +29,20 @@ public class User implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
+    @NotBlank
     String username;
-    @JsonIgnore String password;
+
+    @JsonIgnore
+    @NotBlank
+    String password;
+
+    @NotBlank
     String email;
+
+    @NotNull
     boolean enabled;
 
+    @NotNull
     @Enumerated(EnumType.STRING)
     Role role;
 

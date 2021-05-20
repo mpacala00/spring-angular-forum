@@ -5,20 +5,20 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 @Entity
 @Table(name = "post")
 @Getter
 @Setter
-@AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Post {
 
-    @JsonIgnore
-    @EqualsAndHashCode.Exclude
     @ManyToOne
     @JoinColumn(name="creator_id", nullable=false)
     User creator;
@@ -27,19 +27,19 @@ public class Post {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
+    @Size(max = 50)
+    @NotBlank(message = "Title of post must not be empty")
     String title;
 
+    @Size(max = 10000)
+    @NotBlank(message = "Post must include body")
     String body;
 
     LocalDateTime postDate;
 
-    //array list works fine, hashset creates infinite loop
-    @ToString.Exclude
     @OneToMany(mappedBy = "post", fetch = FetchType.EAGER)
     Set<Comment> comments = new HashSet<>();
 
-    @JsonIgnore
-    @EqualsAndHashCode.Exclude
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name="category_id")
     Category category;
@@ -57,5 +57,15 @@ public class Post {
     public void addComment(Comment comment) {
         this.comments.add(comment);
         comment.setPost(this);
+    }
+
+    @Override
+    public String toString() {
+        return "Post{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", body='" + body + '\'' +
+                ", postDate=" + postDate +
+                '}';
     }
 }

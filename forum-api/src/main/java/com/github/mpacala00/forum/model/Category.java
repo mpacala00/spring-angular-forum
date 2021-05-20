@@ -8,6 +8,8 @@ import lombok.experimental.FieldDefaults;
 import org.apache.commons.lang3.builder.HashCodeExclude;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -15,7 +17,8 @@ import java.util.Set;
 
 @Entity
 @Table(name = "category")
-@Data
+@Getter
+@Setter
 @EqualsAndHashCode(exclude = {"followingUsers"})
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
@@ -25,8 +28,13 @@ public class Category {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
+    @NotBlank
+    @Size(max = 25)
     String name;
-    String description; //default max is 255, use constrains on front-end too
+
+    @Size(max = 200)
+    @NotBlank
+    String description;
 
     //ignore comments collection when fetching posts
     @JsonIgnoreProperties("comments")
@@ -37,12 +45,23 @@ public class Category {
     @ManyToMany(mappedBy = "followedCategories", fetch = FetchType.EAGER)
     Set<User> followingUsers = new HashSet<>();
 
-    public Category(String name) {
+    public Category(String name, String description) {
         this.name = name;
+        this.description = description;
     }
 
     public void addPost(Post post) {
         this.posts.add(post);
         post.setCategory(this);
+    }
+
+    @Override
+    public String toString() {
+        return "Category{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", posts=" + posts +
+                '}';
     }
 }

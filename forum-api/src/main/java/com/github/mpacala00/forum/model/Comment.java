@@ -1,19 +1,19 @@
 package com.github.mpacala00.forum.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.AccessLevel;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
+import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 @Entity
 @Table(name = "comment")
-@Data
+@Getter
+@Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Comment {
 
@@ -21,17 +21,16 @@ public class Comment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
-    @JsonIgnore
-    @EqualsAndHashCode.Exclude //if not excluded causes stack overflow during User fetching
     @ManyToOne
     @JoinColumn(name="creator_id", nullable=false)
     User creator;
 
-    @Lob String body;
+    @Size(max = 10000)
+    @NotBlank(message = "Comment must not be empty")
+    String body;
+
     LocalDateTime postDate;
 
-    @JsonIgnore
-    @EqualsAndHashCode.Exclude
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name="post_id") //cannot be nullable because of the way comments are saved
     Post post;
@@ -46,5 +45,14 @@ public class Comment {
         super();
         this.creator = creator;
         this.body = body;
+    }
+
+    @Override
+    public String toString() {
+        return "Comment{" +
+                "id=" + id +
+                ", body='" + body + '\'' +
+                ", postDate=" + postDate +
+                '}';
     }
 }
