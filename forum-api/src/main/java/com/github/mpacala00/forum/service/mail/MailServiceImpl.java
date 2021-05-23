@@ -1,4 +1,4 @@
-package com.github.mpacala00.forum.service;
+package com.github.mpacala00.forum.service.mail;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -13,10 +13,10 @@ import com.github.mpacala00.forum.pojos.NotificationEmail;
 @Service
 @Slf4j
 @AllArgsConstructor
-public class MailService {
+public class MailServiceImpl implements MailService {
 
     private final JavaMailSender mailSender;
-    private final MailCreatorService mailCreatorService;
+    private final MailCreatorServiceImpl mailCreatorServiceImpl;
 
     public void sendMail(NotificationEmail email) throws ActivationEmailException {
         MimeMessagePreparator messagePreparator = mimeMessage -> {
@@ -24,7 +24,7 @@ public class MailService {
             messageHelper.setFrom("mpacala00@gmail.com");
             messageHelper.setTo(email.getRecipient());
             messageHelper.setSubject(email.getSubject());
-            messageHelper.setText(mailCreatorService.build(email.getBody()));
+            messageHelper.setText(mailCreatorServiceImpl.build(email.getBody()));
         };
 
         try {

@@ -1,35 +1,30 @@
-package com.github.mpacala00.forum.service;
+package com.github.mpacala00.forum.service.data;
 
 import com.github.mpacala00.forum.model.Comment;
 import com.github.mpacala00.forum.model.Post;
+import com.github.mpacala00.forum.model.User;
+import com.github.mpacala00.forum.repository.UserRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-import com.github.mpacala00.forum.model.User;
-import com.github.mpacala00.forum.repository.UserRepository;
 
 import javax.transaction.Transactional;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-
-//todo write interface for this service
+import java.util.*;
 
 @Service
 @AllArgsConstructor
 @Slf4j
-public class UserService {
+public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
 
 //    @Autowired
 //    private PasswordEncoder passwordEncoder;
 
-    //encode password while saving
+    @Override
     public User save(User user) {
         if(user != null) {
             //encoding moved to User.class
@@ -43,31 +38,44 @@ public class UserService {
 
     }
 
+    @Override
+    public Set<User> findAll() {
+        return new HashSet<>(userRepository.findAll());
+    }
+
     //transactional as User entity became so big its fields are stored in several records
     @Transactional
-    public Optional<User> findById(Long id) {
+    public User findById(Long id) {
         Optional<User> foundUser = userRepository.findById(id);
         if(foundUser.isPresent()) {
-            return foundUser;
-        } else {
-            log.info("User of id="+id+" not found");
-            return Optional.empty();
+            return foundUser.get();
         }
+        log.info("User of id="+id+" not found");
+        return null;
     }
 
     @Transactional
-    public Optional<User> findByUsername(String username) {
+    public User findByUsername(String username) {
         Optional<User> foundUser = userRepository.findByUsername(username);
         if(foundUser.isPresent()) {
-            return foundUser;
-        } else {
-            log.info("Username "+username+" not found");
-            return Optional.empty();
+            return foundUser.get();
         }
+        log.info("Username "+username+" not found");
+        return null;
     }
 
-    public List<User> getUsers() {
-        return userRepository.findAll();
+    @Override
+    @Transactional
+    public void delete(User entity) {
+        userRepository.delete(entity);
+        log.info("User {} successfully deleted", entity.getUsername());
+    }
+
+    @Override
+    @Transactional
+    public void deleteById(Long id) {
+        userRepository.deleteById(id);
+        log.info("User of id={} successfully deleted", id);
     }
 
     public List<Comment> getComments(Long userId) {
@@ -76,6 +84,13 @@ public class UserService {
 
     public List<Post> getPosts(Long userId) {
         return new ArrayList<>(userRepository.findById(userId).get().getPosts());
+    }
+
+    @Override
+    @Transactional
+    public Optional<User> findOptionalByUsername(String username) {
+        return userRepository.findByUsername(username);
+
     }
 
     //in order for this method to work token has to be passed in Authorization header

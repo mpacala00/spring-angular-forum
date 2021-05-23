@@ -5,7 +5,6 @@ import org.joda.time.DateTime;
 public interface DateService {
 
     /**
-     *
      * @return current time
      */
     DateTime now();

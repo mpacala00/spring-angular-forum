@@ -1,21 +1,15 @@
 package com.github.mpacala00.forum.controllers.forum;
 
-import com.github.mpacala00.forum.model.Category;
-import com.github.mpacala00.forum.model.Comment;
-import com.github.mpacala00.forum.model.Post;
-import com.github.mpacala00.forum.model.command.PostCommand;
 import com.github.mpacala00.forum.model.dto.CategoryDTO;
 import com.github.mpacala00.forum.model.dto.CategoryPostsDTO;
 import com.github.mpacala00.forum.model.dto.CommentDTO;
 import com.github.mpacala00.forum.model.dto.PostDTO;
-import com.github.mpacala00.forum.service.CategoryService;
-import com.github.mpacala00.forum.service.CommandMappingService;
-import com.github.mpacala00.forum.service.CommentService;
-import com.github.mpacala00.forum.service.PostService;
+import com.github.mpacala00.forum.service.data.CategoryServiceImpl;
+import com.github.mpacala00.forum.service.data.CommentServiceImpl;
+import com.github.mpacala00.forum.service.data.PostServiceImpl;
 import com.github.mpacala00.forum.service.dto.CategoryDTOMappingService;
 import com.github.mpacala00.forum.service.dto.CommentDTOMappingService;
 import com.github.mpacala00.forum.service.dto.PostDTOMappingService;
-import com.sun.mail.iap.Response;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -23,10 +17,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.transaction.Transactional;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @AllArgsConstructor
@@ -35,9 +26,9 @@ import java.util.stream.Collectors;
 @RequestMapping("public")
 public class PublicForumController {
 
-    PostService postService;
-    CategoryService categoryService;
-    CommentService commentService;
+    PostServiceImpl postServiceImpl;
+    CategoryServiceImpl categoryServiceImpl;
+    CommentServiceImpl commentServiceImpl;
 
     PostDTOMappingService postDTOMappingService;
     CategoryDTOMappingService categoryDTOMappingService;
@@ -46,7 +37,7 @@ public class PublicForumController {
     //this should be removed as they belong to a category
     @GetMapping("posts")
     public ResponseEntity<List<PostDTO>> getPosts() {
-        List<PostDTO> posts = postService.getAllPosts()
+        List<PostDTO> posts = postServiceImpl.getAllPosts()
                 .stream()
                 .map(postDTOMappingService::convertToDTO)
                 .collect(Collectors.toList());
@@ -55,7 +46,7 @@ public class PublicForumController {
 
     @GetMapping("categories")
     public ResponseEntity<List<CategoryDTO>> getCategories() {
-        List<CategoryDTO> categories = categoryService.getAllCategories()
+        List<CategoryDTO> categories = categoryServiceImpl.getAllCategories()
                 .stream()
                 .map(categoryDTOMappingService::convertToDTO)
                 .collect(Collectors.toList());
@@ -66,13 +57,13 @@ public class PublicForumController {
     @GetMapping("category/{categoryId}")
     public ResponseEntity<CategoryPostsDTO> getCategoryById(@PathVariable Long categoryId) {
         CategoryPostsDTO dto = categoryDTOMappingService
-                .convertToCategoryPostsDTO(categoryService.findById(categoryId));
+                .convertToCategoryPostsDTO(categoryServiceImpl.findById(categoryId));
         return new ResponseEntity<>(dto, HttpStatus.OK);
     }
 
     @GetMapping("category/{categoryId}/posts")
     public ResponseEntity<List<PostDTO>> getPostsByCategory(@PathVariable Long categoryId) {
-        List<PostDTO> posts = categoryService.findById(categoryId).getPosts()
+        List<PostDTO> posts = categoryServiceImpl.findById(categoryId).getPosts()
                 .stream()
                 .map(postDTOMappingService::convertToDTO)
                 .collect(Collectors.toList());
@@ -81,13 +72,13 @@ public class PublicForumController {
 
     @GetMapping("post/{postId}")
     public ResponseEntity<PostDTO> getPostById(@PathVariable Long postId) {
-        PostDTO post = postDTOMappingService.convertToDTO(postService.findById(postId));
+        PostDTO post = postDTOMappingService.convertToDTO(postServiceImpl.findById(postId));
         return new ResponseEntity<>(post, HttpStatus.OK);
     }
 
     @GetMapping("post/{postId}/comments")
     public ResponseEntity<List<CommentDTO>> getCommentsByPost(@PathVariable Long postId) throws Exception {
-        List<CommentDTO> comments = commentService.getAllCommentsFromPost(postId)
+        List<CommentDTO> comments = commentServiceImpl.getAllCommentsFromPost(postId)
                 .stream()
                 .map(commentDTOMappingService::convertToDTO)
                 .collect(Collectors.toList());

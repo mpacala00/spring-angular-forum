@@ -54,6 +54,7 @@ export class CommentsByPostPageComponent implements OnInit, OnDestroy {
             },
             err => {
                alert("An error occured while posting a comment");
+               console.error(err);
             }
          );
          this.commentForm.reset();

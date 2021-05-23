@@ -1,5 +1,6 @@
 package com.github.mpacala00.forum.security.token;
 
+import com.github.mpacala00.forum.service.data.UserServiceImpl;
 import com.google.common.collect.ImmutableMap;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -8,7 +9,6 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
 import com.github.mpacala00.forum.model.User;
 import com.github.mpacala00.forum.security.UserAuthenticationService;
-import com.github.mpacala00.forum.service.UserService;
 
 import java.util.Optional;
 
@@ -18,7 +18,7 @@ import java.util.Optional;
 public class TokenAuthenticationService implements UserAuthenticationService {
 
     @NonNull TokenService tokenService;
-    @NonNull UserService userService;
+    @NonNull UserServiceImpl userService;
 
     /**
      *
@@ -30,12 +30,12 @@ public class TokenAuthenticationService implements UserAuthenticationService {
     @Override
     public Optional<String> login(String username, String password) {
 
-        String[] authorities = userService.findByUsername(username).get().getRole().getAuthorities();
+        String[] authorities = userService.findByUsername(username).getRole().getAuthorities();
         ImmutableMap<String, Object> claims = ImmutableMap.of("username", username,
                 "authorities", authorities);
 
         return userService
-                .findByUsername(username)
+                .findOptionalByUsername(username)
                 .filter(user -> user.getPassword().equals(password))
                 //return a user that has a token with the passed username att
                 .map(user -> tokenService.expiring(claims));
@@ -47,7 +47,7 @@ public class TokenAuthenticationService implements UserAuthenticationService {
                 .of(tokenService.verify(token))
                 .map(map -> map.get("username"))
                 //using flatMap() to flatten stream results to a single list
-                .flatMap(userService::findByUsername);
+                .flatMap(userService::findOptionalByUsername);
     }
 
     @Override
@@ -57,7 +57,7 @@ public class TokenAuthenticationService implements UserAuthenticationService {
                 .of(tokenService.verify(token))
                 .map(map -> map.get("username"))
                 //using flatMap() to flatten stream results to a single list
-                .flatMap(userService::findByUsername);
+                .flatMap(userService::findOptionalByUsername);
         if(userOptional.isPresent()) {
             User user = userOptional.get();
             user.enableAccount(); //change enabled to true

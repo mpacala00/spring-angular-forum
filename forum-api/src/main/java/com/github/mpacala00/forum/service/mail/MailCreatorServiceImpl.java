@@ -1,4 +1,4 @@
-package com.github.mpacala00.forum.service;
+package com.github.mpacala00.forum.service.mail;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -7,7 +7,7 @@ import org.thymeleaf.context.Context;
 
 @Service
 @AllArgsConstructor
-public class MailCreatorService {
+public class MailCreatorServiceImpl {
 
     private final TemplateEngine templateEngine;
 

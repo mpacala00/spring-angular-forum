@@ -1,4 +1,4 @@
-package com.github.mpacala00.forum.service;
+package com.github.mpacala00.forum.service.data;
 
 import com.github.mpacala00.forum.model.Comment;
 import com.github.mpacala00.forum.model.Post;
@@ -8,31 +8,32 @@ import com.github.mpacala00.forum.repository.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 @AllArgsConstructor
-public class CommentService {
+public class CommentServiceImpl implements CommentService {
 
     private final CommentRepository commentRepository;
     private final PostRepository postRepository;
-    private final UserRepository userRepository;
 
-    public List<Comment> getAllCommentsFromPost(Long postId) throws Exception {
+    @Override
+    public Set<Comment> getAllCommentsFromPost(Long postId) {
         Optional<Post> post = postRepository.findById(postId);
-        if(post.isPresent()) {
-            return new ArrayList<>(post.get().getComments());
-        }
-        throw new NullPointerException();
+        return post.map(value -> new HashSet<>(value.getComments())).orElse(null);
     }
-    
+
+    @Override
+    public Set<Comment> findByUser(String user) {
+        return new HashSet<>(commentRepository.findByCreator(user));
+    }
+
+    @Override
     public Comment save(Comment comment) {
         return commentRepository.save(comment);
-    }
-
-    public List<Comment> findByUser(String user) {
-        return commentRepository.findByCreator(user);
     }
 }

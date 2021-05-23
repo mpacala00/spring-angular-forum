@@ -3,6 +3,7 @@ package com.github.mpacala00.forum.controllers.user;
 import com.github.mpacala00.forum.model.Comment;
 import com.github.mpacala00.forum.model.Post;
 import com.github.mpacala00.forum.model.dto.UserDTO;
+import com.github.mpacala00.forum.service.data.UserServiceImpl;
 import com.github.mpacala00.forum.service.dto.UserDTOMappingService;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -12,12 +13,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import com.github.mpacala00.forum.model.User;
-import com.github.mpacala00.forum.service.UserService;
 
 import javax.transaction.Transactional;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Set;
 
 @RestController
 @AllArgsConstructor
@@ -25,7 +24,7 @@ import java.util.stream.Collectors;
 @RequestMapping("/user")
 public class SecuredUserController {
 
-    UserService userService;
+    UserServiceImpl userService;
     UserDTOMappingService mappingService;
 
     @Transactional
@@ -47,7 +46,7 @@ public class SecuredUserController {
 
     //todo secure with required authority
     @GetMapping("/all")
-    public ResponseEntity<List<User>> users() {
-        return new ResponseEntity<>(userService.getUsers(), HttpStatus.OK);
+    public ResponseEntity<Set<User>> users() {
+        return new ResponseEntity<>(userService.findAll(), HttpStatus.OK);
     }
 }

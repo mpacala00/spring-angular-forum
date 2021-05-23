@@ -1,4 +1,4 @@
-package com.github.mpacala00.forum.service;
+package com.github.mpacala00.forum.service.data;
 
 import com.github.mpacala00.forum.model.Category;
 import com.github.mpacala00.forum.repository.CategoryRepository;
@@ -12,14 +12,16 @@ import java.util.List;
 @Service
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @AllArgsConstructor
-public class CategoryService {
+public class CategoryServiceImpl implements CategoryService{
 
     CategoryRepository categoryRepository;
 
+    @Override
     public List<Category> getAllCategories() {
         return categoryRepository.findAll();
     }
 
+    @Override
     public Category findById(Long id) {
         if(categoryRepository.findById(id).isEmpty()) {
             throw new NullPointerException(String.format("Category of id=%d does not exist", id));
@@ -27,6 +29,7 @@ public class CategoryService {
         return categoryRepository.findById(id).get();
     }
 
+    @Override
     public Category save(Category category) {
         return categoryRepository.save(category);
     }

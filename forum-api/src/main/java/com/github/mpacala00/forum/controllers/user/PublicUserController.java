@@ -6,12 +6,12 @@ import com.github.mpacala00.forum.model.dto.PostDTO;
 import com.github.mpacala00.forum.model.dto.UserDTO;
 import com.github.mpacala00.forum.pojos.*;
 import com.github.mpacala00.forum.security.model.Role;
+import com.github.mpacala00.forum.service.data.UserServiceImpl;
 import com.github.mpacala00.forum.service.dto.CategoryDTOMappingService;
 import com.github.mpacala00.forum.service.dto.CommentDTOMappingService;
 import com.github.mpacala00.forum.service.dto.PostDTOMappingService;
 import com.github.mpacala00.forum.service.dto.UserDTOMappingService;
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.NonFinal;
@@ -24,10 +24,8 @@ import com.github.mpacala00.forum.exception.ActivationEmailException;
 import com.github.mpacala00.forum.exception.UserNotFoundException;
 import com.github.mpacala00.forum.model.User;
 import com.github.mpacala00.forum.security.UserAuthenticationService;
-import com.github.mpacala00.forum.service.MailService;
-import com.github.mpacala00.forum.service.UserService;
+import com.github.mpacala00.forum.service.mail.MailServiceImpl;
 
-import javax.transaction.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -38,8 +36,8 @@ import java.util.stream.Collectors;
 @RequestMapping("/public/user")
 public class PublicUserController {
 
-    UserService userService;
-    MailService mailService;
+    UserServiceImpl userService;
+    MailServiceImpl mailServiceImpl;
     UserAuthenticationService authenticationService;
 
     PostDTOMappingService postDTOMappingService;
@@ -58,7 +56,7 @@ public class PublicUserController {
         if(!userRegistration.getPassword().equals(userRegistration.getPasswordConfirmation())) {
             return HttpResponse.createResponseEntity(HttpStatus.CONFLICT, "Passwords do not match");
         }
-        else if(userService.findByUsername(userRegistration.getUsername()).isPresent())
+        else if(userService.findByUsername(userRegistration.getUsername()) != null)
             return HttpResponse.createResponseEntity(HttpStatus.CONFLICT, "User already exists");
         
         User u = new User(userRegistration.getUsername(),
@@ -101,9 +99,9 @@ public class PublicUserController {
 
     @GetMapping("{username}")
     public ResponseEntity<UserDTO> getUserByUsername(@PathVariable String username) throws UserNotFoundException {
-        if(userService.findByUsername(username).isPresent()) {
+        if(userService.findByUsername(username) != null) {
 
-            UserDTO user = userDTOMappingService.convertToDTO(userService.findByUsername(username).get());
+            UserDTO user = userDTOMappingService.convertToDTO(userService.findByUsername(username));
             return new ResponseEntity<>(user, HttpStatus.OK);
         }
 
@@ -113,9 +111,9 @@ public class PublicUserController {
 
     @GetMapping("{username}/posts")
     public ResponseEntity<List<PostDTO>> getPostsByUser(@PathVariable String username) throws UserNotFoundException {
-        if(userService.findByUsername(username).isPresent()) {
+        if(userService.findByUsername(username) != null) {
 
-            List<PostDTO> posts = userService.findByUsername(username).get().getPosts()
+            List<PostDTO> posts = userService.findByUsername(username).getPosts()
                     .stream()
                     .map(postDTOMappingService::convertToDTO)
                     .collect(Collectors.toList());
@@ -128,9 +126,9 @@ public class PublicUserController {
 
     @GetMapping("{username}/comments")
     public ResponseEntity<List<CommentDTO>> getCommentsByUser(@PathVariable String username) throws UserNotFoundException {
-        if(userService.findByUsername(username).isPresent()) {
+        if(userService.findByUsername(username) != null) {
 
-            List<CommentDTO> comments = userService.findByUsername(username).get().getComments()
+            List<CommentDTO> comments = userService.findByUsername(username).getComments()
                     .stream()
                     .map(commentDTOMappingService::convertToCommentPostDTO)
                     .collect(Collectors.toList());
@@ -142,9 +140,9 @@ public class PublicUserController {
 
     @GetMapping("{username}/followed-categories")
     public ResponseEntity<List<CategoryDTO>> getFollowedCategoriesByUser(@PathVariable String username) throws UserNotFoundException {
-        if(userService.findByUsername(username).isPresent()) {
+        if(userService.findByUsername(username) != null) {
 
-            List<CategoryDTO> categories = userService.findByUsername(username).get().getFollowedCategories()
+            List<CategoryDTO> categories = userService.findByUsername(username).getFollowedCategories()
                     .stream()
                     .map(categoryDTOMappingService::convertToDTO)
                     .collect(Collectors.toList());

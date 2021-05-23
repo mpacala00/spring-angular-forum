@@ -29,17 +29,10 @@ export class PostsByCategoryPageComponent implements OnInit, OnDestroy {
                public dialog: MatDialog) { }
 
    ngOnInit(): void {
-      //this solution is probably not worth it to save 2 lines of json response
-      //simple check if history containes cateogry object
-      if (history.state.hasOwnProperty('name')) {
-         this.category = history.state;
-         this.getPostsByCategory(history.state.id);
-      } else {
-         this.activatedRoute.params.subscribe(
-            params => { this.categoryId = params['id']; }
-         );
-         this.getCategory(this.categoryId);
-      }
+      this.activatedRoute.params.subscribe(
+         params => { this.categoryId = params['id']; }
+      );
+      this.getCategory(this.categoryId);
    }
 
    openDialog(): void {

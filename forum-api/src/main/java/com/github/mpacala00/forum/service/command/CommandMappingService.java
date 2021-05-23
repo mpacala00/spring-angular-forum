@@ -1,4 +1,4 @@
-package com.github.mpacala00.forum.service;
+package com.github.mpacala00.forum.service.command;
 
 import com.github.mpacala00.forum.model.Category;
 import com.github.mpacala00.forum.model.Comment;
@@ -13,28 +13,28 @@ public interface CommandMappingService {
 
     /**
      * Converts {@link Comment} to {@link CommentCommand}
-     * @param comment
+     * @param comment comment entity to be converted to dto
      * @return CommentCommand
      */
     CommentCommand convertCommentToCommand(Comment comment);
 
     /**
      * Converts {@link Post} to {@link PostCommand}
-     * @param post
+     * @param post post entity to be converted to dto
      * @return PostCommand
      */
     PostCommand convertPostToCommand(Post post);
 
     /**
      * Converts {@link Category} to {@link CategoryCommand}
-     * @param category
+     * @param category category entity to be converted to dto
      * @return CategoryCommand
      */
     CategoryCommand convertCategoryToCommand(Category category);
 
     /**
      * Converts {@link User} to {@link UserCommand}
-     * @param user
+     * @param user user entity to be converted to dto
      * @return UserCommand
      */
     UserCommand convertUserToCommand(User user);

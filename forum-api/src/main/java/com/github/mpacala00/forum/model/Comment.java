@@ -19,8 +19,10 @@ public class Comment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(nullable = false)
     Long id;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name="creator_id", nullable=false)
     User creator;
@@ -31,6 +33,7 @@ public class Comment {
 
     LocalDateTime postDate;
 
+    @JsonIgnore
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name="post_id") //cannot be nullable because of the way comments are saved
     Post post;

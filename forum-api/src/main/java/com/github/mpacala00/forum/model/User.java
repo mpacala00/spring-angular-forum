@@ -1,5 +1,6 @@
 package com.github.mpacala00.forum.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.github.mpacala00.forum.security.model.Role;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -27,6 +28,7 @@ public class User implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(nullable = false)
     Long id;
 
     @NotBlank
@@ -46,12 +48,15 @@ public class User implements UserDetails {
     @Enumerated(EnumType.STRING)
     Role role;
 
-    @OneToMany(mappedBy = "creator", cascade = CascadeType.ALL)
+    @JsonIgnoreProperties("creator")
+    @OneToMany(mappedBy = "creator", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     Set<Comment> comments = new HashSet<>();
 
-    @OneToMany(mappedBy = "creator", cascade = CascadeType.ALL)
+    @JsonIgnoreProperties("creator")
+    @OneToMany(mappedBy = "creator", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     Set<Post> posts = new HashSet<>();
 
+    @JsonIgnoreProperties("followingUsers")
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "followed_categories",
             joinColumns = @JoinColumn(name = "user_id"),

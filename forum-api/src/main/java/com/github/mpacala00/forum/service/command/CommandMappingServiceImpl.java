@@ -1,4 +1,4 @@
-package com.github.mpacala00.forum.service;
+package com.github.mpacala00.forum.service.command;
 
 import com.github.mpacala00.forum.model.Category;
 import com.github.mpacala00.forum.model.Comment;

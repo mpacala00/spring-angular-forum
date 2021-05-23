@@ -4,10 +4,10 @@ import com.github.mpacala00.forum.model.Category;
 import com.github.mpacala00.forum.model.Comment;
 import com.github.mpacala00.forum.model.Post;
 import com.github.mpacala00.forum.model.User;
-import com.github.mpacala00.forum.service.CategoryService;
-import com.github.mpacala00.forum.service.CommentService;
-import com.github.mpacala00.forum.service.PostService;
-import com.github.mpacala00.forum.service.UserService;
+import com.github.mpacala00.forum.service.data.CategoryServiceImpl;
+import com.github.mpacala00.forum.service.data.CommentServiceImpl;
+import com.github.mpacala00.forum.service.data.PostServiceImpl;
+import com.github.mpacala00.forum.service.data.UserServiceImpl;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -16,45 +16,49 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import javax.transaction.Transactional;
+
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RestController
 public class SecuredForumController {
     
-    PostService postService;
-    CategoryService categoryService;
-    CommentService commentService;
-    UserService userService;
+    PostServiceImpl postServiceImpl;
+    CategoryServiceImpl categoryServiceImpl;
+    CommentServiceImpl commentServiceImpl;
+    UserServiceImpl userService;
 
     @PostMapping("/category")
     public ResponseEntity<Category> publishCategory(@RequestBody Category category) {
-        return new ResponseEntity<>(categoryService.save(category), HttpStatus.CREATED);
+        return new ResponseEntity<>(categoryServiceImpl.save(category), HttpStatus.CREATED);
     }
 
+    @Transactional
     @PostMapping("category/{categoryId}/post")
-    public ResponseEntity<Post> publishPostToCategory(@PathVariable Long categoryId,
+    public ResponseEntity<Post> publishPostToCategory(@PathVariable String categoryId,
                                                           @RequestBody Post post,
                                                           @AuthenticationPrincipal User originalPoster) {
 
         //another way to get user, but annotation as argument is easier to use
         //User originalPoster = userService.findByUsername(userService.getUsernameFromToken()).get();
         post.setCreator(originalPoster);
-        Post savedPost = postService.savePost(post);
-        Category category = categoryService.findById(categoryId);
+        Post savedPost = postServiceImpl.savePost(post);
+        Category category = categoryServiceImpl.findById(Long.valueOf(categoryId));
         category.addPost(savedPost);
-        categoryService.save(category);
+        categoryServiceImpl.save(category);
         return new ResponseEntity<Post>(savedPost, HttpStatus.CREATED);
     }
 
+    @Transactional
     @PostMapping("post/{postId}/comment")
-    public ResponseEntity<Comment> publishComment(@PathVariable Long postId,
+    public ResponseEntity<Comment> publishComment(@PathVariable String postId,
                                @RequestBody Comment comment,
                                @AuthenticationPrincipal User originalPoster) {
         comment.setCreator(originalPoster);
-        Comment savedComment = commentService.save(comment);
-        Post post = postService.findById(postId);
+        Comment savedComment = commentServiceImpl.save(comment);
+        Post post = postServiceImpl.findById(Long.valueOf(postId));
         post.addComment(savedComment);
-        postService.savePost(post);
+        postServiceImpl.savePost(post);
         return new ResponseEntity<>(savedComment, HttpStatus.CREATED);
     }
 }
