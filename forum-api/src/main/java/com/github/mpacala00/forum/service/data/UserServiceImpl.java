@@ -1,6 +1,5 @@
 package com.github.mpacala00.forum.service.data;
 
-import com.github.mpacala00.forum.exception.UserNotFoundException;
 import com.github.mpacala00.forum.model.Comment;
 import com.github.mpacala00.forum.model.Post;
 import com.github.mpacala00.forum.model.User;
@@ -63,6 +62,11 @@ public class UserServiceImpl implements UserService {
         }
         log.info("Username "+username+" not found");
         return null;
+    }
+
+    @Override
+    public User findByEmail(String email) {
+        return userRepository.findByEmail(email);
     }
 
     @Override

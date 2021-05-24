@@ -1,5 +1,6 @@
 package com.github.mpacala00.forum.controllers.user;
 
+import com.github.mpacala00.forum.exception.model.*;
 import com.github.mpacala00.forum.model.dto.CategoryDTO;
 import com.github.mpacala00.forum.model.dto.CommentDTO;
 import com.github.mpacala00.forum.model.dto.PostDTO;
@@ -20,8 +21,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import com.github.mpacala00.forum.exception.ActivationEmailException;
-import com.github.mpacala00.forum.exception.UserNotFoundException;
 import com.github.mpacala00.forum.model.User;
 import com.github.mpacala00.forum.security.UserAuthenticationService;
 import com.github.mpacala00.forum.service.mail.MailServiceImpl;
@@ -51,14 +50,17 @@ public class PublicUserController {
     String activationLink;
 
     @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody UserRegistration userRegistration) throws UserNotFoundException, ActivationEmailException {
+    public ResponseEntity<?> register(@RequestBody UserRegistration userRegistration)
+            throws UserNotFoundException, ActivationEmailException, UserAlreadyExistException, InvalidCredentialsException, EmailTakenException {
 
         //check if confirm password is the same as password in registration form
         if(!userRegistration.getPassword().equals(userRegistration.getPasswordConfirmation())) {
-            return HttpResponse.createResponseEntity(HttpStatus.CONFLICT, "Passwords do not match");
+            throw new InvalidCredentialsException("Passwords do not match");
         }
-        else if(userService.findByUsername(userRegistration.getUsername()) != null)
-            return HttpResponse.createResponseEntity(HttpStatus.CONFLICT, "User already exists");
+        if(userService.findByUsername(userRegistration.getUsername()) != null)
+            throw new UserAlreadyExistException(String.format("Username %s already taken", userRegistration.getUsername()));
+        if(userService.findByEmail(userRegistration.getEmail()) != null)
+            throw new EmailTakenException(String.format("Email %s is already taken", userRegistration.getEmail()));
         
         User u = new User(userRegistration.getUsername(),
                 userRegistration.getPassword(), userRegistration.getEmail());
@@ -92,7 +94,8 @@ public class PublicUserController {
     }
     
     @PostMapping("/login")
-    public ResponseEntity<TokenResponse> login(@RequestBody UserLogin login) throws UserNotFoundException {
+    public ResponseEntity<TokenResponse> login(@RequestBody UserLogin login)
+            throws UserNotFoundException, InvalidCredentialsException {
         String token = authenticationService.login(login.getUsername(), login.getPassword())
                 .orElseThrow(() -> new UserNotFoundException("User does not exist"));
         return new ResponseEntity<>(new TokenResponse(token), HttpStatus.OK);

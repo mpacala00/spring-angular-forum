@@ -1,6 +1,6 @@
 package com.github.mpacala00.forum.service.mail;
 
-import com.github.mpacala00.forum.exception.ActivationEmailException;
+import com.github.mpacala00.forum.exception.model.ActivationEmailException;
 import com.github.mpacala00.forum.pojos.NotificationEmail;
 
 /** JavaMailSender */

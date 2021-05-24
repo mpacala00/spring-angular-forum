@@ -1,6 +1,7 @@
 package com.github.mpacala00.forum.security.token;
 
-import com.github.mpacala00.forum.exception.UserNotFoundException;
+import com.github.mpacala00.forum.exception.model.InvalidCredentialsException;
+import com.github.mpacala00.forum.exception.model.UserNotFoundException;
 import com.github.mpacala00.forum.service.data.UserServiceImpl;
 import com.google.common.collect.ImmutableMap;
 import lombok.AccessLevel;
@@ -22,7 +23,8 @@ public class TokenAuthenticationService implements UserAuthenticationService {
     @NonNull UserServiceImpl userService;
 
     @Override
-    public Optional<String> login(String username, String password) throws UserNotFoundException {
+    public Optional<String> login(String username, String password)
+            throws UserNotFoundException, InvalidCredentialsException {
 
         User u = userService.findByUsername(username);
         if(u == null) {
@@ -37,7 +39,7 @@ public class TokenAuthenticationService implements UserAuthenticationService {
             return Optional.of(tokenService.expiring(claims));
         }
 
-        throw new RuntimeException(); //todo implement invalid credentials exception
+        throw new InvalidCredentialsException("Passwords do not match");
     }
 
     @Override

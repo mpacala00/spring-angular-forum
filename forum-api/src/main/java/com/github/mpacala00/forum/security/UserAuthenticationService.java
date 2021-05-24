@@ -1,7 +1,8 @@
 package com.github.mpacala00.forum.security;
 
 
-import com.github.mpacala00.forum.exception.UserNotFoundException;
+import com.github.mpacala00.forum.exception.model.InvalidCredentialsException;
+import com.github.mpacala00.forum.exception.model.UserNotFoundException;
 import com.github.mpacala00.forum.model.User;
 
 import java.util.Optional;
@@ -19,7 +20,7 @@ public interface UserAuthenticationService {
      * @param password
      * @return an {@link Optional} of a user when login succeeds
      */
-    Optional<String> login(String username, String password) throws UserNotFoundException;
+    Optional<String> login(String username, String password) throws UserNotFoundException, InvalidCredentialsException;
 
     /**
      * Finds a user by its dao-key.

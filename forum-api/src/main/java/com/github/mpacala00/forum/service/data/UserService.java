@@ -10,6 +10,7 @@ import java.util.Optional;
 public interface UserService extends CrudService<User, Long> {
 
     User findByUsername(String username);
+    User findByEmail(String email);
     List<Comment> getComments(Long userId);
     List<Post> getPosts(Long userId);
 

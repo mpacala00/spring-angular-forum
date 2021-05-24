@@ -1,5 +1,6 @@
 package com.github.mpacala00.forum.exception;
 
+import com.github.mpacala00.forum.exception.model.*;
 import com.github.mpacala00.forum.pojos.HttpResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +18,21 @@ public class ExceptionHandling {
     @ExceptionHandler(ActivationEmailException.class)
     public final ResponseEntity<HttpResponse> activationEmailException(ActivationEmailException e) {
         return HttpResponse.createResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
+    }
+
+    @ExceptionHandler(EmailTakenException.class)
+    public final ResponseEntity<HttpResponse> emailTakenException(EmailTakenException e) {
+        return HttpResponse.createResponseEntity(HttpStatus.CONFLICT, e.getMessage());
+    }
+
+    @ExceptionHandler(UserAlreadyExistException.class)
+    public final ResponseEntity<HttpResponse> userAlreadyExistException(UserAlreadyExistException e) {
+        return HttpResponse.createResponseEntity(HttpStatus.CONFLICT, e.getMessage());
+    }
+
+    @ExceptionHandler(InvalidCredentialsException.class)
+    public final ResponseEntity<HttpResponse> invalidCredentialsException(InvalidCredentialsException e) {
+        return HttpResponse.createResponseEntity(HttpStatus.BAD_REQUEST, e.getMessage());
     }
 
     // ExceptionHandler for defautl exception overrides every other Exception handler

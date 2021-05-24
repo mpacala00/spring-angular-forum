@@ -7,7 +7,7 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.mail.javamail.MimeMessagePreparator;
 import org.springframework.stereotype.Service;
-import com.github.mpacala00.forum.exception.ActivationEmailException;
+import com.github.mpacala00.forum.exception.model.ActivationEmailException;
 import com.github.mpacala00.forum.pojos.NotificationEmail;
 
 @Service
