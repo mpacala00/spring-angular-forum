@@ -1,5 +1,6 @@
 package com.github.mpacala00.forum.service.data;
 
+import com.github.mpacala00.forum.exception.UserNotFoundException;
 import com.github.mpacala00.forum.model.Comment;
 import com.github.mpacala00.forum.model.Post;
 import com.github.mpacala00.forum.model.User;
@@ -86,11 +87,10 @@ public class UserServiceImpl implements UserService {
         return new ArrayList<>(userRepository.findById(userId).get().getPosts());
     }
 
+    //optional is used in authentication, so this method had to stay
     @Override
-    @Transactional
     public Optional<User> findOptionalByUsername(String username) {
         return userRepository.findByUsername(username);
-
     }
 
     //in order for this method to work token has to be passed in Authorization header

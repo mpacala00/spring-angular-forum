@@ -26,6 +26,7 @@ import com.github.mpacala00.forum.model.User;
 import com.github.mpacala00.forum.security.UserAuthenticationService;
 import com.github.mpacala00.forum.service.mail.MailServiceImpl;
 
+import java.rmi.activation.ActivateFailedException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -69,7 +70,7 @@ public class PublicUserController {
         User savedUser = userService.save(u);
 
         String token = authenticationService.login(savedUser.getUsername(), savedUser.getPassword())
-                .orElseThrow(() -> new RuntimeException("invalid login or password"));
+                .orElseThrow(RuntimeException::new);
 
         //sending activation email
 //        mailService.sendMail(new NotificationEmail("ForumApp - active your account",
@@ -81,19 +82,19 @@ public class PublicUserController {
     }
 
     @GetMapping("/activate-account")
-    public ResponseEntity<HttpResponse> activateAccount(@RequestParam final String token) {
+    public ResponseEntity<HttpResponse> activateAccount(@RequestParam final String token) throws ActivateFailedException {
         this.authenticationService.activateAccount(token);
         boolean activated = this.authenticationService.activateAccount(token);
         if(activated) {
             return HttpResponse.createResponseEntity(HttpStatus.OK, "Successfully activated account");
         }
-        return HttpResponse.createResponseEntity(HttpStatus.BAD_REQUEST, "Error occurred while activating account");
+        throw new ActivateFailedException("An error occurred during e-mail activation");
     }
     
     @PostMapping("/login")
     public ResponseEntity<TokenResponse> login(@RequestBody UserLogin login) throws UserNotFoundException {
         String token = authenticationService.login(login.getUsername(), login.getPassword())
-                .orElseThrow(() -> new RuntimeException("invalid login or password"));
+                .orElseThrow(() -> new UserNotFoundException("User does not exist"));
         return new ResponseEntity<>(new TokenResponse(token), HttpStatus.OK);
     }
 

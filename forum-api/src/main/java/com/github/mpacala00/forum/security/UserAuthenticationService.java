@@ -13,6 +13,7 @@ public interface UserAuthenticationService {
 
     /**
      * Logs in with the given {@code username} and {@code password}.
+     * token expiration time is set in application.yml
      *
      * @param username
      * @param password

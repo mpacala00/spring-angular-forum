@@ -1,5 +1,6 @@
 package com.github.mpacala00.forum.security.token;
 
+import com.github.mpacala00.forum.exception.UserNotFoundException;
 import com.github.mpacala00.forum.service.data.UserServiceImpl;
 import com.google.common.collect.ImmutableMap;
 import lombok.AccessLevel;
@@ -20,25 +21,23 @@ public class TokenAuthenticationService implements UserAuthenticationService {
     @NonNull TokenService tokenService;
     @NonNull UserServiceImpl userService;
 
-    /**
-     *
-     * @param username
-     * @param password
-     * @return
-     * token expiration time is set in application.yml
-     */
     @Override
-    public Optional<String> login(String username, String password) {
+    public Optional<String> login(String username, String password) throws UserNotFoundException {
 
-        String[] authorities = userService.findByUsername(username).getRole().getAuthorities();
-        ImmutableMap<String, Object> claims = ImmutableMap.of("username", username,
-                "authorities", authorities);
+        User u = userService.findByUsername(username);
+        if(u == null) {
+            throw new UserNotFoundException("User does not exist");
+        }
 
-        return userService
-                .findOptionalByUsername(username)
-                .filter(user -> user.getPassword().equals(password))
-                //return a user that has a token with the passed username att
-                .map(user -> tokenService.expiring(claims));
+        if(u.getPassword().equals(password)) {
+            String[] authorities = userService.findByUsername(username).getRole().getAuthorities();
+            ImmutableMap<String, Object> claims = ImmutableMap.of("username", username,
+                    "authorities", authorities);
+
+            return Optional.of(tokenService.expiring(claims));
+        }
+
+        throw new RuntimeException(); //todo implement invalid credentials exception
     }
 
     @Override
