@@ -16,7 +16,7 @@
          </mat-card>
 
          <div *ngFor="let p of posts">
-            <mat-card class="my-3" (click)="navigateToPost(p.id)">
+            <mat-card class="my-3 post" (click)="navigateToPost(p.id)">
                {{p.title}}<br>
                {{p.body}}<br>
                Posted by: {{ p.creator }}

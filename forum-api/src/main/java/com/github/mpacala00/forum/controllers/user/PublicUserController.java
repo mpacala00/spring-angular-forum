@@ -53,6 +53,9 @@ public class PublicUserController {
     public ResponseEntity<?> register(@RequestBody UserRegistration userRegistration)
             throws UserNotFoundException, ActivationEmailException, UserAlreadyExistException, InvalidCredentialsException, EmailTakenException {
 
+        if(userRegistration.getUsername().contains(" ")) {
+            throw new InvalidCredentialsException("Username cannot contain spaces");
+        }
         //check if confirm password is the same as password in registration form
         if(!userRegistration.getPassword().equals(userRegistration.getPasswordConfirmation())) {
             throw new InvalidCredentialsException("Passwords do not match");
