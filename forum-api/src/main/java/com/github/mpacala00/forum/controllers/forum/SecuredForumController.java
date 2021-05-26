@@ -4,7 +4,8 @@ import com.github.mpacala00.forum.model.Category;
 import com.github.mpacala00.forum.model.Comment;
 import com.github.mpacala00.forum.model.Post;
 import com.github.mpacala00.forum.model.User;
-import com.github.mpacala00.forum.service.ResourceAccess;
+import com.github.mpacala00.forum.model.dto.comment.CommentUpdateDTO;
+import com.github.mpacala00.forum.model.dto.post.PostUpdateDTO;
 import com.github.mpacala00.forum.service.data.CategoryServiceImpl;
 import com.github.mpacala00.forum.service.data.CommentServiceImpl;
 import com.github.mpacala00.forum.service.data.PostServiceImpl;
@@ -28,7 +29,6 @@ public class SecuredForumController {
     PostServiceImpl postServiceImpl;
     CategoryServiceImpl categoryServiceImpl;
     CommentServiceImpl commentServiceImpl;
-    ResourceAccess resourceAccess;
 
     @PostMapping("/category")
     public ResponseEntity<Category> publishCategory(@RequestBody Category category) {
@@ -44,7 +44,7 @@ public class SecuredForumController {
         //another way to get user, but annotation as argument is easier to use
         //User originalPoster = userService.findByUsername(userService.getUsernameFromToken()).get();
         post.setCreator(originalPoster);
-        Post savedPost = postServiceImpl.savePost(post);
+        Post savedPost = postServiceImpl.save(post);
         Category category = categoryServiceImpl.findById(Long.valueOf(categoryId));
         category.addPost(savedPost);
         categoryServiceImpl.save(category);
@@ -60,7 +60,30 @@ public class SecuredForumController {
         Comment savedComment = commentServiceImpl.save(comment);
         Post post = postServiceImpl.findById(Long.valueOf(postId));
         post.addComment(savedComment);
-        postServiceImpl.savePost(post);
+        postServiceImpl.save(post);
         return new ResponseEntity<>(savedComment, HttpStatus.CREATED);
     }
+
+
+    //UPDATE is only available for content owner
+    @PutMapping("/post")
+    //@P annotated args are marked as parameters and then can be accessed by security
+    //@RA means context is calling for resourceAccess bean
+    @PreAuthorize("@RA.checkIfPostOwner(#user, #post.getId())")
+    public  ResponseEntity<Post> updatePost(@AuthenticationPrincipal @P("user") User user,
+                              @RequestBody @P("post") PostUpdateDTO postUpdateDTO) {
+
+        Post savedPost = postServiceImpl.update(postUpdateDTO);
+        return new ResponseEntity<>(savedPost, HttpStatus.OK);
+    }
+
+    @PutMapping("/comment")
+    @PreAuthorize("@RA.checkIfCommentOwner(#user, #comment.getId())")
+    public ResponseEntity<Comment> updateComment(@AuthenticationPrincipal @P("user") User user,
+                              @RequestBody @P("comment") CommentUpdateDTO commentUpdateDTO) {
+
+        Comment savedComment = commentServiceImpl.update(commentUpdateDTO);
+        return new ResponseEntity<>(savedComment, HttpStatus.OK);
+    }
+
 }

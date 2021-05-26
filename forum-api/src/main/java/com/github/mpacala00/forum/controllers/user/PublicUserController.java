@@ -1,9 +1,9 @@
 package com.github.mpacala00.forum.controllers.user;
 
 import com.github.mpacala00.forum.exception.model.*;
-import com.github.mpacala00.forum.model.dto.CategoryDTO;
-import com.github.mpacala00.forum.model.dto.CommentDTO;
-import com.github.mpacala00.forum.model.dto.PostDTO;
+import com.github.mpacala00.forum.model.dto.category.CategoryDTO;
+import com.github.mpacala00.forum.model.dto.comment.CommentDTO;
+import com.github.mpacala00.forum.model.dto.post.PostDTO;
 import com.github.mpacala00.forum.model.dto.UserDTO;
 import com.github.mpacala00.forum.pojos.*;
 import com.github.mpacala00.forum.security.model.Role;

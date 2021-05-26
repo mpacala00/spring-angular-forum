@@ -1,4 +1,4 @@
-package com.github.mpacala00.forum.service;
+package com.github.mpacala00.forum.security;
 
 import com.github.mpacala00.forum.model.Comment;
 import com.github.mpacala00.forum.model.Post;
@@ -14,7 +14,7 @@ import javax.annotation.Nonnull;
 
 //great article about @PreAuthroize:
 //https://lyubomyr-shaydariv.github.io/posts/2016-08-07-spring-security-preauthorize-annotation-custom-types-and-inspectable-dsl-support/
-@Component("ras")
+@Component("RA")
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class ResourceAccessImpl implements ResourceAccess {

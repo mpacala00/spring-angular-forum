@@ -1,4 +1,4 @@
-package com.github.mpacala00.forum.model.dto;
+package com.github.mpacala00.forum.model.dto.comment;
 
 import lombok.AccessLevel;
 import lombok.Data;
@@ -6,9 +6,10 @@ import lombok.experimental.FieldDefaults;
 
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class CategoryDTO {
+public class CommentDTO {
 
     Long id;
-    String name;
-    String description;
+    String creator;
+    String body;
+    String postDate;
 }

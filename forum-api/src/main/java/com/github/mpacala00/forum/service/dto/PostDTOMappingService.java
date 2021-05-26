@@ -1,7 +1,7 @@
 package com.github.mpacala00.forum.service.dto;
 
 import com.github.mpacala00.forum.model.Post;
-import com.github.mpacala00.forum.model.dto.PostDTO;
+import com.github.mpacala00.forum.model.dto.post.PostDTO;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;

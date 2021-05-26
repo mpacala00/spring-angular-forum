@@ -1,8 +1,8 @@
 package com.github.mpacala00.forum.service.dto;
 
 import com.github.mpacala00.forum.model.Comment;
-import com.github.mpacala00.forum.model.dto.CommentDTO;
-import com.github.mpacala00.forum.model.dto.CommentPostDTO;
+import com.github.mpacala00.forum.model.dto.comment.CommentDTO;
+import com.github.mpacala00.forum.model.dto.comment.CommentPostDTO;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;

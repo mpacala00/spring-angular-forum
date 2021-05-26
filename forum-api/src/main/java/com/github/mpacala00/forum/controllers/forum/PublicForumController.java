@@ -1,9 +1,9 @@
 package com.github.mpacala00.forum.controllers.forum;
 
-import com.github.mpacala00.forum.model.dto.CategoryDTO;
-import com.github.mpacala00.forum.model.dto.CategoryPostsDTO;
-import com.github.mpacala00.forum.model.dto.CommentDTO;
-import com.github.mpacala00.forum.model.dto.PostDTO;
+import com.github.mpacala00.forum.model.dto.category.CategoryDTO;
+import com.github.mpacala00.forum.model.dto.category.CategoryPostsDTO;
+import com.github.mpacala00.forum.model.dto.comment.CommentDTO;
+import com.github.mpacala00.forum.model.dto.post.PostDTO;
 import com.github.mpacala00.forum.service.data.CategoryServiceImpl;
 import com.github.mpacala00.forum.service.data.CommentServiceImpl;
 import com.github.mpacala00.forum.service.data.PostServiceImpl;

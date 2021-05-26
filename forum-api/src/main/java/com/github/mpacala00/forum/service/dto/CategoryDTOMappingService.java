@@ -1,8 +1,8 @@
 package com.github.mpacala00.forum.service.dto;
 
 import com.github.mpacala00.forum.model.Category;
-import com.github.mpacala00.forum.model.dto.CategoryDTO;
-import com.github.mpacala00.forum.model.dto.CategoryPostsDTO;
+import com.github.mpacala00.forum.model.dto.category.CategoryDTO;
+import com.github.mpacala00.forum.model.dto.category.CategoryPostsDTO;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 

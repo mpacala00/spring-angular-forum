@@ -1,5 +1,7 @@
-package com.github.mpacala00.forum.service;
+package com.github.mpacala00.forum.security;
 
+import com.github.mpacala00.forum.model.Comment;
+import com.github.mpacala00.forum.model.Post;
 import com.github.mpacala00.forum.model.User;
 import com.github.mpacala00.forum.security.model.Role;
 

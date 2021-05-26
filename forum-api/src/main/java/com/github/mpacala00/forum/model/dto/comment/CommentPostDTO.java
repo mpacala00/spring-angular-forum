@@ -1,4 +1,4 @@
-package com.github.mpacala00.forum.model.dto;
+package com.github.mpacala00.forum.model.dto.comment;
 
 import lombok.AccessLevel;
 import lombok.Data;
