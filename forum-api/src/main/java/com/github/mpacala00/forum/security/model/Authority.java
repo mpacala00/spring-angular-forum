@@ -14,7 +14,7 @@ public class Authority {
             "content:update"
     );
 
-    public static final String[] ADMIN_AUTHORITIES = ArrayUtils.addAll(USER_AUTHORITIES,
+    public static final String[] ADMIN_AUTHORITIES = ArrayUtils.addAll(MODERATOR_AUTHORITIES,
             "user:delete",
             "user:update"
     );

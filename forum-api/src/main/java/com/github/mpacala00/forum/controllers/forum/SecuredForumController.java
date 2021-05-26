@@ -4,16 +4,18 @@ import com.github.mpacala00.forum.model.Category;
 import com.github.mpacala00.forum.model.Comment;
 import com.github.mpacala00.forum.model.Post;
 import com.github.mpacala00.forum.model.User;
+import com.github.mpacala00.forum.service.ResourceAccess;
 import com.github.mpacala00.forum.service.data.CategoryServiceImpl;
 import com.github.mpacala00.forum.service.data.CommentServiceImpl;
 import com.github.mpacala00.forum.service.data.PostServiceImpl;
-import com.github.mpacala00.forum.service.data.UserServiceImpl;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 
 import javax.transaction.Transactional;
@@ -26,7 +28,7 @@ public class SecuredForumController {
     PostServiceImpl postServiceImpl;
     CategoryServiceImpl categoryServiceImpl;
     CommentServiceImpl commentServiceImpl;
-    UserServiceImpl userService;
+    ResourceAccess resourceAccess;
 
     @PostMapping("/category")
     public ResponseEntity<Category> publishCategory(@RequestBody Category category) {

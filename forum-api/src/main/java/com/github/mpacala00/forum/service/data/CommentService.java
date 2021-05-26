@@ -10,5 +10,7 @@ public interface CommentService {
 
     Set<Comment> findByUser(String user);
 
+    Comment findById(Long id);
+
     Comment save(Comment comment);
 }
