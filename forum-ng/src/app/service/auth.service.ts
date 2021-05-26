@@ -5,8 +5,9 @@ import { Observable } from 'rxjs';
 import { LoginModel } from '../model/login-model';
 import { TokenResponse } from '../model/token-response';
 import { RegisterModel } from '../model/register-model';
+import { JwtHelperService } from "@auth0/angular-jwt";
 
-import jwt_decode from 'jwt-decode';
+// import jwt_decode from 'jwt-decode';
 import { environment } from 'src/environments/environment';
 
 //TODO move all api links to enviroment.ts
@@ -23,7 +24,11 @@ export class AuthService {
 
    private decodedToken;
 
-   constructor(private http: HttpClient, private cookieService: CookieService) { }
+   private helper = new JwtHelperService();
+
+   constructor(private http: HttpClient, private cookieService: CookieService) { 
+      
+   }
 
    public login(loginModel: LoginModel): Observable<any> {
       return this.http.post<TokenResponse>(this.LOGIN_URL, loginModel);
@@ -42,6 +47,18 @@ export class AuthService {
       this.decodeToken(token);
    }
 
+   public retrieveTokenFromCookies() {
+      if(this.cookieService.check('token')) {
+         let token = this.cookieService.get('token');
+
+         if(this.helper.isTokenExpired(token)) {
+            this.cookieService.delete('token');
+            return;
+         }
+         this.decodeToken(token);
+      }
+   }
+
    public getUsername(): string {
       this.decodeToken(this.cookieService.get('token'));
       return this.decodedToken.username;
@@ -52,7 +69,7 @@ export class AuthService {
    }
 
    decodeToken(token: string): void {
-      this.decodedToken = jwt_decode(token);
+      this.decodedToken = this.helper.decodeToken(token);
    }
 
    public isTokenSet(): boolean {
