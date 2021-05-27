@@ -6,12 +6,14 @@ import com.github.mpacala00.forum.model.Post;
 import com.github.mpacala00.forum.model.User;
 import com.github.mpacala00.forum.model.dto.comment.CommentUpdateDTO;
 import com.github.mpacala00.forum.model.dto.post.PostUpdateDTO;
+import com.github.mpacala00.forum.pojos.HttpResponse;
 import com.github.mpacala00.forum.service.data.CategoryServiceImpl;
 import com.github.mpacala00.forum.service.data.CommentServiceImpl;
 import com.github.mpacala00.forum.service.data.PostServiceImpl;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -23,6 +25,7 @@ import javax.transaction.Transactional;
 
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@Slf4j
 @RestController
 public class SecuredForumController {
     
@@ -84,6 +87,27 @@ public class SecuredForumController {
 
         Comment savedComment = commentServiceImpl.update(commentUpdateDTO);
         return new ResponseEntity<>(savedComment, HttpStatus.OK);
+    }
+
+    //DELETE mappings are available either to content owner or Role with content:delete
+    @DeleteMapping("/post/{postId}")
+    @PreAuthorize("@RA.checkIfPostOwner(#user, #postId) || hasAuthority('content:delete')")
+    public ResponseEntity<HttpResponse> deletePost(@AuthenticationPrincipal @P("user") User user,
+                                                   @PathVariable @P("postId") String postId) {
+
+        postServiceImpl.deleteById(Long.valueOf(postId));
+        log.info("Post of id={} deleted", postId);
+        return HttpResponse.createResponseEntity(HttpStatus.OK, "Post successfully deleted");
+    }
+
+    @DeleteMapping("/comment/{commentId}")
+    @PreAuthorize("@RA.checkIfCommentOwner(#user, #commentId) || hasAuthority('content:delete')")
+    public ResponseEntity<HttpResponse> deleteComment(@AuthenticationPrincipal @P("user") User user,
+                                                   @PathVariable @P("commentId") String commentId) {
+
+        commentServiceImpl.deleteById(Long.valueOf(commentId));
+        log.info("Comment of id={} deleted", commentId);
+        return HttpResponse.createResponseEntity(HttpStatus.OK, "Comment successfully deleted");
     }
 
 }

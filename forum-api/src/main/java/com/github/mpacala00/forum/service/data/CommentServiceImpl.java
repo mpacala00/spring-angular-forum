@@ -54,4 +54,15 @@ public class CommentServiceImpl implements CommentService {
         }
         throw new NullPointerException(String.format("Comment of id=%d does not exist", commment.getId()));
     }
+
+    @Override
+    @Transactional
+    public void deleteById(Long id) {
+        Comment commentToDelete = findById(id);
+
+        commentToDelete.setPost(null);
+        commentToDelete.setCreator(null);
+
+        commentRepository.deleteById(id);
+    }
 }

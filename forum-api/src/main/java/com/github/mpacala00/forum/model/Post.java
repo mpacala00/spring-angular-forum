@@ -20,7 +20,7 @@ public class Post {
 
     @JsonIgnore
     @ManyToOne
-    @JoinColumn(name="creator_id", nullable=false)
+    @JoinColumn(name="creator_id")
     User creator;
 
     @Id
@@ -38,11 +38,11 @@ public class Post {
 
     LocalDateTime postDate;
 
-    @OneToMany(mappedBy = "post", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "post", orphanRemoval = true,fetch = FetchType.EAGER)
     Set<Comment> comments = new HashSet<>();
 
     @JsonIgnore
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.REMOVE)
     @JoinColumn(name="category_id")
     Category category;
 

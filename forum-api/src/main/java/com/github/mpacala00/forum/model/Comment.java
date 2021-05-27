@@ -24,7 +24,7 @@ public class Comment {
 
     @JsonIgnore
     @ManyToOne
-    @JoinColumn(name="creator_id", nullable=false)
+    @JoinColumn(name="creator_id")
     User creator;
 
     @Size(max = 10000)

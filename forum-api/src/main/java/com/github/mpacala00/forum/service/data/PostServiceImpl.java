@@ -1,7 +1,9 @@
 package com.github.mpacala00.forum.service.data;
 
+import com.github.mpacala00.forum.model.Category;
 import com.github.mpacala00.forum.model.Post;
 import com.github.mpacala00.forum.model.dto.post.PostUpdateDTO;
+import com.github.mpacala00.forum.repository.CategoryRepository;
 import com.github.mpacala00.forum.repository.CommentRepository;
 import com.github.mpacala00.forum.repository.PostRepository;
 import lombok.AccessLevel;
@@ -9,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
@@ -19,6 +22,7 @@ import java.util.Set;
 public class PostServiceImpl implements PostService {
 
     PostRepository postRepository;
+    CategoryRepository categoryRepository;
     CommentRepository commentRepository;
 
     @Override
@@ -53,6 +57,17 @@ public class PostServiceImpl implements PostService {
     public Post findById(Long id) {
         //todo check if not null
         return postRepository.findById(id).get();
+    }
+
+    @Override
+    @Transactional
+    public void deleteById(Long id) {
+        Post postToDelete = findById(id);
+
+        postToDelete.setCategory(null);
+        postToDelete.setCreator(null);
+
+        postRepository.deleteById(id);
     }
 
 }
