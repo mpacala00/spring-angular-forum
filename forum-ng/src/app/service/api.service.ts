@@ -20,6 +20,11 @@ export class ApiService {
    private GET_POSTS = `${environment.BASE_URL_PUBLIC}/posts`;
    private GET_CATEGORIES = `${environment.BASE_URL_PUBLIC}/categories`;
    private GET_USER_DTO = `${environment.BASE_URL}/user`;
+   private PUT_POST = `${environment.BASE_URL}/post`;
+
+   private getDeletePostByIdUrl(id: number): string {
+      return `${environment.BASE_URL}/post/${id}`;
+   }
 
    private getPostsByCategoryUrl(id: number): string {
       return `${environment.BASE_URL_PUBLIC}/category/${id}/posts`;
@@ -100,6 +105,14 @@ export class ApiService {
 
    postPost(categoryId: number, post: PostModel) {
       return this.http.post<PostModel>(this.getPublishPostOnCategoryUrl(categoryId), post, { headers: this.headersObj });
+   }
+
+   putPost(post: PostModel) {
+      return this.http.put<PostModel>(this.PUT_POST, post, { headers: this.headersObj });
+   }
+
+   deletePost(postId: number) {
+      return this.http.delete<any>(this.getDeletePostByIdUrl(postId), { headers: this.headersObj });
    }
 
    //USER

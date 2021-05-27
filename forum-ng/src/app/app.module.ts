@@ -11,6 +11,15 @@ import { LoginPageComponent } from './component/login-page/login-page.component'
 import { NewPostComponent } from './component/new-post/new-post.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
+import { NavComponent } from './component/nav/nav.component';
+import { RegisterPageComponent } from './component/register-page/register-page.component';
+import { CategoryPageComponent } from './component/category-page/category-page.component';
+import { PostsByCategoryPageComponent } from './component/posts-by-category-page/posts-by-category-page.component';
+import { CommentsByPostPageComponent } from './component/comments-by-post-page/comments-by-post-page.component';
+import { PersonalProfilePageComponent } from './component/user/personal-profile-page/personal-profile-page.component';
+import { NewPostDialogComponent } from './component/shared/new-post-dialog/new-post-dialog.component';
+import { ConfirmationDialogComponent } from './component/shared/confirmation-dialog/confirmation-dialog.component';
+
 import { BrowserAnimationsModule } from
    '@angular/platform-browser/animations';
 import { MatFormFieldModule }
@@ -27,14 +36,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatTabsModule } from '@angular/material/tabs';
 import { TextFieldModule } from '@angular/cdk/text-field';
 import { MatDialogModule } from '@angular/material/dialog';
-
-import { NavComponent } from './component/nav/nav.component';
-import { RegisterPageComponent } from './component/register-page/register-page.component';
-import { CategoryPageComponent } from './component/category-page/category-page.component';
-import { PostsByCategoryPageComponent } from './component/posts-by-category-page/posts-by-category-page.component';
-import { CommentsByPostPageComponent } from './component/comments-by-post-page/comments-by-post-page.component';
-import { PersonalProfilePageComponent } from './component/user/personal-profile-page/personal-profile-page.component';
-import { NewPostDialogComponent } from './component/posts-by-category-page/new-post-dialog/new-post-dialog.component';
+import { MatDividerModule } from '@angular/material/divider';
 
 @NgModule({
    declarations: [
@@ -48,7 +50,8 @@ import { NewPostDialogComponent } from './component/posts-by-category-page/new-p
       PostsByCategoryPageComponent,
       CommentsByPostPageComponent,
       PersonalProfilePageComponent,
-      NewPostDialogComponent
+      NewPostDialogComponent,
+      ConfirmationDialogComponent
    ],
    imports: [
       BrowserModule,
@@ -72,7 +75,8 @@ import { NewPostDialogComponent } from './component/posts-by-category-page/new-p
       MatCardModule,
       MatTabsModule,
       TextFieldModule,
-      MatDialogModule
+      MatDialogModule,
+      MatDividerModule
    ],
 
    providers: [],

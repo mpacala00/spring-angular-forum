@@ -28,7 +28,7 @@ public class Post {
     @Column(nullable = false)
     Long id;
 
-    @Size(max = 50)
+    @Size(max = 150)
     @NotBlank(message = "Title of post must not be empty")
     String title;
 
@@ -38,7 +38,7 @@ public class Post {
 
     LocalDateTime postDate;
 
-    @OneToMany(mappedBy = "post", orphanRemoval = true,fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "post",fetch = FetchType.EAGER)
     Set<Comment> comments = new HashSet<>();
 
     @JsonIgnore

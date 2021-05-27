@@ -1,14 +1,14 @@
-<h1 mat-dialog-title>New post</h1>
+<h1 mat-dialog-title>{{ data.dialogTitle }}</h1>
 <div mat-dialog-content>
   <mat-form-field>
     <mat-label>Title</mat-label>
-    <input matInput [(ngModel)]="data.post.title" required maxlength="100" cdkFocusInitial>
+    <input matInput [(ngModel)]="data.post.title" required maxlength="150" cdkFocusInitial>
   </mat-form-field>
 
   <mat-form-field>
     <mat-label>Body</mat-label>
     <textarea matInput [(ngModel)]="data.post.body" cdkTextareaAutosize #autosize="cdkTextareaAutosize"
-                     cdkAutosizeMinRows="1" cdkAutosizeMaxRows="15" required maxlength="254"></textarea>
+                     cdkAutosizeMinRows="1" cdkAutosizeMaxRows="15" required maxlength="10000"></textarea>
   </mat-form-field>
 </div>
 <div mat-dialog-actions>

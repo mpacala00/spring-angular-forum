@@ -2,29 +2,35 @@
    <div class="row justify-content-center">
       <div class="col-lg-12 p-0">
 
-         <mat-card class="my-4">
+         <mat-card class="my-2">
             <mat-card-title>
-               <div class="container-fluid">
-                  <div class="row">
-                     <span>{{ post?.title }}</span>
-                     <button mat-raised-button color="basic" class="ml-auto" type="button"
-                        (click)="refreshComments()">Load comments</button>
+               <div class="row">
+                  <div class="col-9 m-0">
+
+                     <h1 class="m-0">{{ post?.title }}</h1>
+                     <span class="post-date">Posted on {{ post?.postDate | date: 'short'}} by <a routerLink="/user/{{ post?.creator }}">{{ post?.creator }}</a></span>
                   </div>
+                  <div class="col-3 m-0 btn-div">
 
+                     <button mat-stroked-button color="basic" type="button"
+                     (click)="openEditPostDialog()">Edit post</button>
+                     <button mat-stroked-button color="warn" type="button"
+                     (click)="openDeletePostDialog()">Delete post</button>
+                  </div>
                </div>
-
             </mat-card-title>
             <mat-card-content>{{ post?.body }}</mat-card-content>
 
             <div *ngFor="let c of comments">
                <hr>
-               <p class="text-muted">Posted on {{ c?.postDate | date }}</p>
+               <p class="post-date">Posted on {{ c?.postDate | date: 'short' }} by <a routerLink="/user/{{ c?.creator }}">{{ c?.creator }}</a></p>
                <p>{{ c?.body }}</p>
-               Posted by: {{ c?.creator }}
             </div>
+            <button mat-stroked-button color="link" type="button"
+                           (click)="refreshComments()">Refresh comments</button>
          </mat-card>
 
-         <mat-card class="my-4">
+         <mat-card class="my-2">
             <form [formGroup]="commentForm">
                <mat-form-field class="w-100">
                   <mat-label>Add new comment</mat-label>

@@ -1,10 +1,13 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { CommentModel } from 'src/app/model/comment-model';
 import { PostModel } from 'src/app/model/post-model';
 import { ApiService } from 'src/app/service/api.service';
 import { SubSink } from 'subsink';
+import { NewPostDialogComponent } from '../shared/new-post-dialog/new-post-dialog.component';
+import { ConfirmationDialogModel, ConfirmationDialogComponent } from '../shared/confirmation-dialog/confirmation-dialog.component';
 
 @Component({
    selector: 'app-comments-by-post-page',
@@ -20,7 +23,9 @@ export class CommentsByPostPageComponent implements OnInit, OnDestroy {
    public comments: CommentModel[];
    public commentForm: FormGroup;
 
-   constructor(private route: ActivatedRoute, private apiService: ApiService) { }
+   
+
+   constructor(private route: ActivatedRoute, private apiService: ApiService, public dialog: MatDialog, private router: Router) { }
 
    ngOnInit(): void {
       this.commentForm = new FormGroup({
@@ -42,6 +47,64 @@ export class CommentsByPostPageComponent implements OnInit, OnDestroy {
          },
          err => {
             alert('An error occured while fetching posts');
+            this.router.navigate(['../../'], { relativeTo: this.route });
+         }
+      )
+   }
+
+   openEditPostDialog(): void {
+      const dialogRef = this.dialog.open(NewPostDialogComponent, {
+         width: '450px',
+         // to pass data to the dialog:
+         data: {post: this.post, dialogTitle: 'Edit post'}
+       });
+
+       dialogRef.afterClosed().subscribe(result => {
+         if(result != null) {
+
+            //result is of type PostModel, but since PostUpdateDTO takes only id, title and body on the back-end
+            //rest of the fields won't be mapped
+            this.updatePost(result.post);
+         }
+       });
+   }
+
+   public updatePost(post: PostModel) {
+      this.subs.sink = this.apiService.putPost(post).subscribe(
+         res => {
+            this.refreshComments();
+         },
+         err => {
+            alert("An error occured while updating post");
+            console.error(err);
+         }
+      )
+   }
+
+   public openDeletePostDialog() {
+      const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+         width: '400px',
+         data: new ConfirmationDialogModel('Are you sure?', 'This action cannot be undone')
+       });
+
+       let deletePost: boolean;
+
+       dialogRef.afterClosed().subscribe(dialogResult => {
+         if(dialogResult == true) {
+            this.deletePost();
+         }
+       });
+   }
+
+   public deletePost() {
+      this.apiService.deletePost(this.postId).subscribe(
+         res => {
+            // console.log(res);
+            this.router.navigateByUrl('/');
+         },
+         err => {
+            alert('An error occurred during post delete');
+            console.error(err);
          }
       )
    }

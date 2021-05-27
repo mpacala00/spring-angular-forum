@@ -66,6 +66,7 @@ public class PostServiceImpl implements PostService {
 
         postToDelete.setCategory(null);
         postToDelete.setCreator(null);
+        postToDelete.setComments(null);
 
         postRepository.deleteById(id);
     }

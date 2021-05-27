@@ -5,7 +5,7 @@ import { CategoryModel } from 'src/app/model/category-model';
 import { PostModel } from 'src/app/model/post-model';
 import { ApiService } from 'src/app/service/api.service';
 import { SubSink } from 'subsink';
-import { NewPostDialogComponent } from './new-post-dialog/new-post-dialog.component';
+import { NewPostDialogComponent } from '../shared/new-post-dialog/new-post-dialog.component';
 
 
 @Component({
@@ -39,7 +39,7 @@ export class PostsByCategoryPageComponent implements OnInit, OnDestroy {
       const dialogRef = this.dialog.open(NewPostDialogComponent, {
          width: '450px',
          // to pass data to the dialog:
-         data: {post: {title: '', body: ''}}
+         data: {post: {title: '', body: ''}, dialogTitle: 'New post'}
        });
 
        dialogRef.afterClosed().subscribe(result => {

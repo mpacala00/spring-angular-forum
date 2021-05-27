@@ -22,4 +22,5 @@ export class NewPostDialogComponent {
 
 export interface DialogData {
   post: PostModel;
+  dialogTitle: string;
 }
