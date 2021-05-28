@@ -5,6 +5,8 @@
 
 @import "~@angular/material/prebuilt-themes/deeppurple-amber.css";
 
+$main-purple: rgb(103, 58, 183);
+
 html,
 body {
    height: 100%;
@@ -34,4 +36,8 @@ body {
 .post-date {
    font-size: 12px;
    color: gray;
+}
+
+a, a:active, a:visited, a:hover {
+   color:rgb(103, 58, 183);
 }

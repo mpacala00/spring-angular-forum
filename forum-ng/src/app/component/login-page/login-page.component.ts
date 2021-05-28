@@ -43,6 +43,7 @@ export class LoginPageComponent implements OnInit, OnDestroy {
          res => {
             console.log(res);
             //setting the token also sets the username in auth service
+            this.authService.logout();
             this.authService.setToken(res.token);
 
             //this redirect works but causes the whole page to reload

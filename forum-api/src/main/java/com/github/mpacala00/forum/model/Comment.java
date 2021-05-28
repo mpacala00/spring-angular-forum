@@ -34,7 +34,7 @@ public class Comment {
     LocalDateTime postDate;
 
     @JsonIgnore
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name="post_id") //cannot be nullable because of the way comments are saved
     Post post;
 

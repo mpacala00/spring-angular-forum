@@ -59,13 +59,28 @@ export class AuthService {
       }
    }
 
+   //for checking if logged-in user is the creator of post or comment
+   public checkIfEntityIsOwned(checkedUsername: string): boolean {
+      let loggedInUser = this.getUsername();
+      if(!loggedInUser) {
+         return false;
+      }
+      if(loggedInUser === checkedUsername) {
+         return true;
+      }
+
+      return false;
+   }
+
    public getUsername(): string {
       this.decodeToken(this.cookieService.get('token'));
       return this.decodedToken.username;
    }
 
    logout(): void {
-      this.cookieService.delete('token');
+      if(this.cookieService.check('token')) {
+         this.cookieService.delete('token');
+      }
    }
 
    decodeToken(token: string): void {

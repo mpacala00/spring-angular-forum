@@ -8,6 +8,7 @@ import { ApiService } from 'src/app/service/api.service';
 import { SubSink } from 'subsink';
 import { NewPostDialogComponent } from '../shared/new-post-dialog/new-post-dialog.component';
 import { ConfirmationDialogModel, ConfirmationDialogComponent } from '../shared/confirmation-dialog/confirmation-dialog.component';
+import { AuthService } from 'src/app/service/auth.service';
 
 @Component({
    selector: 'app-comments-by-post-page',
@@ -23,9 +24,13 @@ export class CommentsByPostPageComponent implements OnInit, OnDestroy {
    public comments: CommentModel[];
    public commentForm: FormGroup;
 
-   
+   public isOwnerOfPost = false;
 
-   constructor(private route: ActivatedRoute, private apiService: ApiService, public dialog: MatDialog, private router: Router) { }
+   constructor(private route: ActivatedRoute,
+               private router: Router ,
+               private apiService: ApiService,
+               private authService: AuthService,
+               public dialog: MatDialog, ) { }
 
    ngOnInit(): void {
       this.commentForm = new FormGroup({
@@ -43,6 +48,9 @@ export class CommentsByPostPageComponent implements OnInit, OnDestroy {
       this.subs.sink = this.apiService.getPostComments(postId).subscribe(
          res => {
             this.post = res;
+            
+            //checking ownership
+            this.checkIfOwner();
             this.refreshComments();
          },
          err => {
@@ -50,6 +58,13 @@ export class CommentsByPostPageComponent implements OnInit, OnDestroy {
             this.router.navigate(['../../'], { relativeTo: this.route });
          }
       )
+   }
+
+   //check if currently logged-in user is the owner of this post
+   private checkIfOwner(): void {
+      if(this.authService.checkIfEntityIsOwned(this.post.creator)) {
+         this.isOwnerOfPost = true;
+      }
    }
 
    openEditPostDialog(): void {

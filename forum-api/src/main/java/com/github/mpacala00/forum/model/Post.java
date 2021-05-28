@@ -38,7 +38,7 @@ public class Post {
 
     LocalDateTime postDate;
 
-    @OneToMany(mappedBy = "post",fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "post", fetch = FetchType.EAGER, cascade = CascadeType.PERSIST, orphanRemoval = true)
     Set<Comment> comments = new HashSet<>();
 
     @JsonIgnore

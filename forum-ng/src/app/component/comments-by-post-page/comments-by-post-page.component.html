@@ -5,12 +5,14 @@
          <mat-card class="my-2">
             <mat-card-title>
                <div class="row">
-                  <div class="col-9 m-0">
+                  <!-- add column class depending if user is owner, if so use col-9 to make space for btn-div -->
+                  <div class="m-0" [ngClass]="{ 'col-12': !isOwnerOfPost, 'col-9': isOwnerOfPost }">
 
                      <h1 class="m-0">{{ post?.title }}</h1>
                      <span class="post-date">Posted on {{ post?.postDate | date: 'short'}} by <a routerLink="/user/{{ post?.creator }}">{{ post?.creator }}</a></span>
                   </div>
-                  <div class="col-3 m-0 btn-div">
+                  
+                  <div class="col-3 m-0 btn-div" *ngIf="isOwnerOfPost">
 
                      <button mat-stroked-button color="basic" type="button"
                      (click)="openEditPostDialog()">Edit post</button>
