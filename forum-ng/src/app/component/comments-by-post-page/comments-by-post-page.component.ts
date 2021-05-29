@@ -50,7 +50,7 @@ export class CommentsByPostPageComponent implements OnInit, OnDestroy {
             this.post = res;
             
             //checking ownership
-            this.checkIfOwner();
+            this.isOwnerOfPost = this.checkIfOwner(this.post.creator);
             this.refreshComments();
          },
          err => {
@@ -61,10 +61,8 @@ export class CommentsByPostPageComponent implements OnInit, OnDestroy {
    }
 
    //check if currently logged-in user is the owner of this post
-   private checkIfOwner(): void {
-      if(this.authService.checkIfEntityIsOwned(this.post.creator)) {
-         this.isOwnerOfPost = true;
-      }
+   private checkIfOwner(usernameToCheck: string): boolean {
+      return this.authService.checkIfEntityIsOwned(usernameToCheck);
    }
 
    openEditPostDialog(): void {

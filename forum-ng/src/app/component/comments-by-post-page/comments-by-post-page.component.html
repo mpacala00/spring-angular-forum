@@ -11,7 +11,7 @@
                      <h1 class="m-0">{{ post?.title }}</h1>
                      <span class="post-date">Posted on {{ post?.postDate | date: 'short'}} by <a routerLink="/user/{{ post?.creator }}">{{ post?.creator }}</a></span>
                   </div>
-                  
+
                   <div class="col-3 m-0 btn-div" *ngIf="isOwnerOfPost">
 
                      <button mat-stroked-button color="basic" type="button"
@@ -25,7 +25,35 @@
 
             <div *ngFor="let c of comments">
                <hr>
-               <p class="post-date">Posted on {{ c?.postDate | date: 'short' }} by <a routerLink="/user/{{ c?.creator }}">{{ c?.creator }}</a></p>
+               <row class="m-0">
+                  <dic class="comment-heading">
+                     <div>
+                        <p class="post-date m-0 d-inline-block">Posted on {{ c?.postDate | date: 'short' }} by <a routerLink="/user/{{ c?.creator }}">{{ c?.creator }}</a></p>
+                     </div>
+                     <div class="btn-div">
+                        <div class="btn-div" *ngIf="checkIfOwner(c.creator)">
+                           <button mat-stroked-button color="basic" type="button"
+                              (click)="openEditPostDialog()">Edit</button>
+   
+                           <button mat-stroked-button color="warn" type="button"
+                              (click)="openDeletePostDialog()">Delete</button>
+                        </div>
+                     </div>
+                  </dic>
+                  <!-- <div class="col-6 p-0">
+                     <p class="post-date">Posted on {{ c?.postDate | date: 'short' }} by <a routerLink="/user/{{ c?.creator }}">{{ c?.creator }}</a></p>
+                  </div>
+                  <div class="col-6 p-0">
+                     <div class="btn-div" *ngIf="checkIfOwner(c.creator)">
+                        <button mat-stroked-button color="basic" type="button"
+                           (click)="openEditPostDialog()">Edit</button>
+
+                        <button mat-stroked-button color="warn" type="button"
+                           (click)="openDeletePostDialog()">Delete</button>
+                     </div>
+                  </div> -->
+               </row>
+               
                <p>{{ c?.body }}</p>
             </div>
             <button mat-stroked-button color="link" type="button"

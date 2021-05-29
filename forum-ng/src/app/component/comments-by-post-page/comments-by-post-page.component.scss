@@ -4,3 +4,10 @@
         margin: 5px 2px;
     }
 }
+
+.comment-heading {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    align-content: center;
+    justify-content: center;
+}
