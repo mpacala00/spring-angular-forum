@@ -38,6 +38,13 @@ body {
    color: gray;
 }
 
-a, a:active, a:visited, a:hover {
-   color:rgb(103, 58, 183);
+a,
+a:active,
+a:visited,
+a:hover {
+   color: rgb(103, 58, 183);
+}
+
+.show {
+   display: inline-block;
 }

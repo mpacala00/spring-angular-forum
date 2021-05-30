@@ -9,55 +9,57 @@
                   <div class="m-0" [ngClass]="{ 'col-12': !isOwnerOfPost, 'col-9': isOwnerOfPost }">
 
                      <h1 class="m-0">{{ post?.title }}</h1>
-                     <span class="post-date">Posted on {{ post?.postDate | date: 'short'}} by <a routerLink="/user/{{ post?.creator }}">{{ post?.creator }}</a></span>
+                     <span class="post-date">Posted on {{ post?.postDate | date: 'short'}} by <a
+                           routerLink="/user/{{ post?.creator }}">{{ post?.creator }}</a></span>
                   </div>
 
                   <div class="col-3 m-0 btn-div" *ngIf="isOwnerOfPost">
 
-                     <button mat-stroked-button color="basic" type="button"
-                     (click)="openEditPostDialog()">Edit post</button>
-                     <button mat-stroked-button color="warn" type="button"
-                     (click)="openDeletePostDialog()">Delete post</button>
+                     <button mat-stroked-button color="basic" type="button" (click)="openEditPostDialog()">Edit
+                        post</button>
+                     <button mat-stroked-button color="warn" type="button" (click)="openDeletePostDialog()">Delete
+                        post</button>
                   </div>
                </div>
             </mat-card-title>
             <mat-card-content>{{ post?.body }}</mat-card-content>
 
-            <div *ngFor="let c of comments">
+            <div *ngFor="let c of comments; let i=index">
                <hr>
                <row class="m-0">
-                  <dic class="comment-heading">
+                  <div class="comment-heading">
                      <div>
-                        <p class="post-date m-0 d-inline-block">Posted on {{ c?.postDate | date: 'short' }} by <a routerLink="/user/{{ c?.creator }}">{{ c?.creator }}</a></p>
+                        <p class="post-date m-0 d-inline-block">Posted on {{ c?.postDate | date: 'short' }} by <a
+                              routerLink="/user/{{ c?.creator }}">{{ c?.creator }}</a></p>
                      </div>
                      <div class="btn-div">
                         <div class="btn-div" *ngIf="checkIfOwner(c.creator)">
-                           <button mat-stroked-button color="basic" type="button"
-                              (click)="openEditPostDialog()">Edit</button>
-   
+                           <button mat-stroked-button color="basic" type="button" (click)="editComment(i)">
+                              Edit
+                           </button>
+
                            <button mat-stroked-button color="warn" type="button"
-                              (click)="openDeletePostDialog()">Delete</button>
+                              (click)="openDeleteCommentDialog(c.id)">Delete</button>
                         </div>
                      </div>
-                  </dic>
-                  <!-- <div class="col-6 p-0">
-                     <p class="post-date">Posted on {{ c?.postDate | date: 'short' }} by <a routerLink="/user/{{ c?.creator }}">{{ c?.creator }}</a></p>
                   </div>
-                  <div class="col-6 p-0">
-                     <div class="btn-div" *ngIf="checkIfOwner(c.creator)">
-                        <button mat-stroked-button color="basic" type="button"
-                           (click)="openEditPostDialog()">Edit</button>
-
-                        <button mat-stroked-button color="warn" type="button"
-                           (click)="openDeletePostDialog()">Delete</button>
-                     </div>
-                  </div> -->
                </row>
-               
+
                <p>{{ c?.body }}</p>
+               <!-- <input  [value]="c?.body" class="d-none"> -->
+
+               <div id="commentEditDiv{{i}}" class="d-none w-100 mb-2">
+                  <mat-form-field class="w-100">
+                     <mat-label>Edit comment</mat-label>
+                     <textarea id="commentInput{{i}}" matInput cdkTextareaAutosize #autosize="cdkTextareaAutosize"
+                        cdkAutosizeMinRows="1" cdkAutosizeMaxRows="5" [value]="c?.body" #textArea required></textarea>
+                  </mat-form-field>
+                  <button mat-stroked-button color="basic" type="button" (click)="updateComment(c, textArea.value)"
+                     [disabled]="textArea.errors">Submit</button>
+               </div>
             </div>
-            <button mat-stroked-button color="link" type="button"
-                           (click)="refreshComments()">Refresh comments</button>
+
+            <button mat-stroked-button color="link" type="button" (click)="refreshComments()">Refresh comments</button>
          </mat-card>
 
          <mat-card class="my-2">

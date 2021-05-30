@@ -24,13 +24,15 @@ export class CommentsByPostPageComponent implements OnInit, OnDestroy {
    public comments: CommentModel[];
    public commentForm: FormGroup;
 
+   public edditedComments = [];
+
    public isOwnerOfPost = false;
 
    constructor(private route: ActivatedRoute,
-               private router: Router ,
-               private apiService: ApiService,
-               private authService: AuthService,
-               public dialog: MatDialog, ) { }
+      private router: Router,
+      private apiService: ApiService,
+      private authService: AuthService,
+      public dialog: MatDialog,) { }
 
    ngOnInit(): void {
       this.commentForm = new FormGroup({
@@ -48,7 +50,7 @@ export class CommentsByPostPageComponent implements OnInit, OnDestroy {
       this.subs.sink = this.apiService.getPostComments(postId).subscribe(
          res => {
             this.post = res;
-            
+
             //checking ownership
             this.isOwnerOfPost = this.checkIfOwner(this.post.creator);
             this.refreshComments();
@@ -69,17 +71,17 @@ export class CommentsByPostPageComponent implements OnInit, OnDestroy {
       const dialogRef = this.dialog.open(NewPostDialogComponent, {
          width: '450px',
          // to pass data to the dialog:
-         data: {post: this.post, dialogTitle: 'Edit post'}
-       });
+         data: { post: this.post, dialogTitle: 'Edit post' }
+      });
 
-       dialogRef.afterClosed().subscribe(result => {
-         if(result != null) {
+      dialogRef.afterClosed().subscribe(result => {
+         if (result != null) {
 
             //result is of type PostModel, but since PostUpdateDTO takes only id, title and body on the back-end
             //rest of the fields won't be mapped
             this.updatePost(result.post);
          }
-       });
+      });
    }
 
    public updatePost(post: PostModel) {
@@ -94,23 +96,80 @@ export class CommentsByPostPageComponent implements OnInit, OnDestroy {
       )
    }
 
+   public updateComment(comment: CommentModel, body: string) {
+      if (body == "") {
+         return;
+      }
+
+      comment.body = body;
+
+      this.subs.sink = this.apiService.putComment(comment).subscribe(
+         res => {
+            this.refreshComments();
+         },
+         err => {
+            alert("An error occured");
+            console.error(err);
+         }
+      )
+
+      console.log(comment);
+   }
+
+   public openDeleteCommentDialog(commentId: number) {
+      const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+         width: '400px',
+         data: new ConfirmationDialogModel('Are you sure?', 'This action cannot be undone')
+      });
+
+      let deletePost: boolean;
+
+      dialogRef.afterClosed().subscribe(dialogResult => {
+         if (dialogResult == true) {
+            this.deleteComment(commentId);
+         }
+      });
+   }
+
    public openDeletePostDialog() {
       const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
          width: '400px',
          data: new ConfirmationDialogModel('Are you sure?', 'This action cannot be undone')
-       });
+      });
 
-       let deletePost: boolean;
+      let deletePost: boolean;
 
-       dialogRef.afterClosed().subscribe(dialogResult => {
-         if(dialogResult == true) {
+      dialogRef.afterClosed().subscribe(dialogResult => {
+         if (dialogResult == true) {
             this.deletePost();
          }
-       });
+      });
    }
 
+   public editComment(index: number) {
+      let input = document.getElementById('commentEditDiv' + index);
+      if (input.classList.contains('d-inline-block')) {
+         input.classList.remove('d-inline-block');
+      } else {
+         input.classList.add('d-inline-block');
+      }
+   }
+
+   // public editComment(index: number) {
+   //    if (this.edditedComments.includes(index)) {
+   //       this.edditedComments.splice(index);
+   //    }
+   //    else {
+   //       this.edditedComments.push(index);
+   //    }
+   // }
+
+   // public isCommentEddited(index: number) {
+   //    this.edditedComments.includes(index);
+   // }
+
    public deletePost() {
-      this.apiService.deletePost(this.postId).subscribe(
+      this.subs.sink = this.apiService.deletePost(this.postId).subscribe(
          res => {
             // console.log(res);
             this.router.navigateByUrl('/');
@@ -122,9 +181,21 @@ export class CommentsByPostPageComponent implements OnInit, OnDestroy {
       )
    }
 
+   public deleteComment(commentId: number) {
+      this.subs.sink = this.apiService.deleteComment(commentId).subscribe(
+         res => {
+            this.refreshComments();
+         },
+         err => {
+            alert('An error occurred during comment delete');
+            console.error(err);
+         }
+      )
+   }
+
    public onCommentPost() {
       if (this.commentForm.valid) {
-         this.apiService.postComment(this.postId, this.commentForm.value).subscribe(
+         this.subs.sink = this.apiService.postComment(this.postId, this.commentForm.value).subscribe(
             res => {
                this.refreshComments();
             },
@@ -140,7 +211,7 @@ export class CommentsByPostPageComponent implements OnInit, OnDestroy {
 
    public refreshComments() {
       if (this.postId) {
-         this.apiService.getCommentsByPost(this.postId).subscribe(
+         this.subs.sink = this.apiService.getCommentsByPost(this.postId).subscribe(
             res => {
                this.comments = res;
             },

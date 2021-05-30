@@ -21,9 +21,14 @@ export class ApiService {
    private GET_CATEGORIES = `${environment.BASE_URL_PUBLIC}/categories`;
    private GET_USER_DTO = `${environment.BASE_URL}/user`;
    private PUT_POST = `${environment.BASE_URL}/post`;
+   private PUT_COMMENT = `${environment.BASE_URL}/comment`;
 
    private getDeletePostByIdUrl(id: number): string {
       return `${environment.BASE_URL}/post/${id}`;
+   }
+
+   private getDeleteCommentByIdUrl(id: number): string {
+      return `${environment.BASE_URL}/comment/${id}`;
    }
 
    private getPostsByCategoryUrl(id: number): string {
@@ -103,6 +108,10 @@ export class ApiService {
       return this.http.post<CommentModel>(this.getPostCommentUrl(postId), comment, { headers: this.headersObj });
    }
 
+   putComment(comment: CommentModel) {
+      return this.http.put<CommentModel>(this.PUT_COMMENT, comment, { headers: this.headersObj });
+   }
+
    postPost(categoryId: number, post: PostModel) {
       return this.http.post<PostModel>(this.getPublishPostOnCategoryUrl(categoryId), post, { headers: this.headersObj });
    }
@@ -113,6 +122,10 @@ export class ApiService {
 
    deletePost(postId: number) {
       return this.http.delete<any>(this.getDeletePostByIdUrl(postId), { headers: this.headersObj });
+   }
+
+   deleteComment(commentId: number) {
+      return this.http.delete<any>(this.getDeleteCommentByIdUrl(commentId), { headers: this.headersObj });
    }
 
    //USER
