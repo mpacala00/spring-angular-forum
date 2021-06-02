@@ -7,7 +7,6 @@ import { TokenResponse } from '../model/token-response';
 import { RegisterModel } from '../model/register-model';
 import { JwtHelperService } from "@auth0/angular-jwt";
 
-// import jwt_decode from 'jwt-decode';
 import { environment } from 'src/environments/environment';
 
 //TODO move all api links to enviroment.ts
@@ -26,9 +25,7 @@ export class AuthService {
 
    private helper = new JwtHelperService();
 
-   constructor(private http: HttpClient, private cookieService: CookieService) { 
-      
-   }
+   constructor(private http: HttpClient, private cookieService: CookieService) { }
 
    public login(loginModel: LoginModel): Observable<any> {
       return this.http.post<TokenResponse>(this.LOGIN_URL, loginModel);
@@ -48,10 +45,10 @@ export class AuthService {
    }
 
    public retrieveTokenFromCookies() {
-      if(this.cookieService.check('token')) {
+      if (this.cookieService.check('token')) {
          let token = this.cookieService.get('token');
 
-         if(this.helper.isTokenExpired(token)) {
+         if (this.helper.isTokenExpired(token)) {
             this.cookieService.delete('token');
             return;
          }
@@ -59,13 +56,20 @@ export class AuthService {
       }
    }
 
+   public getUserAuthorities(): string[] {
+      this.retrieveTokenFromCookies();
+      if (this.decodedToken != null) {
+         return this.decodedToken.authorities;
+      }
+   }
+
    //for checking if logged-in user is the creator of post or comment
    public checkIfEntityIsOwned(checkedUsername: string): boolean {
       let loggedInUser = this.getUsername();
-      if(!loggedInUser) {
+      if (!loggedInUser) {
          return false;
       }
-      if(loggedInUser === checkedUsername) {
+      if (loggedInUser === checkedUsername) {
          return true;
       }
 
@@ -78,7 +82,7 @@ export class AuthService {
    }
 
    logout(): void {
-      if(this.cookieService.check('token')) {
+      if (this.cookieService.check('token')) {
          this.cookieService.delete('token');
       }
    }

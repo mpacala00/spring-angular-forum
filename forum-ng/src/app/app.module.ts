@@ -37,6 +37,7 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { TextFieldModule } from '@angular/cdk/text-field';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatDividerModule } from '@angular/material/divider';
+import { HasAuthorityDirective } from './directive/has-authority.directive';
 
 @NgModule({
    declarations: [
@@ -51,7 +52,8 @@ import { MatDividerModule } from '@angular/material/divider';
       CommentsByPostPageComponent,
       PersonalProfilePageComponent,
       NewPostDialogComponent,
-      ConfirmationDialogComponent
+      ConfirmationDialogComponent,
+      HasAuthorityDirective
    ],
    imports: [
       BrowserModule,

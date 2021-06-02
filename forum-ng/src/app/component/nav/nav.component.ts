@@ -25,7 +25,7 @@ export class NavComponent implements OnInit {
    constructor(private breakpointObserver: BreakpointObserver,
       private authService: AuthService) {
    }
-   
+
    ngOnInit(): void {
       if (this.authService.isTokenSet()) {
          this.username = this.authService.getUsername();
