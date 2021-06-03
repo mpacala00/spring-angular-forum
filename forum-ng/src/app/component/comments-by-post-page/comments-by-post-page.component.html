@@ -20,6 +20,11 @@
                      <button mat-stroked-button color="warn" type="button" (click)="openDeletePostDialog()">Delete
                         post</button>
                   </div>
+                  <div class="col-12 m-0 btn-div" *hasAuthority="'content:delete'" [hidden]="isOwnerOfPost">
+                     <button mat-stroked-button color="warn" type="button" (click)="openDeletePostDialog()">Delete
+                        post</button>
+                  </div>
+
                </div>
             </mat-card-title>
             <mat-card-content>{{ post?.body }}</mat-card-content>
@@ -38,6 +43,12 @@
                               Edit
                            </button>
 
+                           <button mat-stroked-button color="warn" type="button"
+                              (click)="openDeleteCommentDialog(c.id)">Delete</button>
+                        </div>
+
+                        <!-- delete button for admins/mods -->
+                        <div class="btn-div" [hidden]="checkIfOwner(c.creator)" *hasAuthority="'content:delete'">
                            <button mat-stroked-button color="warn" type="button"
                               (click)="openDeleteCommentDialog(c.id)">Delete</button>
                         </div>
