@@ -11,4 +11,5 @@ public class CategoryDTO {
     Long id;
     String name;
     String description;
+    boolean isUserFollowing;
 }

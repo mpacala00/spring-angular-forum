@@ -91,7 +91,7 @@ export class ApiService {
 
    //just return category, posts will be nested in it...
    getPostsByCategory(categoryId: number) {
-      return this.http.get<PostModel[]>(this.getPostsByCategoryUrl(categoryId));
+      return this.http.get<PostModel[]>(this.getPostsByCategoryUrl(categoryId), { headers: this.headersObj });
    }
 
    //return post object with comments

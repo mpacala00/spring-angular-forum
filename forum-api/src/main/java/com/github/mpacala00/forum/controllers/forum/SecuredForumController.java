@@ -1,5 +1,6 @@
 package com.github.mpacala00.forum.controllers.forum;
 
+import com.github.mpacala00.forum.exception.model.ResourceNotFoundException;
 import com.github.mpacala00.forum.model.Category;
 import com.github.mpacala00.forum.model.Comment;
 import com.github.mpacala00.forum.model.Post;
@@ -10,6 +11,7 @@ import com.github.mpacala00.forum.pojos.HttpResponse;
 import com.github.mpacala00.forum.service.data.CategoryServiceImpl;
 import com.github.mpacala00.forum.service.data.CommentServiceImpl;
 import com.github.mpacala00.forum.service.data.PostServiceImpl;
+import com.github.mpacala00.forum.service.data.UserService;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -32,6 +34,7 @@ public class SecuredForumController {
     PostServiceImpl postServiceImpl;
     CategoryServiceImpl categoryServiceImpl;
     CommentServiceImpl commentServiceImpl;
+    UserService userService;
 
     @PostMapping("/category")
     public ResponseEntity<Category> publishCategory(@RequestBody Category category) {
@@ -108,6 +111,32 @@ public class SecuredForumController {
         commentServiceImpl.deleteById(Long.valueOf(commentId));
         log.info("Comment of id={} deleted", commentId);
         return HttpResponse.createResponseEntity(HttpStatus.OK, "Comment successfully deleted");
+    }
+
+    @GetMapping("category/{categoryId}/follow")
+    public ResponseEntity<HttpResponse> followCategory(@PathVariable Long categoryId, @AuthenticationPrincipal User user)
+            throws ResourceNotFoundException {
+        Category cat = categoryServiceImpl.findById(categoryId);
+        if(user != null && cat != null) {
+            user.getFollowedCategories().add(cat);
+            userService.save(user);
+
+            return HttpResponse.createResponseEntity(HttpStatus.OK, "Category followed");
+        }
+        throw new ResourceNotFoundException(String.format("Category of id=%d not found", categoryId));
+    }
+
+    @GetMapping("category/{categoryId}/unfollow")
+    public ResponseEntity<HttpResponse> unfollowCategory(@PathVariable Long categoryId, @AuthenticationPrincipal User user) throws ResourceNotFoundException {
+        Category cat = categoryServiceImpl.findById(categoryId);
+        if(user != null && cat != null) {
+            user.getFollowedCategories().remove(cat);
+            userService.save(user);
+
+            return HttpResponse.createResponseEntity(HttpStatus.OK, "Category unfollowed");
+        }
+
+        throw new ResourceNotFoundException(String.format("Category of id=%d not found", categoryId));
     }
 
 }

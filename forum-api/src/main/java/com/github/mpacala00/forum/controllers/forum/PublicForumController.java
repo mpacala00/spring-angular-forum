@@ -1,5 +1,8 @@
 package com.github.mpacala00.forum.controllers.forum;
 
+import com.github.mpacala00.forum.exception.model.ResourceNotFoundException;
+import com.github.mpacala00.forum.model.Category;
+import com.github.mpacala00.forum.model.User;
 import com.github.mpacala00.forum.model.dto.category.CategoryDTO;
 import com.github.mpacala00.forum.model.dto.category.CategoryPostsDTO;
 import com.github.mpacala00.forum.model.dto.comment.CommentDTO;
@@ -15,7 +18,11 @@ import lombok.AllArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -55,9 +62,22 @@ public class PublicForumController {
 
     //CategoryPostsDTO so it also contains all of its posts
     @GetMapping("category/{categoryId}")
-    public ResponseEntity<CategoryPostsDTO> getCategoryById(@PathVariable Long categoryId) {
+    public ResponseEntity<CategoryPostsDTO> getCategoryById(@PathVariable Long categoryId,
+                                                            @AuthenticationPrincipal User user) throws ResourceNotFoundException {
+        Category cat = categoryServiceImpl.findById(categoryId);
+        if(cat == null) {
+            throw new ResourceNotFoundException(String.format("Category of id=%d not found", categoryId));
+        }
+
         CategoryPostsDTO dto = categoryDTOMappingService
-                .convertToCategoryPostsDTO(categoryServiceImpl.findById(categoryId));
+                .convertToCategoryPostsDTO(cat);
+
+        if(user != null) {
+            if(user.getFollowedCategories().contains(cat)) {
+                dto.setUserFollowing(true);
+            }
+        }
+
         return new ResponseEntity<>(dto, HttpStatus.OK);
     }
 

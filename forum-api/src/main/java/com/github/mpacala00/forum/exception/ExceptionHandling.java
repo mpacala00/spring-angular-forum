@@ -15,6 +15,11 @@ public class ExceptionHandling {
         return HttpResponse.createResponseEntity(HttpStatus.NOT_FOUND, e.getMessage());
     }
 
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public final ResponseEntity<HttpResponse> resourceNotFoundException(ResourceNotFoundException e) {
+        return HttpResponse.createResponseEntity(HttpStatus.NOT_FOUND, e.getMessage());
+    }
+
     @ExceptionHandler(ActivationEmailException.class)
     public final ResponseEntity<HttpResponse> activationEmailException(ActivationEmailException e) {
         return HttpResponse.createResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());

@@ -2,24 +2,23 @@ package com.github.mpacala00.forum.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.google.common.hash.HashCode;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.experimental.FieldDefaults;
-import org.apache.commons.lang3.builder.HashCodeExclude;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 @Entity
 @Table(name = "category")
 @Getter
 @Setter
-@EqualsAndHashCode(exclude = {"followingUsers"})
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Category {
@@ -64,5 +63,19 @@ public class Category {
                 ", description='" + description + '\'' +
                 ", posts=" + posts +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Category category = (Category) o;
+        return id.equals(category.id) &&
+                name.equals(category.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name);
     }
 }

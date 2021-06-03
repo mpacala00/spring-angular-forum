@@ -20,6 +20,7 @@ public class CategoryDTOMappingService implements DTOMappingService<Category, Ca
         dto.setDescription(entity.getDescription());
         dto.setName(entity.getName());
         dto.setId(entity.getId());
+        dto.setUserFollowing(false);
         return dto;
     }
 
