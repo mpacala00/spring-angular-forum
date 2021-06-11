@@ -1,7 +1,10 @@
 .post {
+   &:hover {
+      background-color: rgb(252, 250, 255);
+      cursor: pointer;
+   }
+}
 
-    &:hover {
-        background-color: rgb(252, 250, 255);
-        cursor: pointer;
-    }
+button {
+   margin: 5px 2px;
 }

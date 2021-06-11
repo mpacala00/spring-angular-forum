@@ -4,6 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { CategoryModel } from 'src/app/model/category-model';
 import { PostModel } from 'src/app/model/post-model';
 import { ApiService } from 'src/app/service/api.service';
+import { AuthService } from 'src/app/service/auth.service';
 import { SubSink } from 'subsink';
 import { NewPostDialogComponent } from '../shared/new-post-dialog/new-post-dialog.component';
 
@@ -18,36 +19,45 @@ export class PostsByCategoryPageComponent implements OnInit, OnDestroy {
    private subs = new SubSink();
 
    category: CategoryModel;
+   isUserFollowingCategory: boolean = false;
    posts: PostModel[];
    categoryId: number;
 
    newPost: PostModel;
 
    constructor(private apiService: ApiService,
-               private router: Router,
-               private activatedRoute: ActivatedRoute,
-               public dialog: MatDialog) { }
+      private router: Router,
+      private activatedRoute: ActivatedRoute,
+      public dialog: MatDialog,
+      public authService: AuthService) { }
 
    ngOnInit(): void {
       this.activatedRoute.params.subscribe(
          params => { this.categoryId = params['id']; }
       );
-      this.getCategory(this.categoryId);
+
+      //make a call to a different endpoint depending on user being logged in
+      if (this.authService.isTokenSet()) {
+         this.getCategoryLoggedIn(this.categoryId);
+      } else {
+         this.getCategory(this.categoryId);
+      }
+
    }
 
    openDialog(): void {
       const dialogRef = this.dialog.open(NewPostDialogComponent, {
          width: '450px',
          // to pass data to the dialog:
-         data: {post: {title: '', body: ''}, dialogTitle: 'New post'}
-       });
+         data: { post: { title: '', body: '' }, dialogTitle: 'New post' }
+      });
 
-       dialogRef.afterClosed().subscribe(result => {
-         if(result != null) {
+      dialogRef.afterClosed().subscribe(result => {
+         if (result != null) {
             this.newPost = result.post;
             this.publishPost(this.newPost);
          }
-       });
+      });
    }
 
    publishPost(post: PostModel) {
@@ -76,6 +86,19 @@ export class PostsByCategoryPageComponent implements OnInit, OnDestroy {
       )
    }
 
+   getCategoryLoggedIn(categoryId: number) {
+      this.subs.sink = this.apiService.getCategoryByIdSecured(categoryId).subscribe(
+         res => {
+            this.category = res;
+            this.posts = res.posts;
+            this.isUserFollowingCategory = res.userFollowing;
+         },
+         err => {
+            alert("An error occured while fetching category");
+         }
+      )
+   }
+
    //make a call when category is known
    getPostsByCategory(categoryId: number) {
       this.subs.sink = this.apiService.getPostsByCategory(categoryId).subscribe(
@@ -86,6 +109,31 @@ export class PostsByCategoryPageComponent implements OnInit, OnDestroy {
             alert('An error occured while fetching posts');
          }
       )
+   }
+
+   //this function follows or unfollows category depending on the current state
+   switchFollowingCategory() {
+      if (!this.isUserFollowingCategory) {
+         this.subs.sink = this.apiService.followCategory(this.categoryId).subscribe(
+            res => {
+               this.isUserFollowingCategory = true;
+            },
+            err => {
+               console.error(err);
+            }
+         )
+      }
+
+      else if (this.isUserFollowingCategory) {
+         this.subs.sink = this.apiService.unfollowCategory(this.categoryId).subscribe(
+            res => {
+               this.isUserFollowingCategory = false;
+            },
+            err => {
+               console.error(err);
+            }
+         )
+      }
    }
 
    public navigateToPost(postId: number) {

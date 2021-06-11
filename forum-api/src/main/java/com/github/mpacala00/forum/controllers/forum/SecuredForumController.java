@@ -5,6 +5,7 @@ import com.github.mpacala00.forum.model.Category;
 import com.github.mpacala00.forum.model.Comment;
 import com.github.mpacala00.forum.model.Post;
 import com.github.mpacala00.forum.model.User;
+import com.github.mpacala00.forum.model.dto.category.CategoryPostsDTO;
 import com.github.mpacala00.forum.model.dto.comment.CommentUpdateDTO;
 import com.github.mpacala00.forum.model.dto.post.PostUpdateDTO;
 import com.github.mpacala00.forum.pojos.HttpResponse;
@@ -12,6 +13,7 @@ import com.github.mpacala00.forum.service.data.CategoryServiceImpl;
 import com.github.mpacala00.forum.service.data.CommentServiceImpl;
 import com.github.mpacala00.forum.service.data.PostServiceImpl;
 import com.github.mpacala00.forum.service.data.UserService;
+import com.github.mpacala00.forum.service.dto.CategoryDTOMappingService;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -34,7 +36,32 @@ public class SecuredForumController {
     PostServiceImpl postServiceImpl;
     CategoryServiceImpl categoryServiceImpl;
     CommentServiceImpl commentServiceImpl;
+    CategoryDTOMappingService categoryDTOMappingService;
     UserService userService;
+
+    //GET this when user is logged in
+    //check if user is following this category and set boolean in dto accordingly
+    @GetMapping("category/{categoryId}")
+    public ResponseEntity<CategoryPostsDTO> getCategoryById(@PathVariable Long categoryId,
+                                                            @AuthenticationPrincipal User user)
+            throws ResourceNotFoundException {
+
+        Category cat = categoryServiceImpl.findById(categoryId);
+        if(cat == null) {
+            throw new ResourceNotFoundException(String.format("Category of id=%d not found", categoryId));
+        }
+
+        CategoryPostsDTO dto = categoryDTOMappingService
+                .convertToCategoryPostsDTO(cat);
+
+        if(user != null) {
+            if(user.getFollowedCategories().contains(cat)) {
+                dto.setUserFollowing(true);
+            }
+        }
+
+        return new ResponseEntity<>(dto, HttpStatus.OK);
+    }
 
     @PostMapping("/category")
     public ResponseEntity<Category> publishCategory(@RequestBody Category category) {
@@ -127,7 +154,8 @@ public class SecuredForumController {
     }
 
     @GetMapping("category/{categoryId}/unfollow")
-    public ResponseEntity<HttpResponse> unfollowCategory(@PathVariable Long categoryId, @AuthenticationPrincipal User user) throws ResourceNotFoundException {
+    public ResponseEntity<HttpResponse> unfollowCategory(@PathVariable Long categoryId, @AuthenticationPrincipal User user)
+            throws ResourceNotFoundException {
         Category cat = categoryServiceImpl.findById(categoryId);
         if(user != null && cat != null) {
             user.getFollowedCategories().remove(cat);

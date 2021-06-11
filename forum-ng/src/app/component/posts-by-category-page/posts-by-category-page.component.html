@@ -7,6 +7,9 @@
             <mat-card-subtitle>{{ category?.description }}</mat-card-subtitle>
 
             <mat-card-content>
+               <button mat-raised-button color="primary" (click)="switchFollowingCategory()">
+                  {{ isUserFollowingCategory == true ? "Unfollow" : "Follow" }}
+               </button>
                <button mat-raised-button color="primary" (click)="openDialog()">New post</button>
             </mat-card-content>
          </mat-card>

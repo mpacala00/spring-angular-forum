@@ -5,4 +5,5 @@ export interface CategoryModel {
    name: string;
    description: string;
    posts: PostModel[];
+   userFollowing: boolean;
 }

@@ -89,9 +89,21 @@ export class ApiService {
       return this.http.get<CategoryModel>(this.getCategoryByIdUrl(categoryId));
    }
 
+   getCategoryByIdSecured(cateogryId: number) {
+      return this.http.get<CategoryModel>(`${environment.BASE_URL}/category/${cateogryId}`, { headers: this.headersObj });
+   }
+
+   followCategory(cateogryId: number) {
+      return this.http.get<any>(`${environment.BASE_URL}/category/${cateogryId}/follow`, { headers: this.headersObj });
+   }
+
+   unfollowCategory(cateogryId: number) {
+      return this.http.get<any>(`${environment.BASE_URL}/category/${cateogryId}/unfollow`, { headers: this.headersObj });
+   }
+
    //just return category, posts will be nested in it...
    getPostsByCategory(categoryId: number) {
-      return this.http.get<PostModel[]>(this.getPostsByCategoryUrl(categoryId), { headers: this.headersObj });
+      return this.http.get<PostModel[]>(this.getPostsByCategoryUrl(categoryId));
    }
 
    //return post object with comments
