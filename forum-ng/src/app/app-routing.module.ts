@@ -6,6 +6,7 @@ import { CategoryPageComponent } from './component/category-page/category-page.c
 import { PostsByCategoryPageComponent } from './component/posts-by-category-page/posts-by-category-page.component';
 import { CommentsByPostPageComponent } from './component/comments-by-post-page/comments-by-post-page.component';
 import { PersonalProfilePageComponent } from './component/user/personal-profile-page/personal-profile-page.component';
+import { AuthenticationGuard } from './guard/authentication.guard';
 
 const routes: Routes = [
    {
@@ -38,7 +39,8 @@ const routes: Routes = [
       children: [
          {
             path: ':username',
-            component: PersonalProfilePageComponent
+            component: PersonalProfilePageComponent,
+            canActivate: [AuthenticationGuard]
          }
       ]
    },

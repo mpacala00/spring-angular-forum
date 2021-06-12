@@ -36,6 +36,22 @@ export class AuthService {
       return this.http.post<TokenResponse>(this.REGISTER_URL, registerModel);
    }
 
+   public isUserLoggedIn(): boolean {
+      //check if token is present & if not expired & decode token
+      this.retrieveTokenFromCookies();
+
+      if (!this.decodedToken) {
+         return false;
+      }
+
+      //check if username is present in the token
+      if (this.decodedToken.username != null && this.decodedToken.username != '') {
+         return true;
+      }
+
+      return false;
+   }
+
    public setToken(token: string): void {
       if (this.cookieService.check('token')) {
          this.cookieService.delete('token');
