@@ -1,6 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgxWebstorageModule } from 'ngx-webstorage';
 
@@ -10,6 +10,7 @@ import { LoginPageComponent } from './component/login-page/login-page.component'
 import { NewPostComponent } from './component/new-post/new-post.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
+import { AddTokenInterceptor } from './interceptor/add-token.interceptor';
 import { NavComponent } from './component/nav/nav.component';
 import { RegisterPageComponent } from './component/register-page/register-page.component';
 import { CategoryPageComponent } from './component/category-page/category-page.component';
@@ -79,7 +80,9 @@ import { HasAuthorityDirective } from './directive/has-authority.directive';
       MatDividerModule
    ],
 
-   providers: [],
+   providers: [
+      { provide: HTTP_INTERCEPTORS, useClass: AddTokenInterceptor, multi: true }
+   ],
    bootstrap: [AppComponent]
 })
 export class AppModule { }

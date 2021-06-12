@@ -77,6 +77,9 @@ export class AuthService {
    }
 
    public getUsername(): string {
+      if (!this.cookieService.check('token')) {
+         return null;
+      }
       this.decodeToken(this.cookieService.get('token'));
       return this.decodedToken.username;
    }

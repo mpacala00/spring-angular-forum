@@ -1,10 +1,8 @@
 import { Injectable } from '@angular/core';
 
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 
-import { PostModel } from '../model/post-model';
 import { CategoryModel } from '../model/category-model';
-import { CommentModel } from '../model/comment-model';
 import { CookieService } from 'ngx-cookie-service';
 import { environment } from 'src/environments/environment';
 
@@ -25,22 +23,14 @@ export class CategoryApiService {
    }
 
    getCategoryByIdSecured(cateogryId: number) {
-      return this.http.get<CategoryModel>(`${environment.BASE_URL}/category/${cateogryId}`, { headers: this.headersObj });
+      return this.http.get<CategoryModel>(`${environment.BASE_URL}/category/${cateogryId}`);
    }
 
    followCategory(cateogryId: number) {
-      return this.http.get<any>(`${environment.BASE_URL}/category/${cateogryId}/follow`, { headers: this.headersObj });
+      return this.http.get<any>(`${environment.BASE_URL}/category/${cateogryId}/follow`);
    }
 
    unfollowCategory(cateogryId: number) {
-      return this.http.get<any>(`${environment.BASE_URL}/category/${cateogryId}/unfollow`, { headers: this.headersObj });
+      return this.http.get<any>(`${environment.BASE_URL}/category/${cateogryId}/unfollow`);
    }
-
-   private headersObj = new HttpHeaders({
-      'Authorization': "Bearer " + this.cookieService.get('token'),
-      'Access-Control-Allow-Origin': 'http://localhost:8080',
-      'Access-Control-Allow-Methods': 'GET, POST, OPTIONS, PUT, PATCH, DELETE',
-      'Access-Control-Allow-Headers': 'X-Requested-With,content-type:application/json',
-      'Access-Control-Allow-Credentials': 'true'
-   });
 }

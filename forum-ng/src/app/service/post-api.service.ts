@@ -1,10 +1,8 @@
 import { Injectable } from '@angular/core';
 
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 
 import { PostModel } from '../model/post-model';
-import { CategoryModel } from '../model/category-model';
-import { CommentModel } from '../model/comment-model';
 import { CookieService } from 'ngx-cookie-service';
 import { environment } from 'src/environments/environment';
 
@@ -33,22 +31,14 @@ export class PostApiService {
    }
 
    postPost(categoryId: number, post: PostModel) {
-      return this.http.post<PostModel>(`${environment.BASE_URL}/category/${categoryId}/post`, post, { headers: this.headersObj });
+      return this.http.post<PostModel>(`${environment.BASE_URL}/category/${categoryId}/post`, post);
    }
 
    putPost(post: PostModel) {
-      return this.http.put<PostModel>(this.PUT_POST, post, { headers: this.headersObj });
+      return this.http.put<PostModel>(this.PUT_POST, post);
    }
 
    deletePost(postId: number) {
-      return this.http.delete<any>(`${environment.BASE_URL}/post/${postId}`, { headers: this.headersObj });
+      return this.http.delete<any>(`${environment.BASE_URL}/post/${postId}`);
    }
-
-   private headersObj = new HttpHeaders({
-      'Authorization': "Bearer " + this.cookieService.get('token'),
-      'Access-Control-Allow-Origin': 'http://localhost:8080',
-      'Access-Control-Allow-Methods': 'GET, POST, OPTIONS, PUT, PATCH, DELETE',
-      'Access-Control-Allow-Headers': 'X-Requested-With,content-type:application/json',
-      'Access-Control-Allow-Credentials': 'true'
-   });
 }
