@@ -3,10 +3,11 @@ import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CategoryModel } from 'src/app/model/category-model';
 import { PostModel } from 'src/app/model/post-model';
-import { ApiService } from 'src/app/service/api.service';
+import { CategoryApiService } from 'src/app/service/category-api.service';
 import { AuthService } from 'src/app/service/auth.service';
 import { SubSink } from 'subsink';
 import { NewPostDialogComponent } from '../shared/new-post-dialog/new-post-dialog.component';
+import { PostApiService } from 'src/app/service/post-api.service';
 
 
 @Component({
@@ -25,7 +26,9 @@ export class PostsByCategoryPageComponent implements OnInit, OnDestroy {
 
    newPost: PostModel;
 
-   constructor(private apiService: ApiService,
+   constructor(
+      private categoryApiService: CategoryApiService,
+      private postApiService: PostApiService,
       private router: Router,
       private activatedRoute: ActivatedRoute,
       public dialog: MatDialog,
@@ -61,7 +64,7 @@ export class PostsByCategoryPageComponent implements OnInit, OnDestroy {
    }
 
    publishPost(post: PostModel) {
-      this.subs.sink = this.apiService.postPost(this.categoryId, post).subscribe(
+      this.subs.sink = this.postApiService.postPost(this.categoryId, post).subscribe(
          res => {
             //refresh post list
             this.getPostsByCategory(this.categoryId);
@@ -75,7 +78,7 @@ export class PostsByCategoryPageComponent implements OnInit, OnDestroy {
 
    //will contain its posts
    getCategory(categoryId: number) {
-      this.subs.sink = this.apiService.getCategoryById(categoryId).subscribe(
+      this.subs.sink = this.categoryApiService.getCategoryById(categoryId).subscribe(
          res => {
             this.category = res;
             this.posts = res.posts;
@@ -87,7 +90,7 @@ export class PostsByCategoryPageComponent implements OnInit, OnDestroy {
    }
 
    getCategoryLoggedIn(categoryId: number) {
-      this.subs.sink = this.apiService.getCategoryByIdSecured(categoryId).subscribe(
+      this.subs.sink = this.categoryApiService.getCategoryByIdSecured(categoryId).subscribe(
          res => {
             this.category = res;
             this.posts = res.posts;
@@ -101,7 +104,7 @@ export class PostsByCategoryPageComponent implements OnInit, OnDestroy {
 
    //make a call when category is known
    getPostsByCategory(categoryId: number) {
-      this.subs.sink = this.apiService.getPostsByCategory(categoryId).subscribe(
+      this.subs.sink = this.postApiService.getPostsByCategory(categoryId).subscribe(
          res => {
             this.posts = res;
          },
@@ -114,7 +117,7 @@ export class PostsByCategoryPageComponent implements OnInit, OnDestroy {
    //this function follows or unfollows category depending on the current state
    switchFollowingCategory() {
       if (!this.isUserFollowingCategory) {
-         this.subs.sink = this.apiService.followCategory(this.categoryId).subscribe(
+         this.subs.sink = this.categoryApiService.followCategory(this.categoryId).subscribe(
             res => {
                this.isUserFollowingCategory = true;
             },
@@ -125,7 +128,7 @@ export class PostsByCategoryPageComponent implements OnInit, OnDestroy {
       }
 
       else if (this.isUserFollowingCategory) {
-         this.subs.sink = this.apiService.unfollowCategory(this.categoryId).subscribe(
+         this.subs.sink = this.categoryApiService.unfollowCategory(this.categoryId).subscribe(
             res => {
                this.isUserFollowingCategory = false;
             },

@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { ApiService } from 'src/app/service/api.service';
+import { CategoryApiService } from 'src/app/service/category-api.service';
 import { SubSink } from 'subsink';
 import { CategoryModel } from '../../model/category-model';
 
@@ -15,14 +15,14 @@ export class CategoryPageComponent implements OnInit, OnDestroy {
 
    categories: CategoryModel[] = [];
 
-   constructor(private apiService: ApiService, private router: Router) { }
+   constructor(private categoryApiService: CategoryApiService, private router: Router) { }
 
    ngOnInit(): void {
       this.getAllCategories();
    }
 
    private getAllCategories() {
-      this.subs.sink = this.apiService.getAllCategories().subscribe(
+      this.subs.sink = this.categoryApiService.getAllCategories().subscribe(
          res => {
             this.categories = res;
          },
@@ -30,7 +30,7 @@ export class CategoryPageComponent implements OnInit, OnDestroy {
             alert('Some error occured while fetching categories');
          }
       );
-      
+
    }
 
    //todo use route ID instead of sending state, it causes problems upon refreshing on child route

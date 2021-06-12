@@ -1,8 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ApiService } from '../../service/api.service';
-import { PostModel } from '../../model/post-model';
 import { Router } from '@angular/router';
-import { LocalStorageService } from 'ngx-webstorage';
 import { FormControl, FormGroup } from '@angular/forms';
 import { AuthService } from 'src/app/service/auth.service';
 import { SubSink } from 'subsink';
@@ -18,7 +15,7 @@ export class NewPostComponent implements OnInit, OnDestroy {
 
    public postForm: FormGroup;
 
-   constructor(private service: ApiService, private router: Router, private authService: AuthService) { }
+   constructor(private router: Router, private authService: AuthService) { }
 
    ngOnInit(): void {
       this.postForm = new FormGroup({
@@ -34,10 +31,10 @@ export class NewPostComponent implements OnInit, OnDestroy {
       //this.post.date = Date.now().toString();
       //console.log(this.post.date);
 
-      this.subs.sink = this.service.createNewPost(this.postForm.value).subscribe(
-         res => { console.log("success"); window.location.href = "/"; },
-         err => { console.log("error: ", err); }
-      );
+      // this.subs.sink = this.service.createNewPost(this.postForm.value).subscribe(
+      //    res => { console.log("success"); window.location.href = "/"; },
+      //    err => { console.log("error: ", err); }
+      // );
 
       //this.router.navigate(["/"]);
    }

@@ -6,7 +6,6 @@ import { NgxWebstorageModule } from 'ngx-webstorage';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { PostContainerComponent } from './component/post-container/post-container.component';
 import { LoginPageComponent } from './component/login-page/login-page.component';
 import { NewPostComponent } from './component/new-post/new-post.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
@@ -42,7 +41,6 @@ import { HasAuthorityDirective } from './directive/has-authority.directive';
 @NgModule({
    declarations: [
       AppComponent,
-      PostContainerComponent,
       LoginPageComponent,
       NewPostComponent,
       NavComponent,

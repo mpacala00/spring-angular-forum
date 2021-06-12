@@ -4,7 +4,8 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CommentModel } from 'src/app/model/comment-model';
 import { PostModel } from 'src/app/model/post-model';
-import { ApiService } from 'src/app/service/api.service';
+import { PostApiService } from 'src/app/service/post-api.service';
+import { CommentApiService } from 'src/app/service/comment-api.service';
 import { SubSink } from 'subsink';
 import { NewPostDialogComponent } from '../shared/new-post-dialog/new-post-dialog.component';
 import { ConfirmationDialogModel, ConfirmationDialogComponent } from '../shared/confirmation-dialog/confirmation-dialog.component';
@@ -28,9 +29,11 @@ export class CommentsByPostPageComponent implements OnInit, OnDestroy {
 
    public isOwnerOfPost = false;
 
-   constructor(private route: ActivatedRoute,
+   constructor(
+      private route: ActivatedRoute,
       private router: Router,
-      private apiService: ApiService,
+      private commentApiService: CommentApiService,
+      private postApiService: PostApiService,
       private authService: AuthService,
       public dialog: MatDialog,) { }
 
@@ -47,7 +50,7 @@ export class CommentsByPostPageComponent implements OnInit, OnDestroy {
    }
 
    private getPostById(postId: number): void {
-      this.subs.sink = this.apiService.getPostComments(postId).subscribe(
+      this.subs.sink = this.postApiService.getPostComments(postId).subscribe(
          res => {
             this.post = res;
 
@@ -85,7 +88,7 @@ export class CommentsByPostPageComponent implements OnInit, OnDestroy {
    }
 
    public updatePost(post: PostModel) {
-      this.subs.sink = this.apiService.putPost(post).subscribe(
+      this.subs.sink = this.postApiService.putPost(post).subscribe(
          res => {
             this.refreshComments();
          },
@@ -103,7 +106,7 @@ export class CommentsByPostPageComponent implements OnInit, OnDestroy {
 
       comment.body = body;
 
-      this.subs.sink = this.apiService.putComment(comment).subscribe(
+      this.subs.sink = this.commentApiService.putComment(comment).subscribe(
          res => {
             this.refreshComments();
          },
@@ -169,7 +172,7 @@ export class CommentsByPostPageComponent implements OnInit, OnDestroy {
    // }
 
    public deletePost() {
-      this.subs.sink = this.apiService.deletePost(this.postId).subscribe(
+      this.subs.sink = this.postApiService.deletePost(this.postId).subscribe(
          res => {
             // console.log(res);
             this.router.navigateByUrl('/');
@@ -182,7 +185,7 @@ export class CommentsByPostPageComponent implements OnInit, OnDestroy {
    }
 
    public deleteComment(commentId: number) {
-      this.subs.sink = this.apiService.deleteComment(commentId).subscribe(
+      this.subs.sink = this.commentApiService.deleteComment(commentId).subscribe(
          res => {
             this.refreshComments();
          },
@@ -195,7 +198,7 @@ export class CommentsByPostPageComponent implements OnInit, OnDestroy {
 
    public onCommentPost() {
       if (this.commentForm.valid) {
-         this.subs.sink = this.apiService.postComment(this.postId, this.commentForm.value).subscribe(
+         this.subs.sink = this.commentApiService.postComment(this.postId, this.commentForm.value).subscribe(
             res => {
                this.refreshComments();
             },
@@ -211,7 +214,7 @@ export class CommentsByPostPageComponent implements OnInit, OnDestroy {
 
    public refreshComments() {
       if (this.postId) {
-         this.subs.sink = this.apiService.getCommentsByPost(this.postId).subscribe(
+         this.subs.sink = this.commentApiService.getCommentsByPost(this.postId).subscribe(
             res => {
                this.comments = res;
             },

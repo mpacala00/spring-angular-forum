@@ -1,6 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
-import { ApiService } from 'src/app/service/api.service';
+import { UserApiService } from 'src/app/service/user-api.service';
 import { UserModel } from 'src/app/model/user-model';
 import { SubSink } from 'subsink';
 import { PostModel } from 'src/app/model/post-model';
@@ -24,14 +23,14 @@ export class PersonalProfilePageComponent implements OnInit, OnDestroy {
    //is currently logged in user owner of the profile
    isOwner: boolean = false;
 
-   constructor(private apiService: ApiService) { }
-   
+   constructor(private userApiService: UserApiService) { }
+
    ngOnInit(): void {
       this.getCurrentUser();
    }
 
    public getCurrentUser() {
-      this.subs.sink = this.apiService.getCurrentUser().subscribe(
+      this.subs.sink = this.userApiService.getCurrentUser().subscribe(
          res => {
             this.user = res;
          },
@@ -42,7 +41,7 @@ export class PersonalProfilePageComponent implements OnInit, OnDestroy {
    }
 
    public getUserPosts() {
-      this.subs.sink = this.apiService.getPostsByUsername(this.user.username).subscribe(
+      this.subs.sink = this.userApiService.getPostsByUsername(this.user.username).subscribe(
          res => {
             this.userPosts = res;
          },
@@ -53,7 +52,7 @@ export class PersonalProfilePageComponent implements OnInit, OnDestroy {
    }
 
    public getUserComments() {
-      this.subs.sink = this.apiService.getCommentsByUsername(this.user.username).subscribe(
+      this.subs.sink = this.userApiService.getCommentsByUsername(this.user.username).subscribe(
          res => {
             this.userComments = res;
          },
@@ -64,7 +63,7 @@ export class PersonalProfilePageComponent implements OnInit, OnDestroy {
    }
 
    public getUserFollowedCategories() {
-      this.subs.sink = this.apiService.getFollowedCategoriesByUsername(this.user.username).subscribe(
+      this.subs.sink = this.userApiService.getFollowedCategoriesByUsername(this.user.username).subscribe(
          res => {
             this.userFollowedCategories = res;
          },
