@@ -16,8 +16,8 @@ export class UserApiService {
 
    constructor(private http: HttpClient, private cookieService: CookieService) { }
 
-   getCurrentUser() {
-      return this.http.get<UserModel>(`${environment.BASE_URL}/user/current`, { headers: this.headersObj });
+   getUserProfileInfo(username: string) {
+      return this.http.get<UserModel>(`${environment.BASE_URL_PUBLIC}/user/${username}`);
    }
 
    getUserByUsername(username: string) {
@@ -35,12 +35,4 @@ export class UserApiService {
    getFollowedCategoriesByUsername(username: string) {
       return this.http.get<CategoryModel[]>(`${environment.BASE_URL_PUBLIC}/user/${username}/followed-categories`);
    }
-
-   private headersObj = new HttpHeaders({
-      'Authorization': "Bearer " + this.cookieService.get('token'),
-      'Access-Control-Allow-Origin': 'http://localhost:8080',
-      'Access-Control-Allow-Methods': 'GET, POST, OPTIONS, PUT, PATCH, DELETE',
-      'Access-Control-Allow-Headers': 'X-Requested-With,content-type:application/json',
-      'Access-Control-Allow-Credentials': 'true'
-   });
 }

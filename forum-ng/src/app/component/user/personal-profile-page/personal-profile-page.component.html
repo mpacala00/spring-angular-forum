@@ -4,7 +4,7 @@
 
          <mat-card class="mt-4">
             <mat-card-title>
-               Your profile
+               {{ user?.username }}
             </mat-card-title>
             <!-- <mat-card-subtitle>subtitle</mat-card-subtitle> -->
 
@@ -15,7 +15,6 @@
                      <div class="tab-content">
                         <p>username: {{ user?.username }}</p>
                         <p>email: {{ user?.email }}</p>
-                        <p>github link:</p>
                      </div>
                   </mat-tab>
 
@@ -23,17 +22,36 @@
                      <div class="tab-content">
                         <button mat-raised-button color="basic" (click)="getUserFollowedCategories()">Load</button>
 
-                           <div *ngFor="let c of userFollowedCategories">
-                              <mat-card class="my-3 pointer" routerLink="{{ createCategoryUrl(c.id) }}">
-                                 <mat-card-title>{{c.name}}</mat-card-title>
-                              </mat-card>
-                           </div>
+                        <div *ngFor="let c of userFollowedCategories; let i=index">
+                           <mat-card class="my-3 pointer">
+                              <mat-card-title>
+
+                                 <div [ngClass]="isOwner == true ? 'grid-owner' : 'grid-none'">
+                                    <div routerLink="{{ createCategoryUrl(c.id) }}">
+                                       <p>
+                                          {{c.name}}
+                                       </p>
+                                    </div>
+
+                                    <div class="ml-auto" *ngIf="isOwner">
+                                       <button mat-raised-button color="primary"
+                                          (click)="unfollowCategory(i)">Unfollow</button>
+                                    </div>
+                                 </div>
+
+                                 <mat-card-subtitle>
+                                    {{c.description}}
+                                 </mat-card-subtitle>
+
+                              </mat-card-title>
+                           </mat-card>
+                        </div>
                      </div>
                   </mat-tab>
-                  <mat-tab label="Your posts" (click)="getUserPosts()">
+                  <mat-tab label="Posts" (click)="getUserPosts()">
                      <div class="tab-content">
                         <button mat-raised-button color="basic" (click)="getUserPosts()">Load</button>
-                        
+
                         <div *ngFor="let p of userPosts">
                            <mat-card class="my-3 pointer" routerLink="{{ createPostUrl(p.categoryId, p.id) }}">
                               <mat-card-title>{{p.title}}</mat-card-title>
@@ -43,13 +61,13 @@
 
                      </div>
                   </mat-tab>
-                  <mat-tab label="Your comments">
+                  <mat-tab label="Comments">
                      <div class="tab-content">
                         <button mat-raised-button color="basic" (click)="getUserComments()">Load</button>
 
                         <div *ngFor="let c of userComments">
                            <hr>
-                           <p class="text-muted">Posted on {{ c?.postDate | date }} in post: 
+                           <p class="text-muted">Posted on {{ c?.postDate | date }} in post:
                               <a routerLink="{{ createPostUrl(c.postCategoryId, c.postId) }}">"{{ c?.postTitle }}"</a>
                            </p>
                            <p>{{ c?.body }}</p>

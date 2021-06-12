@@ -1,3 +1,29 @@
 .tab-content {
    padding: 1em !important;
 }
+
+.grid-none {
+   display: block;
+
+   div:hover {
+      p {
+         text-decoration: underline;
+         color: rgb(103, 58, 183);
+      }
+   }
+}
+
+.grid-owner {
+   display: grid;
+   grid-template-columns: 3fr 1fr;
+
+   //underline paragraph with cat name when hovering over first div in grid-owner
+   div {
+      &:first-of-type:hover {
+         p {
+            text-decoration: underline;
+            color: rgb(103, 58, 183);
+         }
+      }
+   }
+}

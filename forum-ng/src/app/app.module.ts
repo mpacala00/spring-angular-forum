@@ -7,7 +7,6 @@ import { NgxWebstorageModule } from 'ngx-webstorage';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { LoginPageComponent } from './component/login-page/login-page.component';
-import { NewPostComponent } from './component/new-post/new-post.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 import { AddTokenInterceptor } from './interceptor/add-token.interceptor';
@@ -43,7 +42,6 @@ import { HasAuthorityDirective } from './directive/has-authority.directive';
    declarations: [
       AppComponent,
       LoginPageComponent,
-      NewPostComponent,
       NavComponent,
       RegisterPageComponent,
       CategoryPageComponent,

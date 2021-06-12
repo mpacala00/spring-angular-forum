@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { LoginPageComponent } from './component/login-page/login-page.component';
-import { NewPostComponent } from './component/new-post/new-post.component';
 import { RegisterPageComponent } from './component/register-page/register-page.component';
 import { CategoryPageComponent } from './component/category-page/category-page.component';
 import { PostsByCategoryPageComponent } from './component/posts-by-category-page/posts-by-category-page.component';
@@ -38,16 +37,9 @@ const routes: Routes = [
       path: 'user',
       children: [
          {
-            path: 'current',
+            path: ':username',
             component: PersonalProfilePageComponent
          }
-      ]
-   },
-   {
-      path: 'post',
-      children: [
-         { path: 'new', component: NewPostComponent }
-         // { path: ':id', component: PostByIdComponent }
       ]
    },
    {

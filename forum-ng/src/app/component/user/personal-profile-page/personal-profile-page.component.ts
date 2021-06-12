@@ -5,6 +5,9 @@ import { SubSink } from 'subsink';
 import { PostModel } from 'src/app/model/post-model';
 import { CommentModel } from 'src/app/model/comment-model';
 import { CategoryModel } from 'src/app/model/category-model';
+import { ActivatedRoute } from '@angular/router';
+import { AuthService } from 'src/app/service/auth.service';
+import { CategoryApiService } from 'src/app/service/category-api.service';
 
 @Component({
    selector: 'app-personal-profile-page',
@@ -15,6 +18,8 @@ export class PersonalProfilePageComponent implements OnInit, OnDestroy {
 
    private subs = new SubSink();
 
+   private profileUsername: string;
+
    user: UserModel;
    userPosts: PostModel[];
    userComments: CommentModel[];
@@ -23,19 +28,29 @@ export class PersonalProfilePageComponent implements OnInit, OnDestroy {
    //is currently logged in user owner of the profile
    isOwner: boolean = false;
 
-   constructor(private userApiService: UserApiService) { }
+   constructor(private userApiService: UserApiService,
+      private activatedRoute: ActivatedRoute,
+      private authService: AuthService,
+      private categoryApiService: CategoryApiService) { }
 
    ngOnInit(): void {
-      this.getCurrentUser();
+      this.activatedRoute.params.subscribe(
+         params => {
+            this.profileUsername = params['username'];
+            console.log(this.profileUsername);
+         }
+      )
+      this.getUserProfileInfo(this.profileUsername);
+      this.isOwner = this.authService.checkIfEntityIsOwned(this.profileUsername);
    }
 
-   public getCurrentUser() {
-      this.subs.sink = this.userApiService.getCurrentUser().subscribe(
+   public getUserProfileInfo(username: string) {
+      this.subs.sink = this.userApiService.getUserProfileInfo(username).subscribe(
          res => {
             this.user = res;
          },
          err => {
-            alert("Could not retrieve current user");
+            alert("Could not retrieve user profile info");
          }
       )
    }
@@ -69,6 +84,20 @@ export class PersonalProfilePageComponent implements OnInit, OnDestroy {
          },
          err => {
             alert("An error occured while fetching followed categories");
+         }
+      )
+   }
+
+   unfollowCategory(index: number) {
+      let categoryId = this.userFollowedCategories[index].id;
+
+      this.categoryApiService.unfollowCategory(categoryId).subscribe(
+         res => {
+            //refresh category list
+            this.getUserFollowedCategories();
+         },
+         err => {
+            alert('An error occured');
          }
       )
    }
