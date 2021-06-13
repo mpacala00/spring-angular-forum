@@ -26,6 +26,10 @@ export class CategoryApiService {
       return this.http.get<CategoryModel>(`${environment.BASE_URL}/category/${cateogryId}`);
    }
 
+   postCategory(category: CategoryModel) {
+      return this.http.post<CategoryModel>(`${environment.BASE_URL}/category`, category);
+   }
+
    followCategory(cateogryId: number) {
       return this.http.get<any>(`${environment.BASE_URL}/category/${cateogryId}/follow`);
    }

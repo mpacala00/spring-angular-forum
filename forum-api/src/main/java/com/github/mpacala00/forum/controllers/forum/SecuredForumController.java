@@ -64,6 +64,7 @@ public class SecuredForumController {
     }
 
     @PostMapping("/category")
+    @PreAuthorize("hasAuthority('content:add')")
     public ResponseEntity<Category> publishCategory(@RequestBody Category category) {
         return new ResponseEntity<>(categoryServiceImpl.save(category), HttpStatus.CREATED);
     }

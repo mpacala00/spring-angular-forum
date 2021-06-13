@@ -37,6 +37,7 @@ import { TextFieldModule } from '@angular/cdk/text-field';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatDividerModule } from '@angular/material/divider';
 import { HasAuthorityDirective } from './directive/has-authority.directive';
+import { NewCategoryDialogComponent } from './component/shared/new-category-dialog/new-category-dialog.component';
 
 @NgModule({
    declarations: [
@@ -50,7 +51,8 @@ import { HasAuthorityDirective } from './directive/has-authority.directive';
       PersonalProfilePageComponent,
       NewPostDialogComponent,
       ConfirmationDialogComponent,
-      HasAuthorityDirective
+      HasAuthorityDirective,
+      NewCategoryDialogComponent
    ],
    imports: [
       BrowserModule,

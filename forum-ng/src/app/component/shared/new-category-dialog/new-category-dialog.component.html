@@ -1,0 +1,18 @@
+<h1 mat-dialog-title>{{ data.dialogTitle }}</h1>
+<div mat-dialog-content>
+   <mat-form-field>
+      <mat-label>Category name</mat-label>
+      <input matInput [(ngModel)]="data.category.name" required maxlength="150" cdkFocusInitial>
+   </mat-form-field>
+
+   <mat-form-field>
+      <mat-label>Description (max 200 characters)</mat-label>
+      <textarea matInput [(ngModel)]="data.category.description" cdkTextareaAutosize #autosize="cdkTextareaAutosize"
+         cdkAutosizeMinRows="1" cdkAutosizeMaxRows="15" required maxlength="200"></textarea>
+   </mat-form-field>
+</div>
+<div mat-dialog-actions>
+   <button mat-button (click)="onNoClick()">Cancel</button>
+   <button mat-button [mat-dialog-close]="data"
+      [disabled]="!data.category.name || !data.category.description">Add</button>
+</div>
