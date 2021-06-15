@@ -3,7 +3,7 @@
 
       <form class="col-lg-6 mt-5" [formGroup]="registerForm" (ngSubmit)="register()">
          <div class="form-group">
-            <p *ngIf="errorMessage" style="color: red;">{{errorMessage}}</p>
+            <p class="msg-error">{{ registerFailedMessage }}</p>
 
             <mat-form-field appearance="fill">
                <mat-label>Username</mat-label>

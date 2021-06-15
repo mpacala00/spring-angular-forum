@@ -1,26 +1,23 @@
-$invalid-color: red;
-
-input.ng-invalid.ng-touched {
-      //border: $invalid-color 1px solid;
-}
-
 mat-form-field {
-      width: 100%;
+   width: 100%;
 }
 
 .form-group {
-      position: relative;
-      padding-top: 15px;
-}
-
-.span-error {
-      color: $invalid-color;
-      position: absolute;
-      top: -20%;
+   position: relative;
+   padding-top: 15px;
 }
 
 #loginButton {
-      margin-left: 50%;
-      margin-right: 50%;
-      transform: translateX(-50%);
+   margin-left: 50%;
+   margin-right: 50%;
+   transform: translateX(-50%);
+}
+
+.span-error {
+   color: red;
+   position: absolute;
+   top: -20%;
+
+   font-family: Roboto, "Helvetica Neue", sans-serif;
+   padding: 0 10.5px;
 }

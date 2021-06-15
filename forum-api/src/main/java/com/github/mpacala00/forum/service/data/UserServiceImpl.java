@@ -1,5 +1,6 @@
 package com.github.mpacala00.forum.service.data;
 
+import com.github.mpacala00.forum.exception.model.UserNotFoundException;
 import com.github.mpacala00.forum.model.Comment;
 import com.github.mpacala00.forum.model.Post;
 import com.github.mpacala00.forum.model.User;
@@ -106,6 +107,17 @@ public class UserServiceImpl implements UserService {
             return currentUserName;
         }
         throw new Exception("Failed to retreive username. Token not found");
+    }
+
+    @Override
+    public void blockUser(Long userId) throws UserNotFoundException {
+        User user = userRepository.findById(userId).orElse(null);
+
+        if(user == null) {
+            throw new UserNotFoundException(String.format("User of id=%d not found", userId));
+        }
+
+        user.setNotLocked(false);
     }
 
 }

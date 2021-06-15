@@ -1,5 +1,6 @@
 package com.github.mpacala00.forum.service.data;
 
+import com.github.mpacala00.forum.exception.model.UserNotFoundException;
 import com.github.mpacala00.forum.model.Comment;
 import com.github.mpacala00.forum.model.Post;
 import com.github.mpacala00.forum.model.User;
@@ -20,4 +21,6 @@ public interface UserService extends CrudService<User, Long> {
      * @return Optional of user
      */
     Optional<User> findOptionalByUsername(String username);
+    
+    void blockUser(Long userId) throws UserNotFoundException;
 }

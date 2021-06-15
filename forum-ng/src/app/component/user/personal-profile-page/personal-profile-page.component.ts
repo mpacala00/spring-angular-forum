@@ -8,6 +8,8 @@ import { CategoryModel } from 'src/app/model/category-model';
 import { ActivatedRoute } from '@angular/router';
 import { AuthService } from 'src/app/service/auth.service';
 import { CategoryApiService } from 'src/app/service/category-api.service';
+import { MatDialog } from '@angular/material/dialog';
+import { ConfirmationDialogComponent, ConfirmationDialogModel } from '../../shared/confirmation-dialog/confirmation-dialog.component';
 
 @Component({
    selector: 'app-personal-profile-page',
@@ -31,7 +33,8 @@ export class PersonalProfilePageComponent implements OnInit, OnDestroy {
    constructor(private userApiService: UserApiService,
       private activatedRoute: ActivatedRoute,
       private authService: AuthService,
-      private categoryApiService: CategoryApiService) { }
+      private categoryApiService: CategoryApiService,
+      public dialog: MatDialog) { }
 
    ngOnInit(): void {
       this.activatedRoute.params.subscribe(
@@ -100,6 +103,32 @@ export class PersonalProfilePageComponent implements OnInit, OnDestroy {
             alert('An error occured');
          }
       )
+   }
+
+   openBlockUserDialog() {
+      const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+         width: '400px',
+         data: new ConfirmationDialogModel('Are you sure?', 'This action cannot be undone')
+      });
+
+      let deletePost: boolean;
+
+      dialogRef.afterClosed().subscribe(dialogResult => {
+         if (dialogResult == true) {
+            this.blockUser();
+         }
+      });
+   }
+
+   blockUser() {
+      this.subs.sink = this.userApiService.blockUser(this.user.id).subscribe(
+         res => {
+            this.getUserProfileInfo(this.profileUsername);
+         },
+         err => {
+            alert("An error occured while blocking user");
+         }
+      );
    }
 
    public createPostUrl(categoryId: number, postId: number) {

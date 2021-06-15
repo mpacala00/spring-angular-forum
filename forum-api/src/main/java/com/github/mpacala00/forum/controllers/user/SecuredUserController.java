@@ -1,7 +1,9 @@
 package com.github.mpacala00.forum.controllers.user;
 
+import com.github.mpacala00.forum.exception.model.UserNotFoundException;
 import com.github.mpacala00.forum.model.Comment;
 import com.github.mpacala00.forum.model.Post;
+import com.github.mpacala00.forum.model.User;
 import com.github.mpacala00.forum.model.dto.UserDTO;
 import com.github.mpacala00.forum.pojos.HttpResponse;
 import com.github.mpacala00.forum.service.data.UserServiceImpl;
@@ -14,7 +16,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-import com.github.mpacala00.forum.model.User;
 
 import javax.transaction.Transactional;
 import java.util.List;
@@ -57,5 +58,11 @@ public class SecuredUserController {
     public ResponseEntity<HttpResponse> deleteUserById(@PathVariable("userId") String userId) {
         userService.deleteById(Long.valueOf(userId));
         return HttpResponse.createResponseEntity(HttpStatus.OK, "User successfully deleted");
+    }
+
+    @GetMapping("/{userId}/block")
+    public ResponseEntity<HttpResponse> blockUser(@PathVariable("userId") String userId) throws UserNotFoundException {
+        userService.blockUser(Long.valueOf(userId));
+        return HttpResponse.createResponseEntity(HttpStatus.OK, "User successfuly blocked");
     }
 }

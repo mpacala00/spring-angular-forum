@@ -55,7 +55,10 @@ export class CommentsByPostPageComponent implements OnInit, OnDestroy {
             this.post = res;
 
             //checking ownership
-            this.isOwnerOfPost = this.checkIfOwner(this.post.creator);
+            if (this.authService.isTokenSet()) {
+               this.isOwnerOfPost = this.checkIfOwner(this.post.creator);
+            }
+
             this.refreshComments();
          },
          err => {

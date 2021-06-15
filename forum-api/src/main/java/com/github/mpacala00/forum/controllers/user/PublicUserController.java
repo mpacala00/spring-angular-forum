@@ -1,17 +1,23 @@
 package com.github.mpacala00.forum.controllers.user;
 
 import com.github.mpacala00.forum.exception.model.*;
+import com.github.mpacala00.forum.model.User;
+import com.github.mpacala00.forum.model.dto.UserDTO;
 import com.github.mpacala00.forum.model.dto.category.CategoryDTO;
 import com.github.mpacala00.forum.model.dto.comment.CommentDTO;
 import com.github.mpacala00.forum.model.dto.post.PostDTO;
-import com.github.mpacala00.forum.model.dto.UserDTO;
-import com.github.mpacala00.forum.pojos.*;
+import com.github.mpacala00.forum.pojos.HttpResponse;
+import com.github.mpacala00.forum.pojos.TokenResponse;
+import com.github.mpacala00.forum.pojos.UserLogin;
+import com.github.mpacala00.forum.pojos.UserRegistration;
+import com.github.mpacala00.forum.security.UserAuthenticationService;
 import com.github.mpacala00.forum.security.model.Role;
 import com.github.mpacala00.forum.service.data.UserServiceImpl;
 import com.github.mpacala00.forum.service.dto.CategoryDTOMappingService;
 import com.github.mpacala00.forum.service.dto.CommentDTOMappingService;
 import com.github.mpacala00.forum.service.dto.PostDTOMappingService;
 import com.github.mpacala00.forum.service.dto.UserDTOMappingService;
+import com.github.mpacala00.forum.service.mail.MailServiceImpl;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -21,9 +27,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import com.github.mpacala00.forum.model.User;
-import com.github.mpacala00.forum.security.UserAuthenticationService;
-import com.github.mpacala00.forum.service.mail.MailServiceImpl;
 
 import java.rmi.activation.ActivateFailedException;
 import java.util.List;
@@ -51,7 +54,7 @@ public class PublicUserController {
 
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody UserRegistration userRegistration)
-            throws UserNotFoundException, ActivationEmailException, UserAlreadyExistException, InvalidCredentialsException, EmailTakenException {
+            throws UserNotFoundException, ActivationEmailException, UserAlreadyExistException, InvalidCredentialsException, EmailTakenException, UserLockedException {
 
         if(userRegistration.getUsername().contains(" ")) {
             throw new InvalidCredentialsException("Username cannot contain spaces");
@@ -70,6 +73,7 @@ public class PublicUserController {
         
         //enable account for now to skip email activation
         u.setEnabled(true);
+        u.setNotLocked(true);
         u.setRole(Role.ROLE_USER);
 
         User savedUser = userService.save(u);
@@ -97,10 +101,10 @@ public class PublicUserController {
     }
     
     @PostMapping("/login")
-    public ResponseEntity<TokenResponse> login(@RequestBody UserLogin login)
-            throws UserNotFoundException, InvalidCredentialsException {
-        String token = authenticationService.login(login.getUsername(), login.getPassword())
-                .orElseThrow(() -> new UserNotFoundException("User does not exist"));
+    public ResponseEntity<?> login(@RequestBody UserLogin login)
+            throws UserNotFoundException, InvalidCredentialsException, UserLockedException {
+
+        String token = authenticationService.login(login.getUsername(), login.getPassword()).get();
         return new ResponseEntity<>(new TokenResponse(token), HttpStatus.OK);
     }
 

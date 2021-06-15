@@ -3,8 +3,14 @@
       <div class="col-lg-12 p-0">
 
          <mat-card class="mt-4">
-            <mat-card-title>
-               {{ user?.username }}
+            <mat-card-title class="title-grid">
+               <div>
+                  {{ user?.username }}
+               </div>
+               <div class="ml-auto" *hasAuthority="'user:block'" [hidden]="isOwner">
+                  <button mat-stroked-button color="warn" (click)="openBlockUserDialog()">block</button>
+               </div>
+
             </mat-card-title>
             <!-- <mat-card-subtitle>subtitle</mat-card-subtitle> -->
 

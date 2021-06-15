@@ -1,46 +1,28 @@
 <div class="container">
-      <div class="row justify-content-center">
+   <div class="row justify-content-center">
 
-            <form class="col-lg-6 mt-5" [formGroup]="loginForm" name="loginForm" (ngSubmit)="login()">
-                  <div class="form-group">
+      <form class="col-lg-6 mt-5" [formGroup]="loginForm" name="loginForm" (ngSubmit)="login()">
+         <div class="form-group">
+            <span *ngIf="loginFailedMessage" class="span-error">{{ loginFailedMessage }}</span>
 
-                        <!-- <mat-form-field appearance="fill">
-                              <mat-label>Input</mat-label>
-                              <input matInput>
-                        </mat-form-field> -->
-                        <!-- <span class="span-error"
-                              *ngIf="!loginForm.get('username').valid && loginForm.get('username').touched">
-                              Please provide valid username
-                        </span> -->
+            <mat-form-field appearance="fill">
+               <mat-label>Username</mat-label>
+               <input matInput type="text" name="username" [formControlName]="'username'" autofocus>
+               <mat-error *ngIf="loginForm.get('username').invalid">This field is required</mat-error>
+            </mat-form-field>
 
-                        <mat-form-field appearance="fill">
-                              <mat-label>Username</mat-label>
-                              <input matInput type="text" name="username" [formControlName]="'username'" autofocus>
-                              <mat-error *ngIf="loginForm.get('username').invalid">{{getErrorMessage()}}</mat-error>
-                        </mat-form-field>
+         </div>
+         <div class="form-group">
 
-                  </div>
-                  <div class="form-group">
-                        <!-- <label for="login">Enter your password</label> -->
+            <mat-form-field appearance="fill">
+               <mat-label>Password</mat-label>
+               <input matInput type="password" name="password" [formControlName]="'password'" required>
+               <mat-error *ngIf="loginForm.get('password').invalid">This field is required</mat-error>
+            </mat-form-field>
 
-                        <!-- <input class="form-control" type="password" name="password" [formControlName]="'password'"
-                              placeholder="Password" required /> -->
+         </div>
 
-                        <!-- <span class="span-error"
-                              *ngIf="!loginForm.get('password').valid && loginForm.get('password').touched">
-                              Please provide valid password
-                        </span> -->
-
-                        <mat-form-field appearance="fill">
-                              <mat-label>Password</mat-label>
-                              <input matInput type="password" name="password" [formControlName]="'password'" required>
-                              <mat-error *ngIf="loginForm.get('password').invalid">{{getErrorMessage()}}</mat-error>
-                        </mat-form-field>
-
-                  </div>
-
-                  <button mat-raised-button color="primary" type="submit" id="loginButton">Login</button>
-                  <!-- <button type="submit" class="btn btn-primary">login</button> -->
-            </form>
-      </div>
+         <button mat-raised-button color="primary" type="submit" id="loginButton">Login</button>
+      </form>
+   </div>
 </div>

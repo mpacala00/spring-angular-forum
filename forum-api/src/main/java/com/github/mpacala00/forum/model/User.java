@@ -43,6 +43,9 @@ public class User implements UserDetails {
 
     @NotNull
     boolean enabled;
+    
+    @NotNull
+    boolean notLocked;
 
     @NotNull
     @Enumerated(EnumType.STRING)
@@ -64,12 +67,14 @@ public class User implements UserDetails {
     Set<Category> followedCategories = new HashSet<>();
 
     public User() {
-        this.enabled = false;
-        this.role = Role.ROLE_USER;
+        this.setEnabled(false);
+        this.setNotLocked(true);
+        this.setRole(Role.ROLE_USER);
     }
 
     public User(@NonNull String username, @NonNull String password, @NonNull String email) {
         super();
+        this.setNotLocked(true);
         this.username = username;
         //todo implement password encoding that works
         //this.password = passwordEncoder().encode(password);
@@ -100,7 +105,7 @@ public class User implements UserDetails {
 
     @Override
     public boolean isAccountNonLocked() {
-        return true;
+        return notLocked;
     }
 
     @Override

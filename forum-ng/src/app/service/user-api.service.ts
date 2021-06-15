@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
 
 import { PostModel } from '../model/post-model';
 import { CategoryModel } from '../model/category-model';
@@ -34,5 +34,9 @@ export class UserApiService {
 
    getFollowedCategoriesByUsername(username: string) {
       return this.http.get<CategoryModel[]>(`${environment.BASE_URL_PUBLIC}/user/${username}/followed-categories`);
+   }
+
+   blockUser(userId: number) {
+      return this.http.get<any>(`${environment.BASE_URL}/user/${userId}/block`);
    }
 }

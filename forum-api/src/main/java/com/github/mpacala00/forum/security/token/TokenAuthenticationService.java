@@ -1,7 +1,10 @@
 package com.github.mpacala00.forum.security.token;
 
 import com.github.mpacala00.forum.exception.model.InvalidCredentialsException;
+import com.github.mpacala00.forum.exception.model.UserLockedException;
 import com.github.mpacala00.forum.exception.model.UserNotFoundException;
+import com.github.mpacala00.forum.model.User;
+import com.github.mpacala00.forum.security.UserAuthenticationService;
 import com.github.mpacala00.forum.service.data.UserServiceImpl;
 import com.google.common.collect.ImmutableMap;
 import lombok.AccessLevel;
@@ -9,8 +12,6 @@ import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
-import com.github.mpacala00.forum.model.User;
-import com.github.mpacala00.forum.security.UserAuthenticationService;
 
 import java.util.Optional;
 
@@ -24,11 +25,15 @@ public class TokenAuthenticationService implements UserAuthenticationService {
 
     @Override
     public Optional<String> login(String username, String password)
-            throws UserNotFoundException, InvalidCredentialsException {
+            throws UserNotFoundException, InvalidCredentialsException, UserLockedException {
 
         User u = userService.findByUsername(username);
         if(u == null) {
             throw new UserNotFoundException("User does not exist");
+        }
+        
+        if(!u.isNotLocked()) {
+            throw new UserLockedException("Account has been locked");
         }
 
         if(u.getPassword().equals(password)) {

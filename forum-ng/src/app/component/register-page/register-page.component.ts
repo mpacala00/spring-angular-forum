@@ -1,6 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { AuthApiService } from 'src/app/service/auth-api.service';
 import { AuthService } from 'src/app/service/auth.service';
 import { SubSink } from 'subsink';
 
@@ -14,9 +15,9 @@ export class RegisterPageComponent implements OnInit, OnDestroy {
    private subs = new SubSink();
 
    public registerForm: FormGroup;
-   public errorMessage: string;
+   public registerFailedMessage: string;
 
-   constructor(private authService: AuthService, private router: Router) { }
+   constructor(private authService: AuthService, private authApiService: AuthApiService, private router: Router) { }
 
    ngOnInit(): void {
       this.registerForm = new FormGroup({
@@ -30,21 +31,21 @@ export class RegisterPageComponent implements OnInit, OnDestroy {
    }
 
    public register() {
-      if(this.registerForm.controls['username'].value.indexOf(' ') >= 0) {
-         this.errorMessage = "Username cannot contain spaces";
-         return;
+      this.registerFailedMessage = null;
+
+      if (this.registerForm.valid) {
+         this.subs.sink = this.authApiService.postRegister(this.registerForm.value).subscribe(
+            res => {
+               this.authService.login(res.token);
+               window.location.href = '/';
+            },
+            err => {
+               console.log(err);
+               this.registerFailedMessage = err.error.message;
+               console.log("registerFailedMessage: ", this.registerFailedMessage);
+            }
+         );
       }
-      this.subs.sink = this.authService.register(this.registerForm.value).subscribe(
-         res => {
-            let token = res.token;
-            //basically log in
-            this.authService.setToken(token);
-            this.router.navigateByUrl('/');
-         },
-         err => {
-            console.log(err);
-         }
-      );
 
    }
 

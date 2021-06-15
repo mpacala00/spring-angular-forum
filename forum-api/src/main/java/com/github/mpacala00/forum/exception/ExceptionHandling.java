@@ -15,6 +15,11 @@ public class ExceptionHandling {
         return HttpResponse.createResponseEntity(HttpStatus.NOT_FOUND, e.getMessage());
     }
 
+    @ExceptionHandler(UserLockedException.class)
+    public final ResponseEntity<HttpResponse> userLockedException(UserLockedException e) {
+        return HttpResponse.createResponseEntity(HttpStatus.LOCKED, e.getMessage());
+    }
+
     @ExceptionHandler(ResourceNotFoundException.class)
     public final ResponseEntity<HttpResponse> resourceNotFoundException(ResourceNotFoundException e) {
         return HttpResponse.createResponseEntity(HttpStatus.NOT_FOUND, e.getMessage());
