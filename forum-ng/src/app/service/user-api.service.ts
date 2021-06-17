@@ -39,4 +39,8 @@ export class UserApiService {
    blockUser(userId: number) {
       return this.http.get<any>(`${environment.BASE_URL}/user/${userId}/block`);
    }
+
+   getAllUsers() {
+      return this.http.get<UserModel[]>(`${environment.BASE_URL}/user/all`);
+   }
 }

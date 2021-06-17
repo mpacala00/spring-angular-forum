@@ -21,6 +21,7 @@ spring:
 
     host: smtp.mailtrap.io
     port: 25
+    #credentials have been refreshed
     username: 91f05e81b0403f
     password: 9e49565445af78
     protocol: smtp

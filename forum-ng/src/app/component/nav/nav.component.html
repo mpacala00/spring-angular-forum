@@ -22,6 +22,8 @@
                <div class="col-6" *ngIf="username">
                   <div class="float-right">
                      <span>Welcome back, {{username}}!&nbsp;</span>
+                     <button mat-raised-button color="accent" *hasAuthority="'user:delete'"
+                        routerLink="/admin-panel">Admin</button>
                      <button mat-raised-button color="basic" routerLink="/user/{{ username }}">Profile</button>
                      <button mat-raised-button color="basic" (click)="logout()">Logout</button>
                   </div>

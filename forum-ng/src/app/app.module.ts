@@ -18,6 +18,7 @@ import { CommentsByPostPageComponent } from './component/comments-by-post-page/c
 import { PersonalProfilePageComponent } from './component/user/personal-profile-page/personal-profile-page.component';
 import { NewPostDialogComponent } from './component/shared/new-post-dialog/new-post-dialog.component';
 import { ConfirmationDialogComponent } from './component/shared/confirmation-dialog/confirmation-dialog.component';
+import { AdminPanelPageComponent } from './component/admin-panel-page/admin-panel-page.component';
 
 import { BrowserAnimationsModule } from
    '@angular/platform-browser/animations';
@@ -52,7 +53,8 @@ import { NewCategoryDialogComponent } from './component/shared/new-category-dial
       NewPostDialogComponent,
       ConfirmationDialogComponent,
       HasAuthorityDirective,
-      NewCategoryDialogComponent
+      NewCategoryDialogComponent,
+      AdminPanelPageComponent
    ],
    imports: [
       BrowserModule,

@@ -6,7 +6,8 @@ export const environment = {
    production: false,
    BASE_URL_PUBLIC: "http://localhost:8080/public",
    BASE_URL: "http://localhost:8080",
-   viewAuthority: "content:view"
+   viewAuthority: "content:view",
+   userDeleteAuthority: "user:delete"
 };
 
 /*

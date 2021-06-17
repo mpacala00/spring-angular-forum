@@ -47,8 +47,8 @@ public class SecuredUserController {
         return new ResponseEntity<>(userService.getPosts(userId), HttpStatus.OK);
     }
 
-    //todo secure with required authority
     @GetMapping("/all")
+//    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<Set<User>> users() {
         return new ResponseEntity<>(userService.findAll(), HttpStatus.OK);
     }

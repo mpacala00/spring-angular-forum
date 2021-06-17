@@ -7,6 +7,8 @@ import { PostsByCategoryPageComponent } from './component/posts-by-category-page
 import { CommentsByPostPageComponent } from './component/comments-by-post-page/comments-by-post-page.component';
 import { PersonalProfilePageComponent } from './component/user/personal-profile-page/personal-profile-page.component';
 import { AuthenticationGuard } from './guard/authentication.guard';
+import { AdminGuard } from './guard/admin.guard';
+import { AdminPanelPageComponent } from './component/admin-panel-page/admin-panel-page.component';
 
 const routes: Routes = [
    {
@@ -51,6 +53,11 @@ const routes: Routes = [
    {
       path: 'register',
       component: RegisterPageComponent
+   },
+   {
+      path: 'admin-panel',
+      component: AdminPanelPageComponent,
+      canActivate: [AdminGuard]
    },
    {
       path: '',
