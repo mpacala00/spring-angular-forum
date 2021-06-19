@@ -35,7 +35,7 @@ Roles higher in hierarchy also contain authorities from previous ones.
 | ADMIN     | user:delete, user:update                |
 
 
-**content:view** allows for viewing other users' profiles, **content:add** allows for adding additional categories, rest is self-explanatory
+**content:view** allows the viewing of other users' profiles, **content:add** allows creating new categories, rest is self-explanatory
 
 ## JWT implementation
 Example token looks like this:
@@ -54,18 +54,18 @@ Example token looks like this:
 	    "user:update"
 	  ]
 	}
-Token lasts exactly for one day, which can be changed in **application.yml**.
-Username passed in the token is helpful in determining if user is the owner of content (post or comment).
+Tokens lasts exactly for one day, which can be changed in **application.yml**.
+Username passed in the token is helpful in determining whether the user is the owner of content (post or comment).
 Authorities are used in conditional component visibilty.
 
 Token is decoded on the front-end using [@auth0/angular-jwt](https://github.com/auth0/angular2-jwt) package and its stored in cookies using [ngx-cookie-service](https://www.npmjs.com/package/ngx-cookie-service)
 
 ## Conditional component visibility
-Component visibility is determined in 2 ways: either by using ***hasAuthority** directive or by checking **isOwner** boolean declared in component
+Component visibility is determined in 2 ways: either by using the ***hasAuthority** directive or by checking **isOwner** boolean declared in component
 
 	<button  mat-raised-button *hasAuthority="'user:delete'" color="accent">Admin</button>
 
-*hasAuthority directive is checking if the token has required authority.
+The *hasAuthority directive is checking if the token has required authority.
 
 Implementation:
 		
@@ -112,4 +112,4 @@ Checking for ownership of entity in Angular client:
 	private checkIfOwner(usernameToCheck: string): boolean {
 		return this.authService.checkIfEntityIsOwned(usernameToCheck);
 	}
-**checkIfOwner()** function sets the property by calling authService which checks if passed in string matches username in the token.
+**checkIfOwner()** function sets the property by calling authService which checks if what is passed in the string matches username in the token.
