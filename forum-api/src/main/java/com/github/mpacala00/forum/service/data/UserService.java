@@ -22,5 +22,5 @@ public interface UserService extends CrudService<User, Long> {
      */
     Optional<User> findOptionalByUsername(String username);
     
-    void blockUser(Long userId) throws UserNotFoundException;
+    void blockUnblockUser(Long userId) throws UserNotFoundException;
 }

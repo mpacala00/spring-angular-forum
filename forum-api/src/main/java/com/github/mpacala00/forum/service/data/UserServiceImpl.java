@@ -109,15 +109,17 @@ public class UserServiceImpl implements UserService {
         throw new Exception("Failed to retreive username. Token not found");
     }
 
+    //if blocked (locked) set to unblocked and vice versa
     @Override
-    public void blockUser(Long userId) throws UserNotFoundException {
+    public void blockUnblockUser(Long userId) throws UserNotFoundException {
         User user = userRepository.findById(userId).orElse(null);
 
         if(user == null) {
             throw new UserNotFoundException(String.format("User of id=%d not found", userId));
         }
 
-        user.setNotLocked(false);
+        user.setNotLocked(!user.isNotLocked());
+        userRepository.save(user);
     }
 
 }

@@ -36,13 +36,13 @@
 
          <ng-container matColumnDef="block">
             <th mat-header-cell *matHeaderCellDef> Block </th>
-            <td mat-cell *matCellDef="let user"> <button mat-raised-button color="basic"
-                  (click)="openBlockDialog(user)">Block</button> </td>
+            <td mat-cell *matCellDef="let user"> <button mat-raised-button color="basic" class="btn-action"
+                  (click)="openBlockDialog(user)">{{ user.notLocked ? 'Block' : 'Unblock' }}</button> </td>
          </ng-container>
 
          <ng-container matColumnDef="delete">
             <th mat-header-cell *matHeaderCellDef> Delete </th>
-            <td mat-cell *matCellDef="let user"> <button mat-raised-button color="warn"
+            <td mat-cell *matCellDef="let user"> <button mat-raised-button color="warn" class="btn-action"
                   (click)="openDeleteDialog(user)">Delete</button>
             </td>
          </ng-container>

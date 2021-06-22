@@ -7,14 +7,11 @@ import com.github.mpacala00.forum.model.User;
 import com.github.mpacala00.forum.model.dto.UserDTO;
 import com.github.mpacala00.forum.pojos.HttpResponse;
 import com.github.mpacala00.forum.security.model.Role;
-import com.github.mpacala00.forum.service.data.UserServiceImpl;
+import com.github.mpacala00.forum.service.data.UserService;
 import com.github.mpacala00.forum.service.dto.UserDTOMappingService;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.codehaus.jackson.node.TextNode;
-import org.springframework.data.repository.query.Param;
-import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -31,7 +28,7 @@ import java.util.Set;
 @RequestMapping("/user")
 public class SecuredUserController {
 
-    UserServiceImpl userService;
+    UserService userService;
     UserDTOMappingService mappingService;
 
     @Transactional
@@ -51,6 +48,7 @@ public class SecuredUserController {
         return new ResponseEntity<>(userService.getPosts(userId), HttpStatus.OK);
     }
 
+    //todo exlcue posts comments and categories from res
     @GetMapping("/all")
     @PreAuthorize("hasAuthority('user:update')")
     public ResponseEntity<Set<User>> users() {
@@ -65,8 +63,8 @@ public class SecuredUserController {
     }
 
     @GetMapping("/{userId}/block")
-    public ResponseEntity<HttpResponse> blockUser(@PathVariable("userId") String userId) throws UserNotFoundException {
-        userService.blockUser(Long.valueOf(userId));
+    public ResponseEntity<HttpResponse> blockUnblockUser(@PathVariable("userId") String userId) throws UserNotFoundException {
+        userService.blockUnblockUser(Long.valueOf(userId));
         return HttpResponse.createResponseEntity(HttpStatus.OK, "User successfuly blocked");
     }
 
