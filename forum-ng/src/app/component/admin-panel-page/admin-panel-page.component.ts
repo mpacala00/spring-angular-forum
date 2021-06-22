@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { UserModel } from 'src/app/model/user-model';
 import { UserApiService } from 'src/app/service/user-api.service';
 import { SubSink } from 'subsink';
+import { ConfirmationDialogModel, ConfirmationDialogComponent } from '../shared/confirmation-dialog/confirmation-dialog.component';
 
 @Component({
    selector: 'app-admin-panel-page',
@@ -18,7 +20,12 @@ export class AdminPanelPageComponent implements OnInit {
    displayedColumns: string[] = ['id', 'username', 'email', 'role', 'block', 'delete'];
    roles: string[] = ['ROLE_ADMIN', 'ROLE_MODERATOR', 'ROLE_USER'];
 
-   constructor(private userApiService: UserApiService) { }
+   //putting button names into variables to write openDialog function once
+   btnBlockText = 'Block';
+   btnDeleteText = 'Delete';
+
+   constructor(private userApiService: UserApiService,
+      public dialog: MatDialog,) { }
 
    ngOnInit(): void {
       this.getUsers();
@@ -47,6 +54,46 @@ export class AdminPanelPageComponent implements OnInit {
          }
       );
 
+   }
+
+   public onBlockUser(userId: number) {
+      console.log('Blocking user ', userId);
+   }
+
+   public onDeleteUser(userId: number) {
+      console.log('Deleting user ', userId);
+   }
+
+   public openBlockDialog(user: any) {
+
+      const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+         width: '400px',
+         data: new ConfirmationDialogModel(`Block user ${user.username}`, 'Are you sure you want to continue?')
+      });
+
+
+      dialogRef.afterClosed().subscribe(dialogResult => {
+
+         if (dialogResult == true) {
+            this.onBlockUser(user.id);
+         }
+      });
+   }
+
+   public openDeleteDialog(user: any) {
+
+      const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+         width: '400px',
+         data: new ConfirmationDialogModel(`Delete user ${user.username}`, 'Are you sure you want to continue?')
+      });
+
+
+      dialogRef.afterClosed().subscribe(dialogResult => {
+
+         if (dialogResult == true) {
+            this.onBlockUser(user.id);
+         }
+      });
    }
 
 }

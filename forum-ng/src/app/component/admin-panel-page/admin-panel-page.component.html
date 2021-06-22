@@ -36,12 +36,15 @@
 
          <ng-container matColumnDef="block">
             <th mat-header-cell *matHeaderCellDef> Block </th>
-            <td mat-cell *matCellDef="let user"> <button mat-raised-button color="basic">Block</button> </td>
+            <td mat-cell *matCellDef="let user"> <button mat-raised-button color="basic"
+                  (click)="openBlockDialog(user)">Block</button> </td>
          </ng-container>
 
          <ng-container matColumnDef="delete">
             <th mat-header-cell *matHeaderCellDef> Delete </th>
-            <td mat-cell *matCellDef="let user"> <button mat-raised-button color="warn">Delete</button> </td>
+            <td mat-cell *matCellDef="let user"> <button mat-raised-button color="warn"
+                  (click)="openDeleteDialog(user)">Delete</button>
+            </td>
          </ng-container>
 
          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
