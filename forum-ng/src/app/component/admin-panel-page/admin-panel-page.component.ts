@@ -56,8 +56,16 @@ export class AdminPanelPageComponent implements OnInit {
 
    }
 
-   public onBlockUser(userId: number) {
-      console.log('Blocking user ', userId);
+   public onBlockUser(user: any) {
+      console.log("block user inside function=", user)
+      this.subs.sink = this.userApiService.blockUser(user.id).subscribe(
+         res => {
+            user.notLocked = !user.notLocked;
+         },
+         err => {
+            alert("An error occured while updating role");
+         }
+      )
    }
 
    public onDeleteUser(userId: number) {
@@ -68,14 +76,14 @@ export class AdminPanelPageComponent implements OnInit {
 
       const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
          width: '400px',
-         data: new ConfirmationDialogModel(`Block user ${user.username}`, 'Are you sure you want to continue?')
+         data: new ConfirmationDialogModel(`Block/Unblock user ${user.username}`, 'Are you sure you want to continue?')
       });
 
 
       dialogRef.afterClosed().subscribe(dialogResult => {
 
          if (dialogResult == true) {
-            this.onBlockUser(user.id);
+            this.onBlockUser(user);
          }
       });
    }
