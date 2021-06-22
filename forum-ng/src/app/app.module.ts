@@ -39,6 +39,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatDividerModule } from '@angular/material/divider';
 import { HasAuthorityDirective } from './directive/has-authority.directive';
 import { NewCategoryDialogComponent } from './component/shared/new-category-dialog/new-category-dialog.component';
+import { MatSelectModule } from '@angular/material/select';
 
 @NgModule({
    declarations: [
@@ -79,7 +80,8 @@ import { NewCategoryDialogComponent } from './component/shared/new-category-dial
       MatTabsModule,
       TextFieldModule,
       MatDialogModule,
-      MatDividerModule
+      MatDividerModule,
+      MatSelectModule
    ],
 
    providers: [

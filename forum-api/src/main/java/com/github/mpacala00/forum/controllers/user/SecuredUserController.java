@@ -6,11 +6,15 @@ import com.github.mpacala00.forum.model.Post;
 import com.github.mpacala00.forum.model.User;
 import com.github.mpacala00.forum.model.dto.UserDTO;
 import com.github.mpacala00.forum.pojos.HttpResponse;
+import com.github.mpacala00.forum.security.model.Role;
 import com.github.mpacala00.forum.service.data.UserServiceImpl;
 import com.github.mpacala00.forum.service.dto.UserDTOMappingService;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.codehaus.jackson.node.TextNode;
+import org.springframework.data.repository.query.Param;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -48,7 +52,7 @@ public class SecuredUserController {
     }
 
     @GetMapping("/all")
-//    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasAuthority('user:update')")
     public ResponseEntity<Set<User>> users() {
         return new ResponseEntity<>(userService.findAll(), HttpStatus.OK);
     }
@@ -64,5 +68,16 @@ public class SecuredUserController {
     public ResponseEntity<HttpResponse> blockUser(@PathVariable("userId") String userId) throws UserNotFoundException {
         userService.blockUser(Long.valueOf(userId));
         return HttpResponse.createResponseEntity(HttpStatus.OK, "User successfuly blocked");
+    }
+
+    @PreAuthorize("hasAuthority('user:update')")
+    @PatchMapping(value = "/{userId}/role", consumes = "text/plain")
+    public User updateUserRole(@PathVariable("userId") String userId,
+                                                       @RequestBody String role) {
+        User user = userService.findById(Long.valueOf(userId));
+        Role roleToSet = Role.valueOf(role);
+        user.setRole(roleToSet);
+        userService.save(user);
+        return user;
     }
 }

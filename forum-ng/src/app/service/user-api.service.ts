@@ -43,4 +43,8 @@ export class UserApiService {
    getAllUsers() {
       return this.http.get<UserModel[]>(`${environment.BASE_URL}/user/all`);
    }
+
+   patchRole(userId: number, role: string) {
+      return this.http.patch<any>(`${environment.BASE_URL}/user/${userId}/role`, role);
+   }
 }

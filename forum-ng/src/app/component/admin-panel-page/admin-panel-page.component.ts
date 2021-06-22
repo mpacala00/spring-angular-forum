@@ -15,7 +15,8 @@ export class AdminPanelPageComponent implements OnInit {
    public users: UserModel[];
    public errorMessage: string;
 
-   displayedColumns: string[] = ['id', 'username', 'block'];
+   displayedColumns: string[] = ['id', 'username', 'email', 'role', 'block', 'delete'];
+   roles: string[] = ['ROLE_ADMIN', 'ROLE_MODERATOR', 'ROLE_USER'];
 
    constructor(private userApiService: UserApiService) { }
 
@@ -32,6 +33,20 @@ export class AdminPanelPageComponent implements OnInit {
             this.errorMessage = err.error.message;
          }
       )
+   }
+
+   public onRoleChange($event, user: any) {
+      let role = $event.value;
+      this.subs.sink = this.userApiService.patchRole(user.id, role).subscribe(
+         res => {
+            //udpate view
+            user.role = role;
+         },
+         err => {
+            alert("An error occured while updating role");
+         }
+      );
+
    }
 
 }
