@@ -68,7 +68,14 @@ export class AdminPanelPageComponent implements OnInit {
    }
 
    public onDeleteUser(userId: number) {
-      console.log('Deleting user ', userId);
+      this.subs.sink = this.userApiService.deleteUser(userId).subscribe(
+         res => {
+            this.getUsers();
+         },
+         err => {
+            alert("An error occured while deleting user");
+         }
+      )
    }
 
    public openBlockDialog(user: any) {
@@ -98,7 +105,7 @@ export class AdminPanelPageComponent implements OnInit {
       dialogRef.afterClosed().subscribe(dialogResult => {
 
          if (dialogResult == true) {
-            this.onBlockUser(user.id);
+            this.onDeleteUser(user.id);
          }
       });
    }

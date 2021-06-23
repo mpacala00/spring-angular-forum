@@ -40,6 +40,10 @@ export class UserApiService {
       return this.http.get<any>(`${environment.BASE_URL}/user/${userId}/block`);
    }
 
+   deleteUser(userId: number) {
+      return this.http.delete(`${environment.BASE_URL}/user/${userId}`);
+   }
+
    getAllUsers() {
       return this.http.get<UserModel[]>(`${environment.BASE_URL}/user/all`);
    }
