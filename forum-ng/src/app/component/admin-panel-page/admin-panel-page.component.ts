@@ -18,16 +18,13 @@ export class AdminPanelPageComponent implements OnInit {
    public errorMessage: string;
 
    displayedColumns: string[] = ['id', 'username', 'email', 'role', 'block', 'delete'];
-   roles: string[] = ['ROLE_ADMIN', 'ROLE_MODERATOR', 'ROLE_USER'];
-
-   //putting button names into variables to write openDialog function once
-   btnBlockText = 'Block';
-   btnDeleteText = 'Delete';
+   roles: string[];
 
    constructor(private userApiService: UserApiService,
       public dialog: MatDialog,) { }
 
    ngOnInit(): void {
+      this.getUserRoles();
       this.getUsers();
    }
 
@@ -38,6 +35,17 @@ export class AdminPanelPageComponent implements OnInit {
          },
          err => {
             this.errorMessage = err.error.message;
+         }
+      )
+   }
+
+   public getUserRoles() {
+      this.subs.sink = this.userApiService.getUserRoles().subscribe(
+         res => {
+            this.roles = res;
+         },
+         err => {
+            alert("An error occured while fetching roles");
          }
       )
    }
@@ -62,7 +70,7 @@ export class AdminPanelPageComponent implements OnInit {
             user.notLocked = !user.notLocked;
          },
          err => {
-            alert("An error occured while updating role");
+            alert("An error occured while blocking role");
          }
       )
    }

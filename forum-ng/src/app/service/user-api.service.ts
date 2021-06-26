@@ -51,4 +51,8 @@ export class UserApiService {
    patchRole(userId: number, role: string) {
       return this.http.patch<any>(`${environment.BASE_URL}/user/${userId}/role`, role);
    }
+
+   getUserRoles() {
+      return this.http.get<string[]>(`${environment.BASE_URL_PUBLIC}/user/roles`);
+   }
 }

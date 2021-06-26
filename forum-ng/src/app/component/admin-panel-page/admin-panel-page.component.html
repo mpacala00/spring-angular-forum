@@ -10,7 +10,9 @@
 
          <ng-container matColumnDef="username">
             <th mat-header-cell *matHeaderCellDef> Username </th>
-            <td mat-cell *matCellDef="let user"> {{user.username}} </td>
+            <td mat-cell *matCellDef="let user">
+               <a routerLink="/user/{{user.username}}">{{user.username}} </a>
+            </td>
          </ng-container>
 
          <ng-container matColumnDef="email">

@@ -29,6 +29,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.rmi.activation.ActivateFailedException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -161,5 +162,14 @@ public class PublicUserController {
         }
 
         throw new UserNotFoundException(String.format("Cannot get categories from user. User %s not present", username));
+    }
+
+    @GetMapping("roles")
+    public ResponseEntity<List<String>> getRoles() {
+        List<String> roles = new ArrayList();
+        for(Role role : Role.values()) {
+            roles.add(role.toString());
+        }
+        return new ResponseEntity<>(roles, HttpStatus.OK);
     }
 }
