@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
+import { UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CommentModel } from 'src/app/model/comment-model';
 import { PostModel } from 'src/app/model/post-model';
@@ -23,7 +23,7 @@ export class CommentsByPostPageComponent implements OnInit, OnDestroy {
    private postId: number;
    public post: PostModel;
    public comments: CommentModel[];
-   public commentForm: FormGroup;
+   public commentForm: UntypedFormGroup;
 
    public edditedComments = [];
 
@@ -38,8 +38,8 @@ export class CommentsByPostPageComponent implements OnInit, OnDestroy {
       public dialog: MatDialog,) { }
 
    ngOnInit(): void {
-      this.commentForm = new FormGroup({
-         body: new FormControl('', [Validators.required, Validators.minLength(1)])
+      this.commentForm = new UntypedFormGroup({
+         body: new UntypedFormControl('', [Validators.required, Validators.minLength(1)])
       })
       //get id from current route
       this.route.params.subscribe(

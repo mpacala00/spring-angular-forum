@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthApiService } from 'src/app/service/auth-api.service';
 import { AuthService } from 'src/app/service/auth.service';
@@ -14,17 +14,17 @@ export class RegisterPageComponent implements OnInit, OnDestroy {
 
    private subs = new SubSink();
 
-   public registerForm: FormGroup;
+   public registerForm: UntypedFormGroup;
    public registerFailedMessage: string;
 
    constructor(private authService: AuthService, private authApiService: AuthApiService, private router: Router) { }
 
    ngOnInit(): void {
-      this.registerForm = new FormGroup({
-         username: new FormControl('', [Validators.required]),
-         password: new FormControl('', Validators.required),
-         passwordConfirmation: new FormControl('', Validators.required),
-         email: new FormControl('', Validators.compose(
+      this.registerForm = new UntypedFormGroup({
+         username: new UntypedFormControl('', [Validators.required]),
+         password: new UntypedFormControl('', Validators.required),
+         passwordConfirmation: new UntypedFormControl('', Validators.required),
+         email: new UntypedFormControl('', Validators.compose(
             [Validators.required, Validators.email]
          ))
       })

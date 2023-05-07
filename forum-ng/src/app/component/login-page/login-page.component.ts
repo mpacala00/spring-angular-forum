@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { LoginModel } from '../../model/login-model';
 import { AuthService } from '../../service/auth.service';
 import { AuthApiService } from '../../service/auth-api.service';
@@ -16,7 +16,7 @@ export class LoginPageComponent implements OnInit, OnDestroy {
    private subs = new SubSink();
 
    model: LoginModel;
-   loginForm: FormGroup;
+   loginForm: UntypedFormGroup;
    loginFailedMessage: string;
 
    constructor(private authService: AuthService,
@@ -24,9 +24,9 @@ export class LoginPageComponent implements OnInit, OnDestroy {
 
 
    ngOnInit(): void {
-      this.loginForm = new FormGroup({
-         username: new FormControl('', Validators.required),
-         password: new FormControl('', Validators.required)
+      this.loginForm = new UntypedFormGroup({
+         username: new UntypedFormControl('', Validators.required),
+         password: new UntypedFormControl('', Validators.required)
       });
 
    }
