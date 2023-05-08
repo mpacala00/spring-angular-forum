@@ -22,24 +22,25 @@ import { AdminPanelPageComponent } from './component/admin-panel-page/admin-pane
 
 import { BrowserAnimationsModule } from
    '@angular/platform-browser/animations';
-import { MatLegacyFormFieldModule as MatFormFieldModule }
-   from '@angular/material/legacy-form-field';
-import { MatLegacyInputModule as MatInputModule } from '@angular/material/legacy-input';
-import { MatLegacyTableModule as MatTableModule } from '@angular/material/legacy-table';
-import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button';
-import { LayoutModule } from '@angular/cdk/layout';
+
+import { MatFormFieldModule }from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatTableModule } from '@angular/material/table';
+import { MatButtonModule } from '@angular/material/button';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatIconModule } from '@angular/material/icon';
-import { MatLegacyListModule as MatListModule } from '@angular/material/legacy-list';
-import { MatLegacyCardModule as MatCardModule } from '@angular/material/legacy-card';
-import { MatLegacyTabsModule as MatTabsModule } from '@angular/material/legacy-tabs';
-import { TextFieldModule } from '@angular/cdk/text-field';
-import { MatLegacyDialogModule as MatDialogModule } from '@angular/material/legacy-dialog';
+import { MatCardModule } from '@angular/material/card';
+import { MatTabsModule } from '@angular/material/tabs';
+import { MatListModule } from '@angular/material/list';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatSelectModule } from '@angular/material/select';
 import { MatDividerModule } from '@angular/material/divider';
+
+import { LayoutModule } from '@angular/cdk/layout';
+import { TextFieldModule } from '@angular/cdk/text-field';
 import { HasAuthorityDirective } from './directive/has-authority.directive';
 import { NewCategoryDialogComponent } from './component/shared/new-category-dialog/new-category-dialog.component';
-import { MatLegacySelectModule as MatSelectModule } from '@angular/material/legacy-select';
 
 @NgModule({
    declarations: [

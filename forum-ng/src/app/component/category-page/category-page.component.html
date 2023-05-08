@@ -14,8 +14,11 @@
 
          <div *ngFor="let c of categories" class="my-3">
             <mat-card (click)="navigateToCategory(c.id, c)">
-               <mat-card-title>{{ c.name }}</mat-card-title>
-               <mat-card-subtitle>{{ c.description }}</mat-card-subtitle>
+               <mat-card-content>
+                  <mat-card-title>{{ c.name }}</mat-card-title>
+                  <mat-card-subtitle>{{ c.description }}</mat-card-subtitle>
+               </mat-card-content>
+               
             </mat-card>
          </div>
 

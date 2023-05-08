@@ -3,10 +3,10 @@
       <div class="col-lg-12 p-0">
 
          <mat-card class="my-4">
-            <mat-card-title>{{ category?.name }}</mat-card-title>
-            <mat-card-subtitle>{{ category?.description }}</mat-card-subtitle>
-
             <mat-card-content>
+               <mat-card-title>{{ category?.name }}</mat-card-title>
+               <mat-card-subtitle>{{ category?.description }}</mat-card-subtitle>
+
                <button mat-raised-button color="primary" (click)="switchFollowingCategory()">
                   {{ isUserFollowingCategory == true ? "Unfollow" : "Follow" }}
                </button>
@@ -15,14 +15,18 @@
          </mat-card>
 
          <mat-card class="my-4" *ngIf="!posts">
-            <h3>There are no posts about this topic. Add one [insert button here]</h3>
+            <mat-card-content>
+               <h3>There are no posts about this topic. Add one [insert button here]</h3>
+            </mat-card-content>
          </mat-card>
 
          <div *ngFor="let p of posts">
             <mat-card class="my-3 post" (click)="navigateToPost(p.id)">
-               {{p.title}}<br>
-               {{p.body}}<br>
-               Posted by: {{ p.creator }}
+               <mat-card-content>
+                  {{p.title}}<br>
+                  {{p.body}}<br>
+                  Posted by: {{ p.creator }}
+               </mat-card-content>
             </mat-card>
          </div>
 

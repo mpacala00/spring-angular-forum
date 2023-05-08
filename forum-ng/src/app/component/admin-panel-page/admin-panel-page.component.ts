@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
+import { MatDialog } from '@angular/material/dialog';
 import { UserModel } from 'src/app/model/user-model';
 import { UserApiService } from 'src/app/service/user-api.service';
 import { SubSink } from 'subsink';

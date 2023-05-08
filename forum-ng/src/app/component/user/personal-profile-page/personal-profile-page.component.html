@@ -3,18 +3,18 @@
       <div class="col-lg-12 p-0">
 
          <mat-card class="mt-4">
-            <mat-card-title class="title-grid">
-               <div>
-                  {{ user?.username }}
-               </div>
-               <div class="ml-auto" *hasAuthority="'user:block'" [hidden]="isOwner">
-                  <button mat-stroked-button color="warn" (click)="openBlockUserDialog()">block</button>
-               </div>
-
-            </mat-card-title>
-            <!-- <mat-card-subtitle>subtitle</mat-card-subtitle> -->
-
             <mat-card-content>
+
+               <mat-card-title class="title-grid">
+                  <div>
+                     {{ user?.username }}
+                  </div>
+                  <div class="ml-auto" *hasAuthority="'user:block'" [hidden]="isOwner">
+                     <button mat-stroked-button color="warn" (click)="openBlockUserDialog()">block</button>
+                  </div>
+
+               </mat-card-title>
+               <!-- <mat-card-subtitle>subtitle</mat-card-subtitle> -->
 
                <mat-tab-group dynamicHeight>
                   <mat-tab label="Overview" active="true">
@@ -31,26 +31,28 @@
 
                         <div *ngFor="let c of userFollowedCategories; let i=index">
                            <mat-card class="my-3 pointer">
-                              <mat-card-title>
+                              <mat-card-content>
+                                 <mat-card-title>
 
-                                 <div [ngClass]="isOwner == true ? 'grid-owner' : 'grid-none'">
-                                    <div routerLink="{{ createCategoryUrl(c.id) }}">
-                                       <p>
-                                          {{c.name}}
-                                       </p>
+                                    <div [ngClass]="isOwner == true ? 'grid-owner' : 'grid-none'">
+                                       <div routerLink="{{ createCategoryUrl(c.id) }}">
+                                          <p>
+                                             {{c.name}}
+                                          </p>
+                                       </div>
+
+                                       <div class="ml-auto" *ngIf="isOwner">
+                                          <button mat-raised-button color="primary"
+                                             (click)="unfollowCategory(i)">Unfollow</button>
+                                       </div>
                                     </div>
 
-                                    <div class="ml-auto" *ngIf="isOwner">
-                                       <button mat-raised-button color="primary"
-                                          (click)="unfollowCategory(i)">Unfollow</button>
-                                    </div>
-                                 </div>
+                                    <mat-card-subtitle>
+                                       {{c.description}}
+                                    </mat-card-subtitle>
 
-                                 <mat-card-subtitle>
-                                    {{c.description}}
-                                 </mat-card-subtitle>
-
-                              </mat-card-title>
+                                 </mat-card-title>
+                              </mat-card-content>
                            </mat-card>
                         </div>
                      </div>
@@ -61,8 +63,10 @@
 
                         <div *ngFor="let p of userPosts">
                            <mat-card class="my-3 pointer" routerLink="{{ createPostUrl(p.categoryId, p.id) }}">
-                              <mat-card-title>{{p.title}}</mat-card-title>
-                              <mat-card-conent>{{p.body}}</mat-card-conent>
+                              <mat-card-content>
+                                 <mat-card-title>{{p.title}}</mat-card-title>
+                                 <p>{{p.body}}</p>
+                              </mat-card-content>
                            </mat-card>
                         </div>
 

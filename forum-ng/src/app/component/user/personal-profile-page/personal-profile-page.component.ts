@@ -8,7 +8,7 @@ import { CategoryModel } from 'src/app/model/category-model';
 import { ActivatedRoute } from '@angular/router';
 import { AuthService } from 'src/app/service/auth.service';
 import { CategoryApiService } from 'src/app/service/category-api.service';
-import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
+import { MatDialog } from '@angular/material/dialog';
 import { ConfirmationDialogComponent, ConfirmationDialogModel } from '../../shared/confirmation-dialog/confirmation-dialog.component';
 
 @Component({
