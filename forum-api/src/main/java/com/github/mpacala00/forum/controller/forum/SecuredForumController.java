@@ -1,4 +1,4 @@
-package com.github.mpacala00.forum.controllers.forum;
+package com.github.mpacala00.forum.controller.forum;
 
 import com.github.mpacala00.forum.exception.model.ResourceNotFoundException;
 import com.github.mpacala00.forum.model.Category;

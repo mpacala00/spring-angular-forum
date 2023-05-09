@@ -19,7 +19,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Entity
-@Table(name = "`user`") //user is reserved keyword in postgres, hence the weird quotation marks
+@Table(name = "`users`") //user is reserved keyword in postgres, hence the weird quotation marks
 @Getter
 @Setter
 @EqualsAndHashCode(exclude = { "followedCategories", "comments", "posts" })

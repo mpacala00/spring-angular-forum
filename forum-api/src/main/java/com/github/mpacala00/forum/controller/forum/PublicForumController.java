@@ -1,14 +1,12 @@
-package com.github.mpacala00.forum.controllers.forum;
+package com.github.mpacala00.forum.controller.forum;
 
 import com.github.mpacala00.forum.exception.model.ResourceNotFoundException;
 import com.github.mpacala00.forum.model.Category;
-import com.github.mpacala00.forum.model.Comment;
 import com.github.mpacala00.forum.model.dto.category.CategoryDTO;
 import com.github.mpacala00.forum.model.dto.category.CategoryPostsDTO;
 import com.github.mpacala00.forum.model.dto.comment.CommentDTO;
 import com.github.mpacala00.forum.model.dto.post.PostDTO;
 import com.github.mpacala00.forum.repository.CommentRepository;
-import com.github.mpacala00.forum.security.model.Role;
 import com.github.mpacala00.forum.service.data.CategoryServiceImpl;
 import com.github.mpacala00.forum.service.data.CommentServiceImpl;
 import com.github.mpacala00.forum.service.data.PostServiceImpl;
@@ -26,8 +24,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 

@@ -1,4 +1,4 @@
-package com.github.mpacala00.forum.controllers.user;
+package com.github.mpacala00.forum.controller.user;
 
 import com.github.mpacala00.forum.exception.model.*;
 import com.github.mpacala00.forum.model.User;

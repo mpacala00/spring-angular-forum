@@ -12,7 +12,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Table(name = "post")
+@Table(name = "posts")
 @Getter
 @Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
