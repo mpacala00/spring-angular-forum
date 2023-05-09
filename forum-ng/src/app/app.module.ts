@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgxWebstorageModule } from 'ngx-webstorage';
+import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -42,6 +43,10 @@ import { TextFieldModule } from '@angular/cdk/text-field';
 import { HasAuthorityDirective } from './directive/has-authority.directive';
 import { NewCategoryDialogComponent } from './component/shared/new-category-dialog/new-category-dialog.component';
 
+import { CategorySkeletonComponent } from './component/user/personal-profile-page/skeleton-loading/category-skeleton';
+import { PostSkeletonComponent } from './component/user/personal-profile-page/skeleton-loading/post-skeleton';
+import { CommentSkeletonComponent } from './component/user/personal-profile-page/skeleton-loading/comment-skeleton';
+
 @NgModule({
    declarations: [
       AppComponent,
@@ -56,7 +61,11 @@ import { NewCategoryDialogComponent } from './component/shared/new-category-dial
       ConfirmationDialogComponent,
       HasAuthorityDirective,
       NewCategoryDialogComponent,
-      AdminPanelPageComponent
+      AdminPanelPageComponent,
+
+      CategorySkeletonComponent,
+      PostSkeletonComponent,
+      CommentSkeletonComponent
    ],
    imports: [
       BrowserModule,
@@ -67,6 +76,7 @@ import { NewCategoryDialogComponent } from './component/shared/new-category-dial
       NgxWebstorageModule.forRoot(),
       NgbModule,
       BrowserAnimationsModule,
+      NgxSkeletonLoaderModule,
 
       MatFormFieldModule,
       MatInputModule,
@@ -82,7 +92,7 @@ import { NewCategoryDialogComponent } from './component/shared/new-category-dial
       TextFieldModule,
       MatDialogModule,
       MatDividerModule,
-      MatSelectModule
+      MatSelectModule,
    ],
 
    providers: [

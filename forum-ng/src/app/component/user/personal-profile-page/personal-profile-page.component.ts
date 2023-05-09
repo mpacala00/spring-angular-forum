@@ -21,6 +21,7 @@ export class PersonalProfilePageComponent implements OnInit, OnDestroy {
    private subs = new SubSink();
 
    private profileUsername: string;
+   tabChangeAnimationSpeed = 500;
 
    user: UserModel;
    userPosts: PostModel[];
@@ -130,6 +131,27 @@ export class PersonalProfilePageComponent implements OnInit, OnDestroy {
          }
       );
    }
+
+   onTabChanged($event) {
+      let i = $event.index;
+      switch(i) {
+         case 1:
+            setTimeout(() => {
+               this.getUserFollowedCategories();
+            }, this.tabChangeAnimationSpeed); // Fake delay for testing skeleton loading
+            break;
+         case 2:
+            setTimeout(() => {
+               this.getUserPosts();
+            }, this.tabChangeAnimationSpeed);
+            break;
+         case 3:
+            setTimeout(() => {
+               this.getUserComments();
+            }, this.tabChangeAnimationSpeed);
+            break;
+      }
+    }
 
    public createPostUrl(categoryId: number, postId: number) {
       return `/categories/${categoryId}/posts/${postId}`;
