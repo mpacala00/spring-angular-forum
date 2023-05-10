@@ -5,9 +5,17 @@
     }
 }
 
-.comment-heading {
+.post-comment-buttons {
     display: grid;
-    grid-template-columns: 2fr 1fr;
     align-content: center;
-    justify-content: center;
+    justify-content: space-between;
+    div {
+        grid-row-start: 1;
+        grid-row-end: 1;
+    }
 }
+
+.align-right {
+    margin-left: auto;
+}
+

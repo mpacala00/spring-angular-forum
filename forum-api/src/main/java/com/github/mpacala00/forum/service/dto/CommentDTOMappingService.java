@@ -6,6 +6,8 @@ import com.github.mpacala00.forum.model.dto.comment.CommentPostDTO;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class CommentDTOMappingService implements DTOMappingService<Comment, CommentDTO>{
@@ -17,6 +19,14 @@ public class CommentDTOMappingService implements DTOMappingService<Comment, Comm
         dto.setId(entity.getId());
         dto.setCreator(entity.getCreator().getUsername());
         dto.setPostDate(entity.getPostDate().toString());
+        dto.setDeleted(entity.getDeleted());
+
+        List<CommentDTO> childComments = entity.getChildComments()
+                .stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
+        dto.setChildComments(childComments);
+
         return dto;
     }
 

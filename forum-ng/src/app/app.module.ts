@@ -46,6 +46,7 @@ import { NewCategoryDialogComponent } from './component/shared/new-category-dial
 import { CategorySkeletonComponent } from './component/user/personal-profile-page/skeleton-loading/category-skeleton';
 import { PostSkeletonComponent } from './component/user/personal-profile-page/skeleton-loading/post-skeleton';
 import { CommentSkeletonComponent } from './component/user/personal-profile-page/skeleton-loading/comment-skeleton';
+import { CommentComponent } from './component/comments-by-post-page/comment/comment.component';
 
 @NgModule({
    declarations: [
@@ -65,7 +66,8 @@ import { CommentSkeletonComponent } from './component/user/personal-profile-page
 
       CategorySkeletonComponent,
       PostSkeletonComponent,
-      CommentSkeletonComponent
+      CommentSkeletonComponent,
+      CommentComponent
    ],
    imports: [
       BrowserModule,

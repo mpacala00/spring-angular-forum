@@ -3,4 +3,6 @@ export interface CommentModel {
    creator: string;
    postDate: string;
    body: string;
+   childComments: CommentModel[];
+   deleted: boolean;
 }

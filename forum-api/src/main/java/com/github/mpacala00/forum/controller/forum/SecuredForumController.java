@@ -32,7 +32,8 @@ import javax.transaction.Transactional;
 @Slf4j
 @RestController
 public class SecuredForumController {
-    
+
+    //todo use abstraction instead of implementations
     PostServiceImpl postServiceImpl;
     CategoryServiceImpl categoryServiceImpl;
     CommentServiceImpl commentServiceImpl;
@@ -98,6 +99,33 @@ public class SecuredForumController {
         return new ResponseEntity<>(savedComment, HttpStatus.CREATED);
     }
 
+    @Transactional
+    @PostMapping("posts/{postId}/comment/{parentCommentId}")
+    public ResponseEntity<Comment> replyToComment(@PathVariable Long postId,
+                                                  @PathVariable Long parentCommentId,
+                                                  @RequestBody Comment comment,
+                                                  @AuthenticationPrincipal User originalPoster) {
+        comment.setCreator(originalPoster);
+        if (parentCommentId != null) {
+            Comment parentComment = commentServiceImpl.findById(parentCommentId);
+
+            if (parentComment.getDeleted()) {
+                throw new RuntimeException("Replying to deleted comments is forbidden");
+            }
+
+            if (parentComment != null) {
+                comment.setParentComment(parentComment);
+            }
+        }
+        Comment savedComment = commentServiceImpl.save(comment);
+
+        Post post = postServiceImpl.findById(postId);
+        post.addComment(savedComment);
+        postServiceImpl.save(post);
+
+        return new ResponseEntity<>(savedComment, HttpStatus.CREATED);
+    }
+
 
     //UPDATE is only available for content owner
     @PutMapping("/post")
@@ -138,10 +166,10 @@ public class SecuredForumController {
 
         commentServiceImpl.deleteById(Long.valueOf(commentId));
         log.info("Comment of id={} deleted", commentId);
-        return HttpResponse.createResponseEntity(HttpStatus.OK, "Comment successfully deleted");
+        return HttpResponse.createResponseEntity(HttpStatus.NO_CONTENT, "Comment successfully deleted");
     }
 
-    @GetMapping("category/{categoryId}/follow")
+    @GetMapping("category/{categoryId}/follow") //todo change HTTP method
     public ResponseEntity<HttpResponse> followCategory(@PathVariable Long categoryId, @AuthenticationPrincipal User user)
             throws ResourceNotFoundException {
         Category cat = categoryServiceImpl.findById(categoryId);
@@ -154,7 +182,7 @@ public class SecuredForumController {
         throw new ResourceNotFoundException(String.format("Category of id=%d not found", categoryId));
     }
 
-    @GetMapping("category/{categoryId}/unfollow")
+    @GetMapping("category/{categoryId}/unfollow") //todo change HTTP method
     public ResponseEntity<HttpResponse> unfollowCategory(@PathVariable Long categoryId, @AuthenticationPrincipal User user)
             throws ResourceNotFoundException {
         Category cat = categoryServiceImpl.findById(categoryId);

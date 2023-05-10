@@ -94,10 +94,8 @@ public class PublicForumController {
 
     @GetMapping("post/{postId}/comments")
     public ResponseEntity<List<CommentDTO>> getCommentsByPost(@PathVariable Long postId) throws Exception {
-        List<CommentDTO> comments = commentServiceImpl.getAllCommentsFromPost(postId)
-                .stream()
-                .map(commentDTOMappingService::convertToDTO)
-                .collect(Collectors.toList());
+        List<CommentDTO> comments = commentServiceImpl.getAllCommentsFromPost(postId);
+
         return new ResponseEntity<>(comments, HttpStatus.OK);
     }
 }

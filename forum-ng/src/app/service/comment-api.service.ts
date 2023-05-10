@@ -24,6 +24,10 @@ export class CommentApiService {
       return this.http.post<CommentModel>(`${environment.BASE_URL}/post/${postId}/comment`, comment);
    }
 
+   replyToComment(postId: number, commentId: number, comment: CommentModel) {
+      return this.http.post<CommentModel>(`${environment.BASE_URL}/posts/${postId}/comment/${commentId}`, comment);
+   }
+
    putComment(comment: CommentModel) {
       return this.http.put<CommentModel>(this.PUT_COMMENT, comment);
    }

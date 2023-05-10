@@ -4,6 +4,8 @@ import lombok.AccessLevel;
 import lombok.Data;
 import lombok.experimental.FieldDefaults;
 
+import java.util.List;
+
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class CommentDTO {
@@ -12,4 +14,6 @@ public class CommentDTO {
     String creator;
     String body;
     String postDate;
+    List<CommentDTO> childComments;
+    Boolean deleted;
 }

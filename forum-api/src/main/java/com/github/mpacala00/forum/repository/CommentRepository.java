@@ -17,7 +17,9 @@ import java.util.List;
 public interface CommentRepository extends JpaRepository<Comment, Long> {
     List<Comment> findByCreator(String creator);
 
+    List<Comment> findByPostId(Long postId);
+
     @Modifying
-    @Query(value = "DELETE FROM comment WHERE id = :id", nativeQuery = true)
+    @Query(value = "DELETE FROM comments WHERE id = :id", nativeQuery = true)
     void deleteById(@Param("id") Long id);
 }

@@ -10,6 +10,7 @@ import { SubSink } from 'subsink';
 import { NewPostDialogComponent } from '../shared/new-post-dialog/new-post-dialog.component';
 import { ConfirmationDialogModel, ConfirmationDialogComponent } from '../shared/confirmation-dialog/confirmation-dialog.component';
 import { AuthService } from 'src/app/service/auth.service';
+import { EditCommentEvent } from 'src/app/event/edit-comment-event';
 
 @Component({
    selector: 'app-comments-by-post-page',
@@ -28,6 +29,7 @@ export class CommentsByPostPageComponent implements OnInit, OnDestroy {
    public edditedComments = [];
 
    public isOwnerOfPost = false;
+   public commentToReplyTo: CommentModel;
 
    constructor(
       private route: ActivatedRoute,
@@ -102,27 +104,8 @@ export class CommentsByPostPageComponent implements OnInit, OnDestroy {
       )
    }
 
-   public updateComment(comment: CommentModel, body: string) {
-      if (body == "") {
-         return;
-      }
-
-      comment.body = body;
-
-      this.subs.sink = this.commentApiService.putComment(comment).subscribe(
-         res => {
-            this.refreshComments();
-         },
-         err => {
-            alert("An error occured");
-            console.error(err);
-         }
-      )
-
-      console.log(comment);
-   }
-
    public openDeleteCommentDialog(commentId: number) {
+      console.log("hello?")
       const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
          width: '400px',
          data: new ConfirmationDialogModel('Are you sure?', 'This action cannot be undone')
@@ -152,28 +135,6 @@ export class CommentsByPostPageComponent implements OnInit, OnDestroy {
       });
    }
 
-   public editComment(index: number) {
-      let input = document.getElementById('commentEditDiv' + index);
-      if (input.classList.contains('d-inline-block')) {
-         input.classList.remove('d-inline-block');
-      } else {
-         input.classList.add('d-inline-block');
-      }
-   }
-
-   // public editComment(index: number) {
-   //    if (this.edditedComments.includes(index)) {
-   //       this.edditedComments.splice(index);
-   //    }
-   //    else {
-   //       this.edditedComments.push(index);
-   //    }
-   // }
-
-   // public isCommentEddited(index: number) {
-   //    this.edditedComments.includes(index);
-   // }
-
    public deletePost() {
       this.subs.sink = this.postApiService.deletePost(this.postId).subscribe(
          res => {
@@ -200,7 +161,13 @@ export class CommentsByPostPageComponent implements OnInit, OnDestroy {
    }
 
    public onCommentPost() {
-      if (this.commentForm.valid) {
+      if (!this.commentForm.valid) {
+         return;
+      }
+
+      console.log('outside if: ', this.postId + ', ' + this.commentToReplyTo.id + ', ' + this.commentForm.value);
+      if (!this.commentToReplyTo) {
+         console.log('inside if: ', this.postId + ', ' + this.commentToReplyTo.id + ', ' + this.commentForm.value);
          this.subs.sink = this.commentApiService.postComment(this.postId, this.commentForm.value).subscribe(
             res => {
                this.refreshComments();
@@ -210,9 +177,51 @@ export class CommentsByPostPageComponent implements OnInit, OnDestroy {
                console.error(err);
             }
          );
-         this.commentForm.reset();
+         
+      } else {
+         console.log('comment body: ', this.postId + ', ' + this.commentToReplyTo.id + ', ' + this.commentForm.value);
+         this.subs.sink = this.commentApiService.replyToComment(this.postId, this.commentToReplyTo.id, this.commentForm.value).subscribe(
+            res => {
+               this.cancelReply();
+               this.refreshComments();
+            },
+            err => {
+               alert("An error occured while posting a comment");
+               console.error(err);
+            }
+         );
+      }
+      this.commentForm.reset();
+   }
+
+   public updateComment(editCommentEvent: EditCommentEvent) {
+      if (editCommentEvent?.body == '') {
+         return;
+      }
+      
+      editCommentEvent.comment.body = editCommentEvent.body;
+
+      this.subs.sink = this.commentApiService.putComment(editCommentEvent.comment).subscribe(
+         (res) => {
+            this.refreshComments();
+         },
+         (err) => {
+            alert('An error occured');
+            console.error(err);
+         }
+      );
+   }
+
+   replyToComment(comment: CommentModel) {
+      if (!comment.id || !comment.creator) {
+         return;
       }
 
+      this.commentToReplyTo = comment;
+   }
+
+   cancelReply() {
+      this.commentToReplyTo = undefined;
    }
 
    public refreshComments() {
