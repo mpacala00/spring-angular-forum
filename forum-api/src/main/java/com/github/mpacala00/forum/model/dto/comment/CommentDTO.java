@@ -16,4 +16,5 @@ public class CommentDTO {
     String postDate;
     List<CommentDTO> childComments;
     Boolean deleted;
+    Integer likeCount;
 }

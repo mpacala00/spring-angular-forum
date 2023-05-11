@@ -10,7 +10,12 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "comments")
@@ -45,7 +50,11 @@ public class Comment {
     Comment parentComment;
 
     @OneToMany(mappedBy = "parentComment")
-    List<Comment> childComments;
+    List<Comment> childComments = new ArrayList<>();
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "comment", cascade = CascadeType.ALL, orphanRemoval = true)
+    Set<UserLikedComment> userLikes = new HashSet<>();
 
     @NotNull
     Boolean deleted;
@@ -61,6 +70,20 @@ public class Comment {
         super();
         this.creator = creator;
         this.body = body;
+    }
+
+    public Integer getLikeCount() {
+        Integer userLikesCount = userLikes.stream()
+                .filter(UserLikedComment::getIsLike)
+                .collect(Collectors.toSet())
+                .size();
+
+        Integer userDislikesCount = userLikes.stream()
+                .filter(Predicate.not(UserLikedComment::getIsLike))
+                .collect(Collectors.toSet())
+                .size();
+
+        return userLikesCount - userDislikesCount;
     }
 
     @Override

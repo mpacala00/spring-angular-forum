@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 @Table(name = "`users`") //user is reserved keyword in postgres, hence the weird quotation marks
 @Getter
 @Setter
-@EqualsAndHashCode(exclude = { "followedCategories", "comments", "posts" })
+@EqualsAndHashCode(exclude = { "followedCategories", "comments", "posts", "userLikedComments" })
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class User implements UserDetails {
 
@@ -61,10 +61,14 @@ public class User implements UserDetails {
 
     @JsonIgnoreProperties("followingUsers")
     @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "followed_categories",
+    @JoinTable(name = "user_followed_categories",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "category_id"))
     Set<Category> followedCategories = new HashSet<>();
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    Set<UserLikedComment> userLikedComments = new HashSet<>();
 
     public User() {
         this.setEnabled(false);

@@ -20,6 +20,7 @@ public class CommentDTOMappingService implements DTOMappingService<Comment, Comm
         dto.setCreator(entity.getCreator().getUsername());
         dto.setPostDate(entity.getPostDate().toString());
         dto.setDeleted(entity.getDeleted());
+        dto.setLikeCount(entity.getLikeCount());
 
         List<CommentDTO> childComments = entity.getChildComments()
                 .stream()

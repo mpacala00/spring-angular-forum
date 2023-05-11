@@ -165,9 +165,7 @@ export class CommentsByPostPageComponent implements OnInit, OnDestroy {
          return;
       }
 
-      console.log('outside if: ', this.postId + ', ' + this.commentToReplyTo.id + ', ' + this.commentForm.value);
       if (!this.commentToReplyTo) {
-         console.log('inside if: ', this.postId + ', ' + this.commentToReplyTo.id + ', ' + this.commentForm.value);
          this.subs.sink = this.commentApiService.postComment(this.postId, this.commentForm.value).subscribe(
             res => {
                this.refreshComments();
@@ -179,7 +177,6 @@ export class CommentsByPostPageComponent implements OnInit, OnDestroy {
          );
          
       } else {
-         console.log('comment body: ', this.postId + ', ' + this.commentToReplyTo.id + ', ' + this.commentForm.value);
          this.subs.sink = this.commentApiService.replyToComment(this.postId, this.commentToReplyTo.id, this.commentForm.value).subscribe(
             res => {
                this.cancelReply();

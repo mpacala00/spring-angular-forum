@@ -5,6 +5,7 @@ import com.github.mpacala00.forum.model.Category;
 import com.github.mpacala00.forum.model.Comment;
 import com.github.mpacala00.forum.model.Post;
 import com.github.mpacala00.forum.model.User;
+import com.github.mpacala00.forum.model.constant.ResponseMessage;
 import com.github.mpacala00.forum.model.dto.category.CategoryPostsDTO;
 import com.github.mpacala00.forum.model.dto.comment.CommentUpdateDTO;
 import com.github.mpacala00.forum.model.dto.post.PostUpdateDTO;
@@ -12,6 +13,7 @@ import com.github.mpacala00.forum.pojos.HttpResponse;
 import com.github.mpacala00.forum.service.data.CategoryServiceImpl;
 import com.github.mpacala00.forum.service.data.CommentServiceImpl;
 import com.github.mpacala00.forum.service.data.PostServiceImpl;
+import com.github.mpacala00.forum.service.data.UserLikedCommentService;
 import com.github.mpacala00.forum.service.data.UserService;
 import com.github.mpacala00.forum.service.dto.CategoryDTOMappingService;
 import lombok.AccessLevel;
@@ -39,6 +41,7 @@ public class SecuredForumController {
     CommentServiceImpl commentServiceImpl;
     CategoryDTOMappingService categoryDTOMappingService;
     UserService userService;
+    UserLikedCommentService userLikedCommentService;
 
     //GET this when user is logged in
     //check if user is following this category and set boolean in dto accordingly
@@ -194,6 +197,21 @@ public class SecuredForumController {
         }
 
         throw new ResourceNotFoundException(String.format("Category of id=%d not found", categoryId));
+    }
+
+    @PutMapping("comments/{commentId}/like/{isLike}")
+    public ResponseEntity<HttpResponse> likeComment(@PathVariable Long commentId, @PathVariable Boolean isLike,
+                                                    @AuthenticationPrincipal User user) {
+        Comment comment = commentServiceImpl.findById(commentId);
+        if (comment == null) {
+            return HttpResponse.createResponseEntity(HttpStatus.NOT_FOUND, ResponseMessage.NOT_FOUND.getValue());
+        }
+
+        //todo return String with response message instead of boolean
+        boolean created = userLikedCommentService.likeComment(user, comment, isLike);
+        String message = created ? "Reacted to the comment" : "Reaction has been updated";
+
+        return HttpResponse.createResponseEntity(HttpStatus.OK, message);
     }
 
 }
