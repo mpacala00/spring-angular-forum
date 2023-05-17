@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -37,7 +37,8 @@ export class CommentsByPostPageComponent implements OnInit, OnDestroy {
       private commentApiService: CommentApiService,
       private postApiService: PostApiService,
       private authService: AuthService,
-      public dialog: MatDialog,) { }
+      public dialog: MatDialog,
+      public changeDetection: ChangeDetectorRef) { }
 
    ngOnInit(): void {
       this.commentForm = new UntypedFormGroup({
@@ -234,7 +235,28 @@ export class CommentsByPostPageComponent implements OnInit, OnDestroy {
       } else {
          alert("Post id not set");
       }
+   }
 
+   public rateComment(commentId: number, isLike: boolean) {
+      if (!commentId) {
+         return;
+      }
+
+      this.subs.sink = this.commentApiService.likeComment(commentId, isLike).subscribe(
+         res => {
+            //todo use ChangeDetectionRef to update liked comment with backend res
+            this.refreshComments();
+         },
+         err => {
+            alert("Error occured while rating the comment.");
+         }
+      )
+   }
+
+   private replaceCommentInCommentsArray(commentId: number, newComment: CommentModel) {
+      this.comments.map(comment => 
+            comment.id === commentId ? newComment : comment
+      );
    }
 
    ngOnDestroy(): void {

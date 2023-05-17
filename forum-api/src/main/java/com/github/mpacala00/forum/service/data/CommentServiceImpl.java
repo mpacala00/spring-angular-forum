@@ -1,7 +1,9 @@
 package com.github.mpacala00.forum.service.data;
 
+import com.github.mpacala00.forum.exception.model.ResourceNotFoundException;
 import com.github.mpacala00.forum.model.Comment;
 import com.github.mpacala00.forum.model.Post;
+import com.github.mpacala00.forum.model.UserLikedComment;
 import com.github.mpacala00.forum.model.constant.CommentConstants;
 import com.github.mpacala00.forum.model.dto.comment.CommentDTO;
 import com.github.mpacala00.forum.model.dto.comment.CommentUpdateDTO;
@@ -23,22 +25,50 @@ import java.util.stream.Collectors;
 public class CommentServiceImpl implements CommentService {
 
     private final CommentRepository commentRepository;
-    private final PostRepository postRepository;
     private final CommentDTOMappingService commentDTOMappingService;
 
     @Override
-    public List<CommentDTO> getAllCommentsFromPost(Long postId) {
+    public List<CommentDTO> getAllCommentsFromPost(Long postId, Long tokenUserId) {
         List<Comment> postComments = commentRepository.findByPostId(postId);
         if (postComments.size() == 0) {
             return Collections.emptyList();
         }
 
-        List<CommentDTO> postCommentDTOList = postComments.stream()
-                .filter(comment -> comment.getParentComment() == null)
-                .map(commentDTOMappingService::convertToDTO)
-                .collect(Collectors.toList());
+        return mapCommentsToDto(postComments, tokenUserId);
+    }
 
-        return postCommentDTOList;
+    private List<CommentDTO> mapCommentsToDto(List<Comment> comments, Long userId) {
+        if (userId == null) {
+            return comments.stream()
+                    .filter(comment -> comment.getParentComment() == null)
+                    .map(commentDTOMappingService::convertToDTO)
+                    .collect(Collectors.toList());
+        }
+
+        return comments.stream()
+                .filter(comment -> comment.getParentComment() == null)
+                .map(comment -> commentDTOMappingService.convertToDTO(comment, userId))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public CommentDTO getCommentDto(Long commentId, Long tokenUserId) throws ResourceNotFoundException {
+        Comment comment = findById(commentId);
+        if (comment == null) {
+            throw new ResourceNotFoundException("Comment of id=" + commentId + "not found.");
+        }
+
+        return commentDTOMappingService.convertToDTO(comment, tokenUserId);
+    }
+
+    @Override //todo - using on a list of comments can be slow
+    public Boolean isLikedByUser(Comment comment, Long userId) {
+        Optional<Boolean> likingUserOpt = comment.getUserLikes().stream()
+                .filter(userLikedComment -> userLikedComment.getUser().getId().equals(userId))
+                .findAny()
+                .map(UserLikedComment::getIsLike);
+
+        return likingUserOpt.orElse(null);
     }
 
     @Override

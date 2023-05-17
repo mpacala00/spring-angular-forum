@@ -24,6 +24,7 @@ import org.springframework.security.web.util.matcher.RequestMatcher;
 import com.github.mpacala00.forum.security.NoRedirectStrategy;
 import com.github.mpacala00.forum.security.token.TokenAuthenticationFilter;
 import com.github.mpacala00.forum.security.token.TokenAuthenticationProvider;
+import org.springframework.util.AntPathMatcher;
 
 @Configuration
 @EnableWebSecurity
@@ -43,6 +44,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             //add more here after comma
     );
 
+    static RequestMatcher PUBLIC_USER_URLS = new AntPathRequestMatcher("/public/user/**");
+
     static RequestMatcher PROTECTED_URLS = new NegatedRequestMatcher(PUBLIC_URLS);
 
     TokenAuthenticationProvider provider;
@@ -60,7 +63,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     public void configure(final WebSecurity security) {
-        security.ignoring().requestMatchers(PUBLIC_URLS);
+        security.ignoring().requestMatchers(PUBLIC_USER_URLS);
     }
 
     @Override
@@ -75,11 +78,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 // this entry point handles when you request a protected page and you are not yet
                 // authenticated
                 .defaultAuthenticationEntryPointFor(forbiddenEntryPoint(), PROTECTED_URLS)
+                .defaultAuthenticationEntryPointFor(forbiddenEntryPoint(), PUBLIC_URLS)
                 .and()
                 .authenticationProvider(provider)
                 .addFilterBefore(restAuthenticationFilter(), AnonymousAuthenticationFilter.class)
                 .authorizeRequests()
+                .requestMatchers(PUBLIC_URLS).authenticated() //todo find a way to retrieve tokens from public endpoints
                 .requestMatchers(PROTECTED_URLS).authenticated()
+                .requestMatchers(PUBLIC_USER_URLS).permitAll()
                 .and()
                 .csrf().disable()
                 .formLogin().disable()
@@ -89,7 +95,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Bean
     TokenAuthenticationFilter restAuthenticationFilter() throws Exception {
-        final TokenAuthenticationFilter filter = new TokenAuthenticationFilter(PROTECTED_URLS);
+        final TokenAuthenticationFilter filter = new TokenAuthenticationFilter(new OrRequestMatcher(PUBLIC_URLS, PROTECTED_URLS));
         filter.setAuthenticationManager(authenticationManager());
         filter.setAuthenticationSuccessHandler(successHandler());
         return filter;

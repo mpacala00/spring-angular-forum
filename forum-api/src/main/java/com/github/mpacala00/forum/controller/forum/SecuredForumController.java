@@ -7,6 +7,7 @@ import com.github.mpacala00.forum.model.Post;
 import com.github.mpacala00.forum.model.User;
 import com.github.mpacala00.forum.model.constant.ResponseMessage;
 import com.github.mpacala00.forum.model.dto.category.CategoryPostsDTO;
+import com.github.mpacala00.forum.model.dto.comment.CommentDTO;
 import com.github.mpacala00.forum.model.dto.comment.CommentUpdateDTO;
 import com.github.mpacala00.forum.model.dto.post.PostUpdateDTO;
 import com.github.mpacala00.forum.pojos.HttpResponse;
@@ -200,18 +201,17 @@ public class SecuredForumController {
     }
 
     @PutMapping("comments/{commentId}/like/{isLike}")
-    public ResponseEntity<HttpResponse> likeComment(@PathVariable Long commentId, @PathVariable Boolean isLike,
-                                                    @AuthenticationPrincipal User user) {
+    public ResponseEntity<CommentDTO> likeComment(@PathVariable Long commentId, @PathVariable Boolean isLike,
+                                                    @AuthenticationPrincipal User user) throws ResourceNotFoundException {
         Comment comment = commentServiceImpl.findById(commentId);
         if (comment == null) {
-            return HttpResponse.createResponseEntity(HttpStatus.NOT_FOUND, ResponseMessage.NOT_FOUND.getValue());
+            throw new ResourceNotFoundException("Comment of id=" + commentId + "not found.");
         }
 
-        //todo return String with response message instead of boolean
-        boolean created = userLikedCommentService.likeComment(user, comment, isLike);
-        String message = created ? "Reacted to the comment" : "Reaction has been updated";
+        userLikedCommentService.likeComment(user, comment, isLike);
 
-        return HttpResponse.createResponseEntity(HttpStatus.OK, message);
+        //return comment with updated likeCount and isLikedByUser fields
+        return new ResponseEntity<>(commentServiceImpl.getCommentDto(commentId, user.getId()), HttpStatus.OK);
     }
 
 }

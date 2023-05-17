@@ -2,6 +2,7 @@ package com.github.mpacala00.forum.controller.forum;
 
 import com.github.mpacala00.forum.exception.model.ResourceNotFoundException;
 import com.github.mpacala00.forum.model.Category;
+import com.github.mpacala00.forum.model.User;
 import com.github.mpacala00.forum.model.dto.category.CategoryDTO;
 import com.github.mpacala00.forum.model.dto.category.CategoryPostsDTO;
 import com.github.mpacala00.forum.model.dto.comment.CommentDTO;
@@ -19,12 +20,14 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @AllArgsConstructor
@@ -93,8 +96,11 @@ public class PublicForumController {
     }
 
     @GetMapping("post/{postId}/comments")
-    public ResponseEntity<List<CommentDTO>> getCommentsByPost(@PathVariable Long postId) throws Exception {
-        List<CommentDTO> comments = commentServiceImpl.getAllCommentsFromPost(postId);
+    public ResponseEntity<List<CommentDTO>> getCommentsByPost(@PathVariable Long postId,
+                                                              @AuthenticationPrincipal User user) {
+        Long tokenUserId = user.getId();
+
+        List<CommentDTO> comments = commentServiceImpl.getAllCommentsFromPost(postId, tokenUserId);
 
         return new ResponseEntity<>(comments, HttpStatus.OK);
     }

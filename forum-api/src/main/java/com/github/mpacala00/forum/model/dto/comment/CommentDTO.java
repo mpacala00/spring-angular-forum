@@ -17,4 +17,5 @@ public class CommentDTO {
     List<CommentDTO> childComments;
     Boolean deleted;
     Integer likeCount;
+    Boolean isLikedByUser;
 }
