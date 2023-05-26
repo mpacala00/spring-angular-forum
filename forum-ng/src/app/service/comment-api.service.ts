@@ -35,4 +35,8 @@ export class CommentApiService {
    deleteComment(commentId: number) {
       return this.http.delete<any>(`${environment.BASE_URL}/comment/${commentId}`);
    }
+
+   likeComment(commentId: number, isLike: boolean) {
+      return this.http.put<any>(`${environment.BASE_URL}/comments/${commentId}/like/${isLike}`, null);
+   }
 }

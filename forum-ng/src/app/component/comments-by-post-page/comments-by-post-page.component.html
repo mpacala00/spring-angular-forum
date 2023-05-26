@@ -28,14 +28,19 @@
 
                </div>
             </mat-card-title>
-            {{ post?.body }}
+            <p class="post-body my-2">
+               {{ post?.body }}
+            </p>
+            
 
             <div *ngFor="let c of comments; let i=index">
                <app-comment [c]="c"
                    [replyDepth]="0" 
                    (editCommentEvent)="updateComment($event)"
                    (deleteCommentEvent)="openDeleteCommentDialog($event)"
-                   (replyEvent)="replyToComment($event)"></app-comment>
+                   (replyEvent)="replyToComment($event)"
+                   (likeEvent)="rateComment($event, true)"
+                   (dislikeEvent)="rateComment($event, false)"></app-comment>
             </div>
 
             <button mat-stroked-button color="link" type="button" (click)="refreshComments()" class="mt-4">Refresh comments</button>

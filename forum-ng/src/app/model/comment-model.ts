@@ -5,4 +5,6 @@ export interface CommentModel {
    body: string;
    childComments: CommentModel[];
    deleted: boolean;
+   likeCount: number;
+   isLikedByUser: boolean;
 }
