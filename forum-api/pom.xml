@@ -18,7 +18,7 @@
 		<java.version>11</java.version>
 
 		<commons-lang.version>3.8.1</commons-lang.version>
-		<guava.version>29.0-jre</guava.version>
+		<guava.version>32.0.0-jre</guava.version>
 		<jaxb.version>2.3.3</jaxb.version>
 		<jwt.version>0.9.1</jwt.version>
 		<joda-time.version>2.10.6</joda-time.version>
