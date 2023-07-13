@@ -22,19 +22,16 @@ export class CategoryApiService {
       return this.http.get<CategoryModel>(`${environment.BASE_URL}/categories/${categoryId}`);
    }
 
-   getCategoryByIdSecured(cateogryId: number) {
-      return this.http.get<CategoryModel>(`${environment.BASE_URL}/category/${cateogryId}`);
-   }
-
    postCategory(category: CategoryModel) {
-      return this.http.post<CategoryModel>(`${environment.BASE_URL}/category`, category);
+      return this.http.post<CategoryModel>(`${environment.BASE_URL}/categories`, category);
    }
 
+   //todo accept response entity as return type
    followCategory(cateogryId: number) {
-      return this.http.get<any>(`${environment.BASE_URL}/category/${cateogryId}/follow`);
+      return this.http.put<any>(`${environment.BASE_URL}/categories/${cateogryId}/follow`, null);
    }
 
    unfollowCategory(cateogryId: number) {
-      return this.http.get<any>(`${environment.BASE_URL}/category/${cateogryId}/unfollow`);
+      return this.http.put<any>(`${environment.BASE_URL}/categories/${cateogryId}/unfollow`, null);
    }
 }

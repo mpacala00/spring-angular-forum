@@ -2,6 +2,7 @@ package com.github.mpacala00.forum.service.data;
 
 import com.github.mpacala00.forum.exception.model.ResourceNotFoundException;
 import com.github.mpacala00.forum.model.Category;
+import com.github.mpacala00.forum.model.User;
 import com.github.mpacala00.forum.model.dto.category.CategoryDTO;
 import com.github.mpacala00.forum.model.dto.category.CategoryPostsDTO;
 import com.github.mpacala00.forum.repository.CategoryRepository;
@@ -11,6 +12,7 @@ import lombok.AllArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -22,6 +24,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     CategoryRepository categoryRepository;
     CategoryDTOMappingService categoryDTOMappingService;
+    UserService userService;
 
     @Override
     public List<CategoryDTO> getAllCategories() {
@@ -41,12 +44,32 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public CategoryPostsDTO findByIdMapToDTO(Long id) {
-        return categoryDTOMappingService.convertToCategoryPostsDTO(findById(id));
+    public CategoryPostsDTO findByIdMapToDTO(Long categoryId, Long userId) {
+        return categoryDTOMappingService.convertToCategoryPostsDTO(findById(categoryId), userId);
     }
 
     @Override
     public Category save(Category category) {
         return categoryRepository.save(category);
+    }
+
+    @Override
+    @Transactional
+    public void followCategory(Long categoryId, User user, boolean isFollow) {
+        Category category = findById(categoryId);
+
+        if (isFollow) {
+            category.getFollowingUsers().add(user);
+        } else {
+            category.getFollowingUsers().remove(user);
+        }
+        save(category);
+
+        if (isFollow) {
+            user.getFollowedCategories().add(category);
+        } else {
+            user.getFollowedCategories().remove(category);
+        }
+        userService.save(user);
     }
 }

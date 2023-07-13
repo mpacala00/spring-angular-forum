@@ -1,6 +1,7 @@
 package com.github.mpacala00.forum.service.dto;
 
 import com.github.mpacala00.forum.model.Category;
+import com.github.mpacala00.forum.model.User;
 import com.github.mpacala00.forum.model.dto.category.CategoryDTO;
 import com.github.mpacala00.forum.model.dto.category.CategoryPostsDTO;
 import lombok.AllArgsConstructor;
@@ -34,15 +35,26 @@ public class CategoryDTOMappingService implements DTOMappingService<Category, Ca
     }
 
     //include post list in dto
-    public CategoryPostsDTO convertToCategoryPostsDTO(Category entity) {
+    public CategoryPostsDTO convertToCategoryPostsDTO(Category entity, Long userId) {
         CategoryPostsDTO dto = new CategoryPostsDTO();
+
         dto.setDescription(entity.getDescription());
         dto.setName(entity.getName());
         dto.setId(entity.getId());
+
         dto.setPosts(entity.getPosts()
                 .stream()
                 .map(postDTOMappingService::convertToDTO)
                 .collect(Collectors.toList()));
+
+        if (userId != null) {
+            boolean isUserFollowing = entity.getFollowingUsers().stream()
+                    .map(User::getId)
+                    .anyMatch(uid -> uid.equals(userId));
+
+            dto.setUserFollowing(isUserFollowing);
+        }
+
         return dto;
     }
 

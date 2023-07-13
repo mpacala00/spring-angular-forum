@@ -90,7 +90,7 @@ export class PostsByCategoryPageComponent implements OnInit, OnDestroy {
    }
 
    getCategoryLoggedIn(categoryId: number) {
-      this.subs.sink = this.categoryApiService.getCategoryByIdSecured(categoryId).subscribe(
+      this.subs.sink = this.categoryApiService.getCategoryById(categoryId).subscribe(
          res => {
             this.category = res;
             this.posts = res.posts;

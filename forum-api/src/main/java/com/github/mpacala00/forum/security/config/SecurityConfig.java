@@ -1,15 +1,19 @@
 package com.github.mpacala00.forum.security.config;
 
+import com.github.mpacala00.forum.model.constant.ResourceMapping;
+import com.github.mpacala00.forum.security.NoRedirectStrategy;
+import com.github.mpacala00.forum.security.token.TokenAuthenticationFilter;
+import com.github.mpacala00.forum.security.token.TokenAuthenticationProvider;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -21,10 +25,6 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.security.web.util.matcher.NegatedRequestMatcher;
 import org.springframework.security.web.util.matcher.OrRequestMatcher;
 import org.springframework.security.web.util.matcher.RequestMatcher;
-import com.github.mpacala00.forum.security.NoRedirectStrategy;
-import com.github.mpacala00.forum.security.token.TokenAuthenticationFilter;
-import com.github.mpacala00.forum.security.token.TokenAuthenticationProvider;
-import org.springframework.util.AntPathMatcher;
 
 @Configuration
 @EnableWebSecurity
@@ -40,7 +40,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
      */
 
     static RequestMatcher PROTECTED_URLS = new OrRequestMatcher(
-            new AntPathRequestMatcher("/secured/**")
+            //put all secured URLs here:
+            new AntPathRequestMatcher("/secured/**"),
+
+            new AntPathRequestMatcher(ResourceMapping.CATEGORIES + "/**", HttpMethod.POST.name()),
+            new AntPathRequestMatcher(ResourceMapping.CATEGORIES + "/**", HttpMethod.PUT.name()),
+            new AntPathRequestMatcher(ResourceMapping.CATEGORIES + "/**", HttpMethod.PATCH.name()),
+            new AntPathRequestMatcher(ResourceMapping.CATEGORIES + "/**", HttpMethod.DELETE.name())
     );
 
     static RequestMatcher PUBLIC_URLS = new NegatedRequestMatcher(PROTECTED_URLS);
