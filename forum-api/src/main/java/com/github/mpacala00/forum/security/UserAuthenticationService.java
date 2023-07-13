@@ -6,6 +6,7 @@ import com.github.mpacala00.forum.exception.model.UserLockedException;
 import com.github.mpacala00.forum.exception.model.UserNotFoundException;
 import com.github.mpacala00.forum.model.User;
 
+import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -37,6 +38,8 @@ public interface UserAuthenticationService {
      * @return boolean if account was actually activated
      */
     boolean activateAccount(String token);
+
+    Optional<User> retrieveByRequestHeadersToken(Map<String, String> headers);
 
     /**
      * Logs out the given input {@code user}.

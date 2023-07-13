@@ -8,6 +8,7 @@ import com.github.mpacala00.forum.model.dto.category.CategoryPostsDTO;
 import com.github.mpacala00.forum.model.dto.comment.CommentDTO;
 import com.github.mpacala00.forum.model.dto.post.PostDTO;
 import com.github.mpacala00.forum.repository.CommentRepository;
+import com.github.mpacala00.forum.security.UserAuthenticationService;
 import com.github.mpacala00.forum.service.data.CategoryServiceImpl;
 import com.github.mpacala00.forum.service.data.CommentServiceImpl;
 import com.github.mpacala00.forum.service.data.PostServiceImpl;
@@ -20,13 +21,14 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -45,6 +47,8 @@ public class PublicForumController {
     PostDTOMappingService postDTOMappingService;
     CategoryDTOMappingService categoryDTOMappingService;
     CommentDTOMappingService commentDTOMappingService;
+
+    UserAuthenticationService userAuthenticationService;
 
     //this should be removed as they belong to a category
     @GetMapping("posts")
@@ -97,10 +101,10 @@ public class PublicForumController {
 
     @GetMapping("post/{postId}/comments")
     public ResponseEntity<List<CommentDTO>> getCommentsByPost(@PathVariable Long postId,
-                                                              @AuthenticationPrincipal User user) {
-        Long tokenUserId = user.getId();
+                                                              @RequestHeader Map<String, String> headers) {
+        Optional<User> userOpt = userAuthenticationService.retrieveByRequestHeadersToken(headers);
 
-        List<CommentDTO> comments = commentServiceImpl.getAllCommentsFromPost(postId, tokenUserId);
+        List<CommentDTO> comments = commentServiceImpl.getAllCommentsFromPost(postId, userOpt.map(User::getId).orElse(null));
 
         return new ResponseEntity<>(comments, HttpStatus.OK);
     }

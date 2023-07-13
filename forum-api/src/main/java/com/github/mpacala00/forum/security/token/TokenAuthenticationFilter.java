@@ -45,8 +45,12 @@ public class TokenAuthenticationFilter extends AbstractAuthenticationProcessingF
 
         final String token = Optional.ofNullable(param)
                 .map(value -> removeStart(value, BEARER))
-                .map(String::trim) //remove white space from beginning
-                .orElseThrow(() -> new BadCredentialsException("Missing authentication token"));
+                .map(String::trim)
+                .orElse(null);
+
+        if (token == null) {
+            return null;
+        }
 
         final Authentication auth = new UsernamePasswordAuthenticationToken(token, token);
 
