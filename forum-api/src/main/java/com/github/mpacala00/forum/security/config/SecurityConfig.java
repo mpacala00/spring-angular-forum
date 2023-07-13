@@ -39,14 +39,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
      * Some boiler-plate code to disable automatic filter registration, related to Spring Boot.
      */
 
-    static RequestMatcher PUBLIC_URLS = new OrRequestMatcher(
-            new AntPathRequestMatcher("/public/**")
-            //add more here after comma
+    static RequestMatcher PROTECTED_URLS = new OrRequestMatcher(
+            new AntPathRequestMatcher("/secured/**")
     );
 
-    //static RequestMatcher PUBLIC_USER_URLS = new AntPathRequestMatcher("/public/user/**");
-
-    static RequestMatcher PROTECTED_URLS = new NegatedRequestMatcher(PUBLIC_URLS);
+    static RequestMatcher PUBLIC_URLS = new NegatedRequestMatcher(PROTECTED_URLS);
 
     TokenAuthenticationProvider provider;
 
@@ -59,11 +56,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     public void configure(final AuthenticationManagerBuilder auth) {
         auth.authenticationProvider(provider);
-    }
-
-    @Override
-    public void configure(final WebSecurity security) {
-        security.ignoring().requestMatchers(PUBLIC_URLS);
     }
 
     @Override
