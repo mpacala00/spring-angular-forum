@@ -15,11 +15,11 @@ export class CategoryApiService {
 
    //todo change cat entity to include description
    getAllCategories() {
-      return this.http.get<CategoryModel[]>(`${environment.BASE_URL_PUBLIC}/categories`);
+      return this.http.get<CategoryModel[]>(`${environment.BASE_URL}/categories`);
    }
 
    getCategoryById(categoryId: number) {
-      return this.http.get<CategoryModel>(`${environment.BASE_URL_PUBLIC}/category/${categoryId}`);
+      return this.http.get<CategoryModel>(`${environment.BASE_URL}/categories/${categoryId}`);
    }
 
    getCategoryByIdSecured(cateogryId: number) {
