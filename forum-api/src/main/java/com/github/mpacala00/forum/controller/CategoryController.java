@@ -1,4 +1,4 @@
-package com.github.mpacala00.forum.controller.forum;
+package com.github.mpacala00.forum.controller;
 
 import com.github.mpacala00.forum.model.Category;
 import com.github.mpacala00.forum.model.User;

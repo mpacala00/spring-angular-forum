@@ -11,32 +11,39 @@ import { environment } from 'src/environments/environment';
 })
 export class CommentApiService {
 
-   private PUT_COMMENT = `${environment.BASE_URL}/comment`;
-
    constructor(private http: HttpClient, private cookieService: CookieService) { }
 
    //return only comments belonging to post
-   getCommentsByPost(postId: number) {
-      return this.http.get<CommentModel[]>(`${environment.BASE_URL_PUBLIC}/post/${postId}/comments`);
+   getCommentsByPost(categoryId: number, postId: number) {
+      return this.http.get<CommentModel[]>(this.buildUrl(categoryId, postId));
    }
 
-   postComment(postId: number, comment: CommentModel) {
-      return this.http.post<CommentModel>(`${environment.BASE_URL}/post/${postId}/comment`, comment);
+   postComment(categoryId: number, postId: number, comment: CommentModel) {
+      return this.http.post<CommentModel>(this.buildUrl(categoryId, postId), comment);
    }
 
-   replyToComment(postId: number, commentId: number, comment: CommentModel) {
-      return this.http.post<CommentModel>(`${environment.BASE_URL}/posts/${postId}/comment/${commentId}`, comment);
+   replyToComment(categoryId: number, postId: number, commentIdToReply: number, comment: CommentModel) {
+      return this.http.post<CommentModel>(this.buildUrl(categoryId, postId), comment, {
+         params: {
+            replyTo: commentIdToReply
+         }
+      });
    }
 
-   putComment(comment: CommentModel) {
-      return this.http.put<CommentModel>(this.PUT_COMMENT, comment);
+   putComment(categoryId: number, postId: number, comment: CommentModel) {
+      return this.http.put<CommentModel>(this.buildUrl(categoryId, postId, comment.id), comment);
    }
 
-   deleteComment(commentId: number) {
-      return this.http.delete<any>(`${environment.BASE_URL}/comment/${commentId}`);
+   deleteComment(categoryId: number, postId: number, commentId: number) {
+      return this.http.delete<any>(this.buildUrl(categoryId, postId, commentId));
    }
 
-   likeComment(commentId: number, isLike: boolean) {
-      return this.http.put<any>(`${environment.BASE_URL}/comments/${commentId}/like/${isLike}`, null);
+   likeComment(categoryId: number, postId: number, commentId: number, isLike: boolean) {
+      return this.http.put<any>(`${this.buildUrl(categoryId, postId, commentId)}/like/${isLike}`, null);
+   }
+
+   private buildUrl(categoryId: string | number, postId: string | number, commentId?: string | number) {
+      let baseUrl = `${environment.BASE_URL}/categories/${categoryId}/posts/${postId}/comments`;
+      return commentId !== undefined ? baseUrl + `/${commentId}` : baseUrl;
    }
 }
