@@ -243,6 +243,13 @@ export class CommentsByPostPageComponent implements OnInit, OnDestroy {
       }
    }
 
+   ratePost(postId: number, isLike: boolean) {
+      this.subs.sink = this.postApiService.likeComment(this.categoryId, postId, isLike).subscribe(
+         res => { this.post = res; }, //todo: replace liked comment with response from backend
+         err => {alert('An error occured while liking post')}
+      )
+   }
+
    public rateComment(commentId: number, isLike: boolean) {
       if (!commentId) {
          return;

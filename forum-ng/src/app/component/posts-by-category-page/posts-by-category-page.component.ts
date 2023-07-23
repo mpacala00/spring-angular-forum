@@ -114,6 +114,20 @@ export class PostsByCategoryPageComponent implements OnInit, OnDestroy {
       )
    }
 
+   ratePost(postId: number, isLike: boolean) {
+      this.subs.sink = this.postApiService.likeComment(this.categoryId, postId, isLike).subscribe(
+         res => { this.updatePostInPostArray(res) }, //todo: replace liked comment with response from backend
+         err => {alert('An error occured while liking post')}
+      )
+   }
+
+   updatePostInPostArray(updatedPost: PostModel) {
+      const index = this.posts.findIndex(post => post.id === updatedPost.id);
+      if (index !== -1) {
+         this.posts[index] = updatedPost;
+      };
+   }
+
    //this function follows or unfollows category depending on the current state
    switchFollowingCategory() {
       if (!this.isUserFollowingCategory) {

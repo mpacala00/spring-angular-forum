@@ -42,17 +42,21 @@ public class CategoryDTOMappingService implements DTOMappingService<Category, Ca
         dto.setName(entity.getName());
         dto.setId(entity.getId());
 
-        dto.setPosts(entity.getPosts()
-                .stream()
-                .map(postDTOMappingService::convertToDTO)
-                .collect(Collectors.toList()));
-
         if (userId != null) {
             boolean isUserFollowing = entity.getFollowingUsers().stream()
                     .map(User::getId)
                     .anyMatch(uid -> uid.equals(userId));
-
             dto.setUserFollowing(isUserFollowing);
+
+            dto.setPosts(entity.getPosts()
+                    .stream()
+                    .map(post -> postDTOMappingService.convertToDTO(post, userId))
+                    .collect(Collectors.toList()));
+        } else {
+            dto.setPosts(entity.getPosts()
+                    .stream()
+                    .map(postDTOMappingService::convertToDTO)
+                    .collect(Collectors.toList()));
         }
 
         return dto;

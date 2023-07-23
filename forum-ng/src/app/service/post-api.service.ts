@@ -34,6 +34,10 @@ export class PostApiService {
       return this.http.delete<any>(this.buildUrl(categoryId, postId));
    }
 
+   likeComment(categoryId: number, postId: number, isLike: boolean) {
+      return this.http.put<any>(`${this.buildUrl(categoryId, postId)}/like/${isLike}`, null);
+   }
+
    private buildUrl(categoryId: string | number, postId?: string | number) {
       let baseUrl = `${environment.BASE_URL}/categories/${categoryId}/posts`;
       return postId !== undefined ? baseUrl + `/${postId}` : baseUrl;

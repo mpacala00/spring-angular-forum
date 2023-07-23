@@ -53,8 +53,11 @@ public class PostController {
     }
 
     @GetMapping("/{postId}")
-    public ResponseEntity<PostDTO> getPostById(@PathVariable Long postId) {
-        PostDTO post = postDTOMappingService.convertToDTO(postService.findById(postId));
+    public ResponseEntity<PostDTO> getPostById(@RequestHeader Map<String, String> headers,
+            @PathVariable Long postId) {
+        Optional<User> userOpt = userAuthenticationService.retrieveByRequestHeadersToken(headers);
+        PostDTO post = postDTOMappingService.convertToDTO(postService.findById(postId),
+                userOpt.map(User::getId).orElse(null));
 
         return new ResponseEntity<>(post, HttpStatus.OK);
     }
