@@ -9,6 +9,7 @@ import com.github.mpacala00.forum.model.dto.comment.CommentDTO;
 import com.github.mpacala00.forum.model.dto.comment.CommentUpdateDTO;
 import com.github.mpacala00.forum.repository.CommentRepository;
 import com.github.mpacala00.forum.repository.PostRepository;
+import com.github.mpacala00.forum.repository.UserLikedCommentRepository;
 import com.github.mpacala00.forum.service.dto.CommentDTOMappingService;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -32,6 +33,7 @@ public class CommentServiceImpl implements CommentService {
 
     CommentRepository commentRepository;
     PostRepository postRepository;
+    UserLikedCommentRepository userLikedCommentRepository;
     CommentDTOMappingService commentDTOMappingService;
 
     @Override
@@ -143,17 +145,18 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     @Transactional
-    public void deleteById(Long id) {
-        Comment commentToDelete = findById(id);
+    public void deleteById(Long commentId) {
+        Comment commentToDelete = findById(commentId);
         if (commentToDelete.getDeleted()) {
             return;
         }
 
         if (CollectionUtils.isEmpty(commentToDelete.getChildComments())) {
+            userLikedCommentRepository.deleteByCommentId(commentId);
+
             commentToDelete.setPost(null);
             commentToDelete.setCreator(null);
-
-            commentRepository.deleteById(id);
+            commentRepository.deleteById(commentId);
         } else {
             commentToDelete.setBody(CommentConstants.DELETED_BODY.getValue());
             commentToDelete.setDeleted(true);

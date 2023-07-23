@@ -10,4 +10,5 @@ import java.util.Optional;
 public interface UserLikedCommentRepository extends JpaRepository<UserLikedComment, Long> {
 
     Optional<UserLikedComment> findByUserIdAndCommentId(Long userId, Long commentId);
+    void deleteByCommentId(Long commentId);
 }
