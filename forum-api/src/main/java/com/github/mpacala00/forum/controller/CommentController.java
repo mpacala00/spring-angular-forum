@@ -1,6 +1,5 @@
 package com.github.mpacala00.forum.controller;
 
-import com.github.mpacala00.forum.exception.model.ResourceNotFoundException;
 import com.github.mpacala00.forum.model.Comment;
 import com.github.mpacala00.forum.model.User;
 import com.github.mpacala00.forum.model.dto.comment.CommentDTO;
@@ -93,7 +92,7 @@ public class CommentController {
 
     @PutMapping("/{commentId}/like/{isLike}")
     public ResponseEntity<CommentDTO> likeComment(@PathVariable Long commentId, @PathVariable Boolean isLike,
-                                                  @AuthenticationPrincipal User user) throws ResourceNotFoundException {
+            @AuthenticationPrincipal User user) {
         userLikedCommentService.likeComment(user, commentId, isLike);
 
         //return comment with updated likeCount and isLikedByUser fields

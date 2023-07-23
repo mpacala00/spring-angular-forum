@@ -14,4 +14,6 @@ public class PostDTO {
     String title;
     String body;
     String postDate;
+    Integer likeCount;
+    Boolean isLikedByUser;
 }

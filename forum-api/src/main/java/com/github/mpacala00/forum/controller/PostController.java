@@ -5,7 +5,9 @@ import com.github.mpacala00.forum.model.User;
 import com.github.mpacala00.forum.model.dto.post.PostDTO;
 import com.github.mpacala00.forum.model.dto.post.PostUpdateDTO;
 import com.github.mpacala00.forum.pojos.HttpResponse;
+import com.github.mpacala00.forum.security.UserAuthenticationService;
 import com.github.mpacala00.forum.service.data.PostService;
+import com.github.mpacala00.forum.service.data.UserLikedPostService;
 import com.github.mpacala00.forum.service.dto.PostDTOMappingService;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -21,10 +23,13 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 @AllArgsConstructor
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
@@ -33,11 +38,16 @@ import java.util.List;
 public class PostController {
 
     PostService postService;
+    UserLikedPostService userLikedPostService;
     PostDTOMappingService postDTOMappingService;
+    UserAuthenticationService userAuthenticationService;
 
     @GetMapping
-    public ResponseEntity<List<PostDTO>> getPostsByCategory(@PathVariable Long categoryId) {
-        List<PostDTO> posts = postService.findByCategoryIdMapToDTO(categoryId);
+    public ResponseEntity<List<PostDTO>> getPostsByCategory(@RequestHeader Map<String, String> headers,
+            @PathVariable Long categoryId) {
+        Optional<User> userOpt = userAuthenticationService.retrieveByRequestHeadersToken(headers);
+        List<PostDTO> posts = postService.findByCategoryIdMapToDTO(categoryId,
+                userOpt.map(User::getId).orElse(null));
 
         return new ResponseEntity<>(posts, HttpStatus.OK);
     }
@@ -76,5 +86,13 @@ public class PostController {
 
         postService.deleteById(Long.valueOf(postId));
         return HttpResponse.createResponseEntity(HttpStatus.OK, "Post successfully deleted");
+    }
+
+    @PutMapping("/{postId}/like/{isLike}")
+    public ResponseEntity<PostDTO> likePost(@PathVariable Long postId, @PathVariable Boolean isLike,
+            @AuthenticationPrincipal User user) {
+        userLikedPostService.likeComment(user, postId, isLike);
+
+        return new ResponseEntity<>(postService.findByIdMapToDTO(postId, user.getId()), HttpStatus.OK);
     }
 }

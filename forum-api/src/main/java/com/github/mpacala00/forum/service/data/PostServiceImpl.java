@@ -74,16 +74,33 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
+    public PostDTO findByIdMapToDTO(Long postId, Long userId) {
+        Post post = findById(postId);
+
+        return postDTOMappingService.convertToDTO(post, userId);
+    }
+
+    @Override
     public List<Post> findByCategoryId(Long categoryId) {
         return postRepository.findByCategoryId(categoryId);
     }
 
     @Override
-    public List<PostDTO> findByCategoryIdMapToDTO(Long categoryId) {
+    public List<PostDTO> findByCategoryIdMapToDTO(Long categoryId, Long userId) {
         List<Post> posts = findByCategoryId(categoryId);
 
+        return mapPostsToDTO(posts, userId);
+    }
+
+    public List<PostDTO> mapPostsToDTO(List<Post> posts, Long userId) {
+        if (userId == null) {
+            return posts.stream()
+                    .map(postDTOMappingService::convertToDTO)
+                    .collect(Collectors.toList());
+        }
+
         return posts.stream()
-                .map(postDTOMappingService::convertToDTO)
+                .map(post -> postDTOMappingService.convertToDTO(post, userId))
                 .collect(Collectors.toList());
     }
 

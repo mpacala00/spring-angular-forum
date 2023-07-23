@@ -1,15 +1,29 @@
 package com.github.mpacala00.forum.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 
-import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "posts")
@@ -46,6 +60,10 @@ public class Post {
     @JoinColumn(name="category_id")
     Category category;
 
+    @JsonIgnore
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
+    Set<UserLikedPost> userLikes = new HashSet<>();
+
     public Post() {
         this.postDate = LocalDateTime.now();
     }
@@ -59,6 +77,20 @@ public class Post {
     public void addComment(Comment comment) {
         this.comments.add(comment);
         comment.setPost(this);
+    }
+
+    public Integer getLikeCount() {
+        Integer userLikesCount = userLikes.stream()
+                .filter(UserLikedPost::getIsLike)
+                .collect(Collectors.toSet())
+                .size();
+
+        Integer userDislikesCount = userLikes.stream()
+                .filter(Predicate.not(UserLikedPost::getIsLike))
+                .collect(Collectors.toSet())
+                .size();
+
+        return userLikesCount - userDislikesCount;
     }
 
     @Override

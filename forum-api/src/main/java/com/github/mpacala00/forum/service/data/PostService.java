@@ -12,7 +12,8 @@ public interface PostService {
     Post savePostInCategory(Post post, Long categoryId);
     Post update(PostUpdateDTO post, Long postId);
     Post findById(Long id);
+    PostDTO findByIdMapToDTO(Long postId, Long userId);
     List<Post> findByCategoryId(Long categoryId);
-    List<PostDTO> findByCategoryIdMapToDTO(Long categoryId);
+    List<PostDTO> findByCategoryIdMapToDTO(Long categoryId, Long userId);
     void deleteById(Long id);
 }

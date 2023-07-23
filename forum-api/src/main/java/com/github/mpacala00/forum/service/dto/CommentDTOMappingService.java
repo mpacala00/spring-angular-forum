@@ -52,8 +52,7 @@ public class CommentDTOMappingService implements DTOMappingService<Comment, Comm
         return dto;
     }
 
-
-    public Boolean isLikedByUser(Comment comment, Long userId) {
+    private Boolean isLikedByUser(Comment comment, Long userId) {
         Optional<Boolean> likingUserOpt = comment.getUserLikes().stream()
                 .filter(userLikedComment -> userLikedComment.getUser().getId().equals(userId))
                 .findAny()
