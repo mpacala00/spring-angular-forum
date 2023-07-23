@@ -20,5 +20,26 @@
 }
 
 .post-body {
-    font-size: 17px;
+    font-size: 15px;
 }
+
+.post-rating {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    font-size: 14px;
+    text-align: right;
+    width: 50%;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-gap: 5px;
+ 
+    button, div {
+       border-radius: 20px;
+       border: 1px lightgray solid;
+    }
+ 
+    div {
+       font-weight: bold;
+       grid-column: 1 / span 2;
+       text-align: center;
+    }
+ }

@@ -1,21 +1,11 @@
-.post {
-   &:hover {
-      background-color: rgb(252, 250, 255);
-   }
+.comment-heading {
+   display: grid;
+   grid-template-columns: 7fr 1fr;
+   align-content: center;
+   justify-content: center;
 }
 
-.post-content {
-   &:hover {
-      background-color: rgb(252, 250, 255);
-      cursor: pointer;
-   }
-}
-
-button {
-   margin: 5px 2px;
-}
-
-.post-container {
+.comment-container {
    display: grid;
    grid-template-columns: 85% 15%;
    grid-gap: 10px;
@@ -39,12 +29,18 @@ button {
    }
 }
 
-.post-heading {
-   font-size: 15px;
-   font-weight: bold;
+.comment-reply {
+   border-left: 2px solid lightgray;
 }
 
-.post-rating {
+.btn-div {
+   // text-align: right;
+   button {
+       margin: 5px 2px;
+   }
+}
+
+.comment-btns {
    text-align: right;
    width: 50%;
    display: grid;
@@ -61,4 +57,8 @@ button {
       grid-column: 1 / span 2;
       text-align: center;
    }
+}
+
+.mat-icon {
+   margin-right: 0 !important;
 }

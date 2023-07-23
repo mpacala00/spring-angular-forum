@@ -21,11 +21,43 @@
          </mat-card>
 
          <div *ngFor="let p of posts">
-            <mat-card class="my-3 post" (click)="navigateToPost(p.id)">
-               <mat-card-content>
-                  {{p.title}}<br>
-                  {{p.body}}<br>
-                  Posted by: {{ p.creator }}
+            <mat-card class="my-3 post">
+               <mat-card-content class="post-container">
+                  <div class="column post-content" (click)="navigateToPost(p.id)">
+                     <p class="post-heading">{{p.title}}</p>
+                     {{p.body}}<br>
+                     <small>Posted by: {{ p.creator }}</small>
+                  </div>
+                  
+                  <div class="column">
+                     <div class="post-rating">
+                        <div class="py-2">
+                           Rating: {{p?.likeCount}}
+                        </div>
+                        <!-- c?.isLikedByUser -->
+                        <button mat-button
+                           color="primary"
+                           (click)="ratePost(p?.id, true)"
+                           [ngClass]="{
+                              'mdc-button--outlined mat-mdc-outlined-button': p?.isLikedByUser !== true,
+                              'mat-mdc-button mat-mdc-raised-button': p?.isLikedByUser === true
+                           }">
+                           <mat-icon>thumb_up</mat-icon>
+                        </button>
+                     
+                        <button mat-button
+                           color="primary"
+                           (click)="ratePost(p?.id, false)"
+                           [ngClass]="{
+                              'mdc-button--outlined mat-mdc-outlined-button': p?.isLikedByUser !== false,
+                              'mat-mdc-button mat-mdc-raised-button': p?.isLikedByUser === false
+                           }">
+                           <mat-icon>thumb_down</mat-icon>
+                        </button>
+
+                     
+                     </div>
+                  </div>
                </mat-card-content>
             </mat-card>
          </div>

@@ -1,0 +1,125 @@
+<hr />
+<div class="comment-container">
+   <div class="column">
+      <div class="column-info">
+         <p class="post-date m-0 d-inline-block">
+            Posted on {{ c?.postDate | date : "short" }} by
+            <a routerLink="/user/{{ c?.creator }}">{{ c?.creator }}</a>
+         </p>
+         <br />
+         <p class="post-date m-0 d-inline-block" *ngIf="replyingTo">
+            Replying to
+            <a routerLink="/user/{{ replyingTo }}">{{ replyingTo }}:</a>
+         </p>
+      </div>
+
+      <div class="comment-body">
+         <p class="mt-2 mb-0">{{ c?.body }}</p>
+      </div>
+   </div>
+
+   <div class="column">
+      <div class="comment-rating">
+
+         <div class="comment-btns">
+            <div class="py-2">
+               Rating: {{c?.likeCount}}
+            </div>
+         <!-- c?.isLikedByUser -->
+            <button mat-button
+               color="primary"
+               (click)="emitLikeEvent(c?.id)"
+               [ngClass]="{
+                  'mdc-button--outlined mat-mdc-outlined-button': c?.isLikedByUser !== true,
+                  'mat-mdc-button mat-mdc-raised-button': c?.isLikedByUser === true
+               }">
+               <mat-icon>thumb_up</mat-icon>
+            </button>
+         
+            <button mat-button
+               color="primary"
+               (click)="emitDislikeEvent(c?.id)"
+               [ngClass]="{
+                  'mdc-button--outlined mat-mdc-outlined-button': c?.isLikedByUser !== false,
+                  'mat-mdc-button mat-mdc-raised-button': c?.isLikedByUser === false
+               }">
+               <mat-icon>thumb_down</mat-icon>
+            </button>
+         </div>
+      
+      </div>
+   </div>
+</div>
+
+
+
+<div #editCommentInput class="d-none w-100 my-2">
+   <mat-form-field class="w-100">
+      <mat-label>Edit comment</mat-label>
+      <textarea matInput
+         cdkTextareaAutosize
+         #autosize="cdkTextareaAutosize"
+         cdkAutosizeMinRows="1"
+         cdkAutosizeMaxRows="5"
+         [value]="c?.body"
+         #textArea
+         required>
+      </textarea>
+   </mat-form-field>
+   <button mat-stroked-button
+         color="basic"
+         type="button"
+         (click)="emitEditCommentEvent(c, textArea.value)"
+         [disabled]="textArea.errors">
+      Submit
+   </button>
+</div>
+
+<div class="mt-3">
+
+   <div class="btn-div">
+      <button mat-stroked-button
+         color="primary"
+         type="button"
+         (click)="emitReplyEvent(c)"
+         [disabled]="c.deleted">
+         Reply
+      </button>
+
+      <button mat-stroked-button *ngIf="checkIfOwner(c.creator)"
+         color="basic"
+         type="button"
+         (click)="showEditCommentInput()">
+         Edit
+      </button>
+
+      <button mat-stroked-button *ngIf="checkIfOwner(c.creator)"
+         color="warn"
+         type="button"
+         (click)="emitDeleteCommentEvent(c.id)">
+         Delete
+      </button>
+   </div>
+
+   <!-- delete button for admins/mods -->
+   <div class="btn-div" [hidden]="checkIfOwner(c.creator)" *hasAuthority="'content:delete'">
+      <button mat-stroked-button
+         color="warn"
+         type="button"
+         (click)="emitDeleteCommentEvent(c.id)">
+         Delete
+      </button>
+   </div>
+</div>
+
+<div *ngFor="let cc of c?.childComments" class="pl-4 comment-reply" [ngClass]="{'pl-4 comment-reply' : replyDepth < 10}">
+   <app-comment [c]="cc"
+         [replyDepth]="replyDepth + 1" 
+         [replyingTo]="c.creator"
+         (editCommentEvent)="handleChildCommentEditEvent($event)"
+         (deleteCommentEvent)="emitDeleteCommentEvent($event)"
+         (replyEvent)="emitReplyEvent($event)"
+         (likeEvent)="emitLikeEvent($event)"
+         (dislikeEvent)="emitDislikeEvent($event)">
+   </app-comment>
+</div>
