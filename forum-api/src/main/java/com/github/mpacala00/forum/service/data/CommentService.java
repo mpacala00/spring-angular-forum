@@ -21,14 +21,11 @@ public interface CommentService {
      * @return null - no UserLikedComment present, true - comment liked, false - comment disliked
      */
     Boolean isLikedByUser(Comment comment, Long userId);
-
     Set<Comment> findByUser(String user);
-
     Comment findById(Long id);
-
     Comment save(Comment comment);
-
-    Comment update(CommentUpdateDTO commment);
-
+    Comment saveCommentInPost(Comment comment, Long postId);
+    Comment replyToComment(Comment comment, Long postId, Long parentCommentId);
+    Comment update(CommentUpdateDTO commment, Long commentId);
     void deleteById(Long id);
 }

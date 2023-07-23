@@ -18,10 +18,9 @@ export class PostApiService {
       return this.http.get<PostModel[]>(this.buildUrl(categoryId));
    }
 
-   // todo: move to comment service
-   // getPostComments(postId: number) {
-   //    return this.http.get<PostModel>(this.buildUrl());
-   // }
+   getPostById(categoryId: number, postId: number) {
+      return this.http.get<PostModel>(this.buildUrl(categoryId, postId));
+   }
 
    postPost(categoryId: number, post: PostModel) {
       return this.http.post<PostModel>(this.buildUrl(categoryId), post);

@@ -1,6 +1,5 @@
 package com.github.mpacala00.forum.service.data;
 
-import com.github.mpacala00.forum.model.Comment;
 import com.github.mpacala00.forum.model.User;
 
 public interface UserLikedCommentService {
@@ -12,9 +11,9 @@ public interface UserLikedCommentService {
      * Else remove existing UserLikedComment.
      *
      * @param user      user giving reaction to a comment
-     * @param comment   comment which will receive reaction
+     * @param commentId comment id which will receive reaction
      * @param isLike    determines whether user liked or disliked a comment
      * @return          returns information if new UserLikedComment object was created
      */
-    boolean likeComment(User user, Comment comment, Boolean isLike);
+    boolean likeComment(User user, Long commentId, Boolean isLike);
 }

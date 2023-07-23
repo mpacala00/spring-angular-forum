@@ -59,22 +59,22 @@ export class CommentsByPostPageComponent implements OnInit, OnDestroy {
    }
 
    private getPostById(postId: number): void {
-      // this.subs.sink = this.postApiService.getPostComments(postId).subscribe(
-      //    res => {
-      //       this.post = res;
+      this.subs.sink = this.postApiService.getPostById(this.categoryId, postId).subscribe(
+         res => {
+            this.post = res;
 
-      //       //checking ownership
-      //       if (this.authService.isTokenSet()) {
-      //          this.isOwnerOfPost = this.checkIfOwner(this.post.creator);
-      //       }
+            //checking ownership
+            if (this.authService.isTokenSet()) {
+               this.isOwnerOfPost = this.checkIfOwner(this.post.creator);
+            }
 
-      //       this.refreshComments();
-      //    },
-      //    err => {
-      //       alert('An error occured while fetching posts');
-      //       this.router.navigate(['../../'], { relativeTo: this.route });
-      //    }
-      // )
+            this.refreshComments();
+         },
+         err => {
+            alert('An error occured while fetching posts');
+            this.router.navigate(['../../'], { relativeTo: this.route });
+         }
+      )
    }
 
    //check if currently logged-in user is the owner of this post
@@ -156,7 +156,7 @@ export class CommentsByPostPageComponent implements OnInit, OnDestroy {
    }
 
    public deleteComment(commentId: number) {
-      this.subs.sink = this.commentApiService.deleteComment(commentId).subscribe(
+      this.subs.sink = this.commentApiService.deleteComment(this.categoryId, this.postId, commentId).subscribe(
          res => {
             this.refreshComments();
          },
@@ -173,7 +173,7 @@ export class CommentsByPostPageComponent implements OnInit, OnDestroy {
       }
 
       if (!this.commentToReplyTo) {
-         this.subs.sink = this.commentApiService.postComment(this.postId, this.commentForm.value).subscribe(
+         this.subs.sink = this.commentApiService.postComment(this.categoryId, this.postId, this.commentForm.value).subscribe(
             res => {
                this.refreshComments();
             },
@@ -184,7 +184,7 @@ export class CommentsByPostPageComponent implements OnInit, OnDestroy {
          );
          
       } else {
-         this.subs.sink = this.commentApiService.replyToComment(this.postId, this.commentToReplyTo.id, this.commentForm.value).subscribe(
+         this.subs.sink = this.commentApiService.replyToComment(this.categoryId, this.postId, this.commentToReplyTo.id, this.commentForm.value).subscribe(
             res => {
                this.cancelReply();
                this.refreshComments();
@@ -205,7 +205,7 @@ export class CommentsByPostPageComponent implements OnInit, OnDestroy {
       
       editCommentEvent.comment.body = editCommentEvent.body;
 
-      this.subs.sink = this.commentApiService.putComment(editCommentEvent.comment).subscribe(
+      this.subs.sink = this.commentApiService.putComment(this.categoryId, this.postId, editCommentEvent.comment).subscribe(
          (res) => {
             this.refreshComments();
          },
@@ -230,7 +230,7 @@ export class CommentsByPostPageComponent implements OnInit, OnDestroy {
 
    public refreshComments() {
       if (this.postId) {
-         this.subs.sink = this.commentApiService.getCommentsByPost(this.postId).subscribe(
+         this.subs.sink = this.commentApiService.getCommentsByPost(this.categoryId, this.postId).subscribe(
             res => {
                this.comments = res;
             },
@@ -248,7 +248,7 @@ export class CommentsByPostPageComponent implements OnInit, OnDestroy {
          return;
       }
 
-      this.subs.sink = this.commentApiService.likeComment(commentId, isLike).subscribe(
+      this.subs.sink = this.commentApiService.likeComment(this.categoryId, this.postId, commentId, isLike).subscribe(
          res => {
             //todo use ChangeDetectionRef to update liked comment with backend res
             this.refreshComments();

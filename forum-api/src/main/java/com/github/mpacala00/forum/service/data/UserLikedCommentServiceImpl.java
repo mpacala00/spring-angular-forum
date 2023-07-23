@@ -1,8 +1,10 @@
 package com.github.mpacala00.forum.service.data;
 
+import com.github.mpacala00.forum.exception.model.ResourceNotFoundException;
 import com.github.mpacala00.forum.model.Comment;
 import com.github.mpacala00.forum.model.User;
 import com.github.mpacala00.forum.model.UserLikedComment;
+import com.github.mpacala00.forum.repository.CommentRepository;
 import com.github.mpacala00.forum.repository.UserLikedCommentRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -18,15 +20,21 @@ import java.util.Optional;
 public class UserLikedCommentServiceImpl implements UserLikedCommentService {
 
     UserLikedCommentRepository userLikedCommentRepository;
+    CommentRepository commentRepository;
 
     @Override
     @Transactional
-    public boolean likeComment(User user, Comment comment, Boolean isLike) {
+    public boolean likeComment(User user, Long commentId, Boolean isLike) {
+        Optional<Comment> commentOpt = commentRepository.findById(commentId);
+        if (commentOpt.isEmpty()) {
+            throw new ResourceNotFoundException(String.format("Comment of id=%s not found", commentId));
+        }
+
         Optional<UserLikedComment> userLikedCommentOpt = userLikedCommentRepository
-                .findByUserIdAndCommentId(user.getId(), comment.getId());
+                .findByUserIdAndCommentId(user.getId(), commentId);
 
         if (userLikedCommentOpt.isEmpty()) {
-            userLikedCommentRepository.save(new UserLikedComment(user, comment, isLike));
+            userLikedCommentRepository.save(new UserLikedComment(user, commentOpt.get(), isLike));
             return true;
         }
 

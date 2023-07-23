@@ -9,23 +9,30 @@ import com.github.mpacala00.forum.model.dto.comment.CommentDTO;
 import com.github.mpacala00.forum.model.dto.comment.CommentUpdateDTO;
 import com.github.mpacala00.forum.repository.CommentRepository;
 import com.github.mpacala00.forum.repository.PostRepository;
-import com.github.mpacala00.forum.repository.UserRepository;
 import com.github.mpacala00.forum.service.dto.CommentDTOMappingService;
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
+@FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class CommentServiceImpl implements CommentService {
 
-    private final CommentRepository commentRepository;
-    private final CommentDTOMappingService commentDTOMappingService;
+    CommentRepository commentRepository;
+    PostRepository postRepository;
+    CommentDTOMappingService commentDTOMappingService;
 
     @Override
     public List<CommentDTO> getAllCommentsFromPost(Long postId, Long tokenUserId) {
@@ -87,14 +94,51 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public Comment update(CommentUpdateDTO commment) {
-        if(commentRepository.findById(commment.getId()).isPresent()) {
-            Comment commentToUpdate = commentRepository.findById(commment.getId()).get();
-            commentToUpdate.setBody(commment.getBody());
-            commentToUpdate.setPostDate(LocalDateTime.now());
-            return commentRepository.save(commentToUpdate);
+    public Comment saveCommentInPost(Comment comment, Long postId) {
+        Optional<Post> postOpt = postRepository.findById(postId);
+        if (postOpt.isEmpty()) {
+            throw new ResourceNotFoundException(String.format("Post of id=%s not found", postId));
         }
-        throw new NullPointerException(String.format("Comment of id=%d does not exist", commment.getId()));
+
+        Comment savedComment = save(comment);
+
+        Post post = postOpt.get();
+        post.addComment(savedComment);
+        postRepository.save(post);
+
+        return savedComment;
+    }
+
+    @Override
+    public Comment replyToComment(Comment comment, Long postId, Long parentCommentId) {
+        Optional<Comment> parentCommentOpt = commentRepository.findById(parentCommentId);
+        if (parentCommentOpt.isEmpty()) {
+            throw new ResourceNotFoundException(String.format("Comment you are replying (id=%s) to does not exist",
+                    parentCommentId));
+        }
+
+        Comment parentComment = parentCommentOpt.get();
+        if (parentComment.getDeleted()) {
+            throw new RuntimeException("Replying to deleted comments is forbidden");
+        }
+
+        comment.setParentComment(parentComment);
+
+        return saveCommentInPost(comment, postId);
+    }
+
+    @Override
+    public Comment update(CommentUpdateDTO commment, Long commentId) {
+        Optional<Comment> commentOpt = commentRepository.findById(commentId);
+        if (commentOpt.isEmpty()) {
+            throw new ResourceNotFoundException(String.format("Comment of id=%d does not exist", commment.getId()));
+        }
+
+        Comment commentToUpdate = commentOpt.get();
+        commentToUpdate.setBody(commment.getBody());
+        commentToUpdate.setPostDate(LocalDateTime.now());
+
+        return commentRepository.save(commentToUpdate);
     }
 
     @Override
