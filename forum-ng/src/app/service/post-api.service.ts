@@ -11,34 +11,32 @@ import { environment } from 'src/environments/environment';
 })
 export class PostApiService {
 
-   private GET_POSTS = `${environment.BASE_URL_PUBLIC}/posts`;
-   private PUT_POST = `${environment.BASE_URL}/post`;
-
    constructor(private http: HttpClient, private cookieService: CookieService) { }
-
-   getAllPosts() {
-      return this.http.get<PostModel[]>(this.GET_POSTS);
-   }
 
    //return category objects with posts
    getPostsByCategory(categoryId: number) {
-      return this.http.get<PostModel[]>(`${environment.BASE_URL_PUBLIC}/category/${categoryId}/posts`);
+      return this.http.get<PostModel[]>(this.buildUrl(categoryId));
    }
 
-   //return post object with comments
-   getPostComments(postId: number) {
-      return this.http.get<PostModel>(`${environment.BASE_URL_PUBLIC}/post/${postId}`);
-   }
+   // todo: move to comment service
+   // getPostComments(postId: number) {
+   //    return this.http.get<PostModel>(this.buildUrl());
+   // }
 
    postPost(categoryId: number, post: PostModel) {
-      return this.http.post<PostModel>(`${environment.BASE_URL}/category/${categoryId}/post`, post);
+      return this.http.post<PostModel>(this.buildUrl(categoryId), post);
    }
 
-   putPost(post: PostModel) {
-      return this.http.put<PostModel>(this.PUT_POST, post);
+   putPost(categoryId: number, postId: number, post: PostModel) {
+      return this.http.put<PostModel>(this.buildUrl(categoryId, postId), post);
    }
 
-   deletePost(postId: number) {
-      return this.http.delete<any>(`${environment.BASE_URL}/post/${postId}`);
+   deletePost(categoryId: number, postId: number) {
+      return this.http.delete<any>(this.buildUrl(categoryId, postId));
+   }
+
+   private buildUrl(categoryId: string | number, postId?: string | number) {
+      let baseUrl = `${environment.BASE_URL}/categories/${categoryId}/posts`;
+      return postId !== undefined ? baseUrl + `/${postId}` : baseUrl;
    }
 }

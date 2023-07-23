@@ -8,7 +8,7 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class PostUpdateDTO {
 
-    Long id;
+    Long id; //todo get rid of this
     String title;
     String body;
 }

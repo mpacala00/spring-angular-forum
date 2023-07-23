@@ -36,7 +36,7 @@ export class PostsByCategoryPageComponent implements OnInit, OnDestroy {
 
    ngOnInit(): void {
       this.activatedRoute.params.subscribe(
-         params => { this.categoryId = params['id']; }
+         params => { this.categoryId = params['id']; console.log('param: ' + params['id']); }
       );
 
       //make a call to a different endpoint depending on user being logged in

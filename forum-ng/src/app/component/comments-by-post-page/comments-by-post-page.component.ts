@@ -22,6 +22,8 @@ export class CommentsByPostPageComponent implements OnInit, OnDestroy {
    private subs = new SubSink();
 
    private postId: number;
+   private categoryId: number;
+
    public post: PostModel;
    public comments: CommentModel[];
    public commentForm: UntypedFormGroup;
@@ -46,29 +48,33 @@ export class CommentsByPostPageComponent implements OnInit, OnDestroy {
       })
       //get id from current route
       this.route.params.subscribe(
-         params => { this.postId = params['id']; }
+         params => { this.postId = params['id']}
+      );
+
+      this.route.parent.params.subscribe(
+         params => { this.categoryId = params['id']}
       );
 
       this.getPostById(this.postId);
    }
 
    private getPostById(postId: number): void {
-      this.subs.sink = this.postApiService.getPostComments(postId).subscribe(
-         res => {
-            this.post = res;
+      // this.subs.sink = this.postApiService.getPostComments(postId).subscribe(
+      //    res => {
+      //       this.post = res;
 
-            //checking ownership
-            if (this.authService.isTokenSet()) {
-               this.isOwnerOfPost = this.checkIfOwner(this.post.creator);
-            }
+      //       //checking ownership
+      //       if (this.authService.isTokenSet()) {
+      //          this.isOwnerOfPost = this.checkIfOwner(this.post.creator);
+      //       }
 
-            this.refreshComments();
-         },
-         err => {
-            alert('An error occured while fetching posts');
-            this.router.navigate(['../../'], { relativeTo: this.route });
-         }
-      )
+      //       this.refreshComments();
+      //    },
+      //    err => {
+      //       alert('An error occured while fetching posts');
+      //       this.router.navigate(['../../'], { relativeTo: this.route });
+      //    }
+      // )
    }
 
    //check if currently logged-in user is the owner of this post
@@ -94,7 +100,7 @@ export class CommentsByPostPageComponent implements OnInit, OnDestroy {
    }
 
    public updatePost(post: PostModel) {
-      this.subs.sink = this.postApiService.putPost(post).subscribe(
+      this.subs.sink = this.postApiService.putPost(this.categoryId, this.postId, post).subscribe(
          res => {
             this.refreshComments();
          },
@@ -137,7 +143,7 @@ export class CommentsByPostPageComponent implements OnInit, OnDestroy {
    }
 
    public deletePost() {
-      this.subs.sink = this.postApiService.deletePost(this.postId).subscribe(
+      this.subs.sink = this.postApiService.deletePost(this.categoryId, this.postId).subscribe(
          res => {
             // console.log(res);
             this.router.navigateByUrl('/');
